@@ -17,14 +17,19 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### DOCKER ###
+docker/db/data
+
 ### IntelliJ IDEA ###
 .idea
+.idea/misc.xml
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -33,5 +38,5 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
+### SPRING BOOT ###
+/data
