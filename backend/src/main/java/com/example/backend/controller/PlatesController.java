@@ -40,4 +40,6 @@ public class PlatesController {
         platesService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
+    
 }

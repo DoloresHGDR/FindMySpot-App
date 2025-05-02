@@ -28,4 +28,5 @@ public class PlatesService {
     public void delete(Long id) {
         platesRepository.deleteById(id);
     }
+    
 }
