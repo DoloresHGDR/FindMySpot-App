@@ -41,10 +41,7 @@ out/
 
 ### spring ###
 backend/gradle
-<<<<<<< HEAD
 backend/.gradle
-=======
->>>>>>> b26458f59e9dfddc85c4d5b77d7fa7bb5994f758
 backend/build
 backend/.build.gradle
 backend/.env
@@ -54,8 +51,3 @@ backend/gradlew
 backend/gradlew.bat
 backend/settings.gradle
 backend/build.gradle
-
-<<<<<<< HEAD
-=======
-
->>>>>>> b26458f59e9dfddc85c4d5b77d7fa7bb5994f758
