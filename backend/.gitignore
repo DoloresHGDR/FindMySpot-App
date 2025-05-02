@@ -18,7 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea/
+.idea
 *.iws
 *.iml
 *.ipr
@@ -35,27 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### Mac OS ###
-.DS_Store
-
-### spring ###
-backend/gradle
-<<<<<<< HEAD
-backend/.gradle
-=======
->>>>>>> b26458f59e9dfddc85c4d5b77d7fa7bb5994f758
-backend/build
-backend/.build.gradle
-backend/.env
-backend/docker/db/data 
-backend/.idea/ 
-backend/gradlew
-backend/gradlew.bat
-backend/settings.gradle
-backend/build.gradle
-
-<<<<<<< HEAD
-=======
-
->>>>>>> b26458f59e9dfddc85c4d5b77d7fa7bb5994f758
