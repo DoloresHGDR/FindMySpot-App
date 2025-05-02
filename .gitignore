@@ -38,5 +38,10 @@ backend/build
 backend/.build.gradle
 backend/.env
 backend/docker/db/data 
-backend/.idea/
+backend/.idea/ 
+backend/gradlew
+backend/gradlew.bat
+backend/settings.gradle
+backend/build.gradle
+
 
