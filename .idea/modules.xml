@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/FindMySpot-App.iml" filepath="$PROJECT_DIR$/.idea/FindMySpot-App.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FindMySpot.iml" filepath="$PROJECT_DIR$/.idea/FindMySpot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.test.iml" />
     </modules>
   </component>
 </project>

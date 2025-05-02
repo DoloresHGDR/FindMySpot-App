@@ -31,3 +31,12 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### spring ###
+backend/gradle
+backend/build
+backend/.build.gradle
+backend/.env
+backend/docker/db/data 
+backend/.idea/
+
