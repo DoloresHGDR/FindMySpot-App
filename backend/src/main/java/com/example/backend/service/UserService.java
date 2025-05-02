@@ -25,7 +25,7 @@ public class UserService {
         return userRepository.findById(id);
     }
     //}
-    //public User getUserByDni(String dni) {
+    //public Optional<User> getUserByDni(String dni) {
     //    return userRepository.findByDni(dni);
     //}
     public User saveUser(User user) {

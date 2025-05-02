@@ -1,13 +1,11 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-.idea/
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-### DOCKER ###
-docker/db/data
-
-### Eclipse ###
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -18,6 +16,15 @@ docker/db/data
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +38,17 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### spring ###
+backend/gradle
+backend/.gradle
+backend/build
+backend/.build.gradle
+backend/.env
+backend/docker/db/data 
+backend/.idea/ 
+backend/gradlew
+backend/gradlew.bat
+backend/settings.gradle
+backend/build.gradle
+
