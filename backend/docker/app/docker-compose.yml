@@ -1,7 +1,7 @@
 services:
   backend-parking:
     container_name: backend-parking
-    image: backend:v1.0.0
+    image: backend:v1.1.0
     build:
       context: ../..
       dockerfile: Dockerfile
@@ -13,6 +13,8 @@ services:
       - .env
     environment:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
 
 networks:

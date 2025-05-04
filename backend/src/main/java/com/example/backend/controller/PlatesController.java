@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 import com.example.backend.models.Plates;
 import com.example.backend.service.PlatesService;
-import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public class PlatesController {
     private final PlatesService platesService;
 
     @Autowired
-    public PlatesController(PlatesService platesService, UserService userService) {
+    public PlatesController(PlatesService platesService) {
         this.platesService = platesService;
     }
 
@@ -35,7 +34,7 @@ public class PlatesController {
         return platesService.save(plates);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         platesService.delete(id);
         return ResponseEntity.noContent().build();
