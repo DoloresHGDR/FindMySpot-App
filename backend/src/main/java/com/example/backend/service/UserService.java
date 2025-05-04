@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.models.User;
-import com.example.backend.repository.UserRepository;
+import com.example.backend.models.Users;
+import com.example.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +11,24 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UsersRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
+    public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
-    public Optional<User> getUserById(Long id) {
+    public Optional<Users> getUserById(Long id) {
         return userRepository.findById(id);
     }
     //}
     //public Optional<User> getUserByDni(String dni) {
     //    return userRepository.findByDni(dni);
     //}
-    public User saveUser(User user) {
+    public Users saveUser(Users user) {
         return userRepository.save(user);
     }
     public void deleteUser(Long id) {

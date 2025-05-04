@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,10 +15,10 @@ public class User {
     private Integer id_plate;
     private Integer id_fines;
 
-    public User() {
+    public Users() {
     }
 
-    public User(String name, String surname, String dni, String password, Integer id_plate, Integer id_fines) {
+    public Users(String name, String surname, String dni, String password, Integer id_plate, Integer id_fines) {
         this.name = name;
         this.surname = surname;
         this.dni = dni;

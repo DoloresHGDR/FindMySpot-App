@@ -18,7 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea/
+.idea
+**/.idle/
 *.iws
 *.iml
 *.ipr
@@ -44,7 +45,7 @@ backend/gradle
 backend/.gradle
 backend/build
 backend/.build.gradle
-backend/.env
+**/*.env
 backend/docker/db/data 
 backend/.idea/ 
 backend/gradlew
