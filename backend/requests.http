@@ -1,0 +1,23 @@
+###GETALL
+GET http://localhost:8080/api/users
+Accept: application/json
+
+###GETBYID
+GET http://localhost:8080/api/users/1
+Accept: application/json
+
+###POST
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "dolly",
+  "surname": "HERRERA GARCIA DA ROSA",
+  "dni": "45257189",
+  "password": "dolopiola123",
+  "id_plate": 1,
+  "id_fines": 1
+}
+
+###DELETE
+DELETE http://localhost:8080/api/users/1
