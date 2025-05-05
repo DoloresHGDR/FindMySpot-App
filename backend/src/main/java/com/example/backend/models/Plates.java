@@ -8,12 +8,14 @@ public class Plates {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
+    private String status;
 
     public Plates() {
     }
 
-    public Plates(String number) {
+    public Plates(String number, String status) {
         this.number = number;
+        this.status = status;
     }
 
     public Long getId() {
@@ -27,6 +29,12 @@ public class Plates {
     }
     public void setNumber(String number) {
         this.number = number;
+    }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 

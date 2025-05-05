@@ -14,17 +14,19 @@ public class Users {
     private String password;
     private Integer id_plate;
     private Integer id_fines;
+    private String role;
 
     public Users() {
     }
 
-    public Users(String name, String surname, String dni, String password, Integer id_plate, Integer id_fines) {
+    public Users(String name, String surname, String dni, String password, Integer id_plate, Integer id_fines, String role) {
         this.name = name;
         this.surname = surname;
         this.dni = dni;
         this.password = password;
         this.id_plate = id_plate;
         this.id_fines = id_fines;
+        this.role = role;
     }
 
     public Long getId() {
@@ -68,5 +70,11 @@ public class Users {
     }
     public void setId_fines(Integer id_fines) {
         this.id_fines = id_fines;
+    }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
     }
 }
