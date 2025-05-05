@@ -1,9 +1,11 @@
+##USERS
+
 ###GETALL
 GET http://localhost:8080/api/users
 Accept: application/json
 
 ###GETBYID
-GET http://localhost:8080/api/users/1
+GET http://localhost:8080/api/users/2
 Accept: application/json
 
 ###POST
@@ -20,4 +22,42 @@ Content-Type: application/json
 }
 
 ###DELETE
-DELETE http://localhost:8080/api/users/1
+DELETE http://localhost:8080/api/users/2
+
+
+### PLATES
+
+### POST
+POST http://localhost:8080/api/plates
+Content-Type: application/json
+
+{
+    "number": "AH 192 WL"
+}
+
+
+### PARKINGS
+
+### GETALL
+GET http://localhost:8080/api/parkings
+Accept: application/json
+
+### GETBYID
+GET http://localhost:8080/api/parkings/1
+Accept: application/json
+
+### POST
+POST http://localhost:8080/api/parkings
+Content-Type: application/json
+
+{
+  "id_user": 3,
+  "id_plate": 1,
+  "date": "2025-05-04",
+  "address": "Tupi123",
+  "duration": "00:30:00",
+  "time_to_expire": "00:10:00"
+}
+
+### DELETE
+DELETE http://localhost:8080/api/parkings/1
