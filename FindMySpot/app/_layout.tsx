@@ -1,22 +1,7 @@
-import { Stack } from 'expo-router';
-
+import { Stack } from "expo-router";
+import { UserProvider } from "@/context/UserContext";
 export default function RootLayout() {
   return (
-<<<<<<< HEAD
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="login" />
-    </Stack>
-=======
       <UserProvider>
         <Stack
           screenOptions={{
@@ -31,6 +16,6 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
         </Stack>
       </UserProvider>
->>>>>>> 13196c7baaed500659263d35d5f38c8aa8ebf021
   );
+
 }
