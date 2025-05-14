@@ -13,9 +13,9 @@ export default function RootLayout() {
               fontWeight: 'bold',
             },
           }}>
-          <Stack.Screen name="index" />
+          <Stack.Screen name="registerposta" />
         </Stack>
       </UserProvider>
   );
 
-}
+} 
