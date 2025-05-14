@@ -41,12 +41,13 @@ out/
 .DS_Store
 
 ### spring ###
+
 backend/gradle
 backend/.gradle
 backend/build
 backend/.build.gradle
 **/*.env
-backend/docker/db/data 
+backend/docker/database/data 
 backend/.idea/ 
 backend/gradlew
 backend/gradlew.bat
