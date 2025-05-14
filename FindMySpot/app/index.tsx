@@ -2,10 +2,12 @@ import { Text, View, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Input from '../components/Input';
+import Input from '@/components/Input';
 import LoginButton from "@/components/loginButton";
-import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '../components/icons';
+import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
+import { useRouter } from 'expo-router';
+
 
 const LoginSchema = Yup.object().shape({
     dni: Yup.string()
@@ -18,8 +20,9 @@ const LoginSchema = Yup.object().shape({
 });
 
 export default function Index() {
-  const [isChecked, setChecked] = useState(false);
-  const [secureText, setSecureText] = useState(true);
+    const router = useRouter();
+    const [isChecked, setChecked] = useState(false);
+    const [secureText, setSecureText] = useState(true);
 
   return (
     <Formik
@@ -65,7 +68,16 @@ export default function Index() {
 
               <LoginButton title="Login" onPress={handleSubmit} />
 
-              <Text style={{ textAlign: 'center' }}>¿No tienes una cuenta?</Text>
+              <View style={styles.registerContainer}>
+              <Text>¿No tienes una cuenta?</Text>
+              <Text
+                  style={{ color: 'blue', fontWeight: 'bold' }}
+                  onPress={() => router.push('/register')}
+                >
+                Regístrate
+                </Text>
+              </View>
+              
             </View>
           )}
         </Formik>
@@ -98,5 +110,12 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: 4,
     marginBottom: 5,
+  },
+  registerContainer:{
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    gap: 5
   }
 });

@@ -5,10 +5,10 @@ import * as Yup from 'yup';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
 const RegisterSchema = Yup.object().shape({
-  nombre: Yup.string()
+  name: Yup.string()
     .required('El nombre es necesario')
     .matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, 'Solo se permiten letras y espacios'),
-  apellido: Yup.string()
+  surname: Yup.string()
     .required('El apellido es necesario')
     .matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, 'Solo se permiten letras y espacios'),
   dni: Yup.string()
@@ -80,7 +80,7 @@ function Register() {
               </View>
             </ProgressStep>
 
-            <ProgressStep label="Contraseñas">
+            <ProgressStep label="Contraseñas" buttonFinishText="Registrarse" onSubmit={() => handleSubmit()}>
               <View style={styles.container}>
                 <Text style={styles.label}>Contraseña</Text>
                 <View style={styles.passwordContainer}>
@@ -112,13 +112,6 @@ function Register() {
                   <Text style={styles.error}>{errors.confirmPassword}</Text>
                 )}
               </View>
-
-                <View>
-                    <TouchableOpacity style={styles.loginBtn} onPress={()=> handleSubmit()}>
-                        <Text style={styles.loginText}>Register</Text>
-                    </TouchableOpacity>
-
-                </View>
             </ProgressStep>
         </ProgressSteps>
       )}
