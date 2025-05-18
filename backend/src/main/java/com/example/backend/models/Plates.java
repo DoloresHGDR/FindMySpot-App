@@ -1,5 +1,6 @@
 package com.example.backend.models;
 import jakarta.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -8,14 +9,25 @@ public class Plates {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
-    private String status;
+    private boolean parked;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+    @OneToMany(mappedBy = "plate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Parkings> parkings;
+    @OneToMany(mappedBy = "plate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Fines> fines;
+
 
     public Plates() {
     }
 
-    public Plates(String number, String status) {
+    public Plates(String number, boolean parked, Users user, List<Parkings> parkings, List<Fines> fines) {
         this.number = number;
-        this.status = status;
+        this.parked = parked;
+        this.user = user;
+        this.parkings = parkings;
+        this.fines = fines;
     }
 
     public Long getId() {
@@ -30,13 +42,24 @@ public class Plates {
     public void setNumber(String number) {
         this.number = number;
     }
-    public String getStatus() {
-        return status;
+    public boolean getParked() {
+        return parked;
     }
-    public void setStatus(String status) {
-        this.status = status;
+    public void setParked(boolean parked) {
+        this.parked = parked;
     }
-    
+    public Users getUser() {
+        return user;
+    }
+    public void setUser(Users user) {
+        this.user = user;
+    }
+    public List<Parkings> getParkings() {
+        return parkings;
+    }
+    public void setParkings(List<Parkings> parkings) {
+        this.parkings = parkings;
+    }
 
 }
 

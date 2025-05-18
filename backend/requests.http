@@ -15,10 +15,9 @@ Content-Type: application/json
 {
   "name": "dolly",
   "surname": "HERRERA GARCIA DA ROSA",
-  "dni": "45257189",
+  "identity_number": "45257189",
   "password": "dolopiola123",
-  "id_plate": 1,
-  "id_fines": 1
+  "role": "1"
 }
 
 ###DELETE
@@ -32,7 +31,11 @@ POST http://localhost:8080/api/plates
 Content-Type: application/json
 
 {
-    "number": "AH 192 WL"
+    "number": "AH 192 WL",
+    "parked": false,
+    "user": {
+      "id": 1
+    }
 }
 
 
@@ -51,13 +54,44 @@ POST http://localhost:8080/api/parkings
 Content-Type: application/json
 
 {
-  "id_user": 3,
-  "id_plate": 1,
+  "user": {
+    "id": 1
+  },
+  "plate": {
+    "id": 1
+  },
   "date": "2025-05-04",
   "address": "Tupi123",
   "duration": "00:30:00",
-  "time_to_expire": "00:10:00"
+  "status": "parked"
 }
 
 ### DELETE
 DELETE http://localhost:8080/api/parkings/1
+
+
+### FINES
+
+###GET
+GET http://localhost:8080/api/fines
+Accept: application/json
+
+###GETBYID
+GET http://localhost:8080/api/fines/1
+Accept: application/json
+
+###POST
+POST http://localhost:8080/api/fines
+Content-Type: application/json
+
+{
+  "description": "Estacionado en una ochava",
+  "amount": 100000,
+  "datetime": "2025-05-18T19:57:00",
+  "plate": {
+    "id": 1
+  }
+}
+
+###DELETE
+DELETE http://localhost:8080/api/fines/1

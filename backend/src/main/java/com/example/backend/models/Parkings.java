@@ -9,8 +9,12 @@ public class Parkings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer id_user;
-    private Integer id_plate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+    @ManyToOne
+    @JoinColumn(name = "plate_id")
+    private Plates plate;
     private LocalDate date;
     private String address;
     private LocalTime duration;
@@ -18,9 +22,9 @@ public class Parkings {
 
     public Parkings() {}
 
-    public Parkings(Integer id_user, Integer id_plate, LocalDate date, String address, LocalTime duration, String status) {
-        this.id_user = id_user;
-        this.id_plate = id_plate;
+    public Parkings(Users user, Plates plate, LocalDate date, String address, LocalTime duration, String status) {
+        this.user = user;
+        this.plate = plate;
         this.date = date;
         this.address = address;
         this.duration = duration;
@@ -32,18 +36,6 @@ public class Parkings {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-    public Integer getId_user() {
-        return id_user;
-    }
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
-    }
-    public Integer getId_plate() {
-        return id_plate;
-    }
-    public void setId_plate(Integer id_plate) {
-        this.id_plate = id_plate;
     }
     public LocalDate getDate() {
         return date;
@@ -68,6 +60,18 @@ public class Parkings {
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+    public Users getUser() {
+        return user;
+    }
+    public void setUser(Users user) {
+        this.user = user;
+    }
+    public Plates getPlate() {
+        return plate;
+    }
+    public void setPlate(Plates plate) {
+        this.plate = plate;
     }
 
 }

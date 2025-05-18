@@ -1,24 +1,26 @@
 package com.example.backend.models;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Fines {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer id_user;
-    private Integer id_plate;
     private String description;
     private Float amount;
     private LocalDateTime datetime;
 
+    @ManyToOne
+    @JoinColumn(name = "plate_id")
+    private Plates plate;
+
     public Fines() {
 
     }
-    public Fines(Integer id_user, Integer id_plate, String description, Float amount) {
-        this.id_user = id_user;
-        this.id_plate = id_plate;
+    public Fines(Plates plate, String description, Float amount) {
+        this.plate = plate;
         this.description = description;
         this.amount = amount;
         this.datetime = LocalDateTime.now();
@@ -29,17 +31,11 @@ public class Fines {
     public void setId(Long id) {
         this.id = id;
     }
-    public Integer getId_user() {
-        return id_user;
+    public Plates getPlate() {
+        return plate;
     }
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
-    }
-    public Integer getId_plate() {
-        return id_plate;
-    }
-    public void setId_plate(Integer id_plate) {
-        this.id_plate = id_plate;
+    public void setPlate(Plates plate) {
+        this.plate = plate;
     }
     public String getDescription() {
         return description;

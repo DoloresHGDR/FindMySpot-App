@@ -1,5 +1,6 @@
 package com.example.backend.models;
 import jakarta.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -10,22 +11,24 @@ public class Users {
     private Long id;
     private String name;
     private String surname;
-    private String dni;
+    private String identity_number;
     private String password;
-    private Integer id_plate;
-    private Integer id_fines;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Plates> plates;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Parkings> parkings;
     private String role;
 
     public Users() {
     }
 
-    public Users(String name, String surname, String dni, String password, Integer id_plate, Integer id_fines, String role) {
+    public Users(String name, String surname, String identity_number, String password, List<Plates> plates, List<Parkings> parkings, String role) {
         this.name = name;
         this.surname = surname;
-        this.dni = dni;
+        this.identity_number = identity_number;
+        this.plates = plates;
+        this.parkings = parkings;
         this.password = password;
-        this.id_plate = id_plate;
-        this.id_fines = id_fines;
         this.role = role;
     }
 
@@ -47,11 +50,11 @@ public class Users {
     public void setSurname(String surname) {
         this.surname = surname;
     }
-    public String getDni() {
-        return dni;
+    public String getIdentity_number() {
+        return identity_number;
     }
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setIdentity_number(String identity_number) {
+        this.identity_number = identity_number;
     }
     public String getPassword() {
         return password;
@@ -59,22 +62,22 @@ public class Users {
     public void setPassword(String password) {
         this.password = password;
     }
-    public Integer getId_plate() {
-        return id_plate;
-    }
-    public void setId_plate(Integer id_plate) {
-        this.id_plate = id_plate;
-    }
-    public Integer getId_fines() {
-        return id_fines;
-    }
-    public void setId_fines(Integer id_fines) {
-        this.id_fines = id_fines;
-    }
     public String getRole() {
         return role;
     }
     public void setRole(String role) {
         this.role = role;
+    }
+    public List<Plates> getPlates() {
+        return plates;
+    }
+    public void setPlates(List<Plates> plates) {
+        this.plates = plates;
+    }
+    public List<Parkings> getParkings() {
+        return parkings;
+    }
+    public void setParkings(List<Parkings> parkings) {
+        this.parkings = parkings;
     }
 }
