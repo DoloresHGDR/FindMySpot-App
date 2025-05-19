@@ -1,8 +1,10 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import axios, { AxiosError } from 'axios';
+
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string()
@@ -11,9 +13,10 @@ const RegisterSchema = Yup.object().shape({
   surname: Yup.string()
     .required('El apellido es necesario')
     .matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, 'Solo se permiten letras y espacios'),
-  dni: Yup.string()
+  identity_number: Yup.string()
     .required('El DNI es necesario')
-    .matches(/^\d+$/, 'Solo se permiten números'),
+    .matches(/^\d{8}$/, 'Solo se permiten números')
+    .min(8, 'Minimo 8 caracteres'),
   password: Yup.string()
     .required('La contraseña es necesaria')
     .min(8, 'Mínimo 8 caracteres'),
@@ -23,12 +26,40 @@ const RegisterSchema = Yup.object().shape({
 });
 
 function Register() {
+
+  const handleRegister = async (values) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/users/register', {
+        name: values.name,
+        surname: values.surname,
+        identity_number: values.identity_number,
+        password: values.password,
+        role: "USER"
+      });
+
+      if (response.status === 201) {
+        console.log('Registro exitoso')
+        Alert.alert('Registro exitoso')
+      }
+    } catch (err) {
+      const error = err as AxiosError;
+
+      if (error.response) {
+        console.log('Error', error.response.data || "Hubo un error al registrar al usuario")
+        Alert.alert('Error', error.response.data as string || "Hubo un error al registrar al usuario")
+      } else {
+        Alert.alert('Error', "No se pudo conectar con el servidor.")
+      }
+        
+    }
+  }
+
   return (
     <Formik
-      initialValues={{ name: '', surname: '', dni: '', password: '', confirmPassword: '' }}
+      initialValues={{ name: '', surname: '', identity_number: '', password: '', confirmPassword: '' }}
       validationSchema={RegisterSchema}
       onSubmit={(values) => {
-        console.log('Valores Enviados', values);
+        handleRegister(values);
       }}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -68,14 +99,14 @@ function Register() {
                   <TextInput
                     placeholder="Ingrese su DNI"
                     style={styles.dniInput}
-                    onChangeText={handleChange('dni')}
-                    onBlur={handleBlur('dni')}
-                    value={values.dni}
+                    onChangeText={handleChange('identity_number')}
+                    onBlur={handleBlur('identity_number')}
+                    value={values.identity_number}
                     keyboardType="numeric"
                   />
                 </View>
-                {touched.dni && errors.dni && (
-                  <Text style={styles.error}>{errors.dni}</Text>
+                {touched.identity_number && errors.identity_number && (
+                  <Text style={styles.error}>{errors.identity_number}</Text>
                 )}
               </View>
             </ProgressStep>
