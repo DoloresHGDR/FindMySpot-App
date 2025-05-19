@@ -1,9 +1,12 @@
 package com.example.backend.controller;
+import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +32,14 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Users createUser(@RequestBody Users user) {
-        return userService.saveUser(user);
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
+        try {
+            userService.saveUser(registerUserDTO);
+            return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error registering user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
