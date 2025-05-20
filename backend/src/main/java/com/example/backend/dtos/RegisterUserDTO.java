@@ -23,7 +23,7 @@ public class RegisterUserDTO {
 
     @NotBlank(message = "El DNI es obligatorio")
     @Pattern(regexp = "^\\d{6,10}$", message = "El DNI debe tener entre 6 y 10 dígitos")
-    private String identity_number;
+    private String identityNumber;
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")

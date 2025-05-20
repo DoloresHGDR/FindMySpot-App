@@ -1,4 +1,6 @@
 package com.example.backend.service;
+import com.example.backend.dtos.LoginRequestDTO;
+import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.repository.UsersRepository;
@@ -23,15 +25,27 @@ public class UserService {
     public Optional<Users> getUserById(Long id) {
         return userRepository.findById(id);
     }
-    //}
-    //public Optional<User> getUserByDni(String dni) {
-    //    return userRepository.findByDni(dni);
-    //}
+    public LoginResponseDTO loginUser(LoginRequestDTO loginRequestDTO) {
+        Optional<Users> optionalUsers = userRepository.findByIdentityNumber(loginRequestDTO.getIdentityNumber());
+        if (optionalUsers.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        Users user = optionalUsers.get();
+        if (!user.getPassword().equals(loginRequestDTO.getPassword())) {
+            throw new RuntimeException("Wrong password");
+        }
+        return new LoginResponseDTO(
+                user.getName(),
+                user.getSurname(),
+                user.getIdentityNumber(),
+                user.getRole()
+        );
+    }
     public void saveUser(RegisterUserDTO registerUserDTO) {
         Users user = new Users();
         user.setName(registerUserDTO.getName());
         user.setSurname(registerUserDTO.getSurname());
-        user.setIdentity_number(registerUserDTO.getIdentity_number());
+        user.setIdentityNumber(registerUserDTO.getIdentityNumber());
         user.setPassword(registerUserDTO.getPassword());
         user.setRole(registerUserDTO.getRole());
         userRepository.save(user);

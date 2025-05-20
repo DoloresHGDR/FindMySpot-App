@@ -1,4 +1,6 @@
 package com.example.backend.controller;
+import com.example.backend.dtos.LoginRequestDTO;
+import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.service.UserService;
@@ -39,6 +41,16 @@ public class UserController {
             return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error registering user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+        try {
+            LoginResponseDTO response = userService.loginUser(loginRequestDTO);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

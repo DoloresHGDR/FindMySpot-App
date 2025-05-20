@@ -15,13 +15,22 @@ Content-Type: application/json
 {
   "name": "dolly",
   "surname": "HERRERA GARCIA DA ROSA",
-  "identity_number": "45257189",
+  "identityNumber": "45257189",
   "password": "dolopiola123",
   "role": "USER"
 }
 
 ###DELETE
 DELETE http://localhost:8080/api/users/2
+
+###LOGIN
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "identityNumber": "45257189",
+  "password": "12345678"
+}
 
 
 ### PLATES
