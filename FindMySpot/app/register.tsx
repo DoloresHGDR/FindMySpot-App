@@ -1,7 +1,9 @@
-import { Text, View, StyleSheet, TextInput, Alert, TouchableOpacity, Animated } from "react-native";
+import { Text, View, StyleSheet, Alert, Animated } from "react-native";
 import React, {useState} from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Input from '@/components/Input';
+import RegisterButtons from '@/components/registerButtons';
 import axios, { AxiosError } from 'axios';
 
 const steps = ['Datos', 'Contraseña']
@@ -115,78 +117,63 @@ function Register() {
                 {step === 0 && (
                   <View style={styles.containerForm}>
                     <Text style={styles.label}>Nombre</Text>
-                  <View style={styles.dniContainer}>
-                    <TextInput
+                    <Input
                       placeholder="Ingrese su nombre"
-                      style={styles.dniInput}
+                      value={values.name}
                       onChangeText={handleChange('name')}
                       onBlur={handleBlur('name')}
-                      value={values.name}
                     />
-                  </View>
-                  {touched.name && errors.name && (
-                    <Text style={styles.error}>{errors.name}</Text>
-                  )}
+                    {touched.name && errors.name && (
+                      <Text style={styles.error}>{errors.name}</Text>
+                    )}
 
                   <Text style={styles.label}>Apellido</Text>
-                  <View style={styles.dniContainer}>
-                    <TextInput
+                    <Input
                       placeholder="Ingrese su apellido"
-                      style={styles.dniInput}
+                      value={values.surname}
                       onChangeText={handleChange('surname')}
                       onBlur={handleBlur('surname')}
-                      value={values.surname}
                     />
-                  </View>
-                  {touched.surname && errors.surname && (
-                    <Text style={styles.error}>{errors.surname}</Text>
-                  )}
+                    {touched.surname && errors.surname && (
+                      <Text style={styles.error}>{errors.surname}</Text>
+                    )}
 
                   <Text style={styles.label}>DNI</Text>
-                  <View style={styles.dniContainer}>
-                    <TextInput
+                    <Input
                       placeholder="Ingrese su DNI"
-                      style={styles.dniInput}
+                      value={values.identity_number}          
                       onChangeText={handleChange('identity_number')}
                       onBlur={handleBlur('identity_number')}
-                      value={values.identity_number}
                       keyboardType="numeric"
                     />
-                  </View>
-                  {touched.identity_number && errors.identity_number && (
-                    <Text style={styles.error}>{errors.identity_number}</Text>
-                  )}
+                    {touched.identity_number && errors.identity_number && (
+                      <Text style={styles.error}>{errors.identity_number}</Text>
+                    )}
                   </View>
                 )}
 
                 {step === 1 && (
                   <View style={styles.containerForm}>
                     <Text style={styles.label}>Contraseña</Text>
-                    <View style={styles.passwordContainer}>
-                      <TextInput
-                        placeholder="Ingrese su contraseña"
-                        style={styles.passwordInput}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                        secureTextEntry={true}
-                      />
-                    </View>
+                    <Input
+                      placeholder="Ingrese su contraseña"
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      secureTextEntry={true}
+                    />
                     {touched.password && errors.password && (
                       <Text style={styles.error}>{errors.password}</Text>
                     )}
 
                     <Text style={styles.label}>Confirmar contraseña</Text>
-                    <View style={styles.passwordContainer}>
-                      <TextInput
-                        placeholder="Ingrese nuevamente su contraseña"
-                        style={styles.passwordInput}
-                        onChangeText={handleChange('confirmPassword')}
-                        onBlur={handleBlur('confirmPassword')}
-                        value={values.confirmPassword}
-                        secureTextEntry={true}
-                      />
-                    </View>
+                    <Input
+                      placeholder="Ingrese nuevamente su contraseña"
+                      value={values.confirmPassword}
+                      onChangeText={handleChange('confirmPassword')}
+                      onBlur={handleBlur('confirmPassword')}
+                      secureTextEntry={true}
+                    />
                     {touched.confirmPassword && errors.confirmPassword && (
                       <Text style={styles.error}>{errors.confirmPassword}</Text>
                     )}
@@ -194,23 +181,19 @@ function Register() {
                 )}
                 </View>
 
-                <View style={styles.buttons}>
-                  {step > 0 && (
-                    <TouchableOpacity style={styles.loginBtn} onPress={() => {setStep(step - 1); reverseLine();}}>
-                      <Text style={styles.loginText}>Atras</Text>
-                    </TouchableOpacity>
-                  )}
-                  {step < steps.length - 1 ? (
-                    <TouchableOpacity style={[styles.loginBtn, {marginLeft: 170}]} onPress={() => {setStep(step + 1); animateLine()}}>
-                      <Text style={styles.loginText}>Siguiente</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity style={styles.loginBtn} onPress={() => handleSubmit()}>
-                      <Text style={styles.loginText}>Registrarse</Text>
-                    </TouchableOpacity>
-                  )}
-
-                </View>
+                <RegisterButtons
+                  step={step}
+                  maxSteps={steps.length}
+                  onNext={() => {
+                    setStep(step + 1);
+                    animateLine();
+                  }}
+                  onBack={() => {
+                    setStep(step - 1);
+                    reverseLine();
+                  }}
+                  onSubmit={() => handleSubmit()}
+                />
             </View>
       )}
     </Formik>
@@ -237,52 +220,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 3
-  },
-  dniContainer: {
-    borderWidth: 1.5,
-    borderColor: '#ecedec',
-    borderRadius: 10,
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 10,
-  },
-  dniInput: {
-    flex: 1,
-    height: '100%',
-    paddingLeft: 0,
-  },
-  passwordContainer: {
-    borderWidth: 1.5,
-    borderColor: '#ecedec',
-    borderRadius: 10,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 10,
-    paddingLeft: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    height: '100%',
-    paddingLeft: 0,
-    borderWidth: 0,
-    borderBottomWidth: 0,
-  },
-  loginBtn: {
-    marginTop: 20,
-    backgroundColor: '#151717',
-    borderRadius: 10,
-    height: 50,
-    width: "40%",
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loginText: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: 'white',
   },
   error: {
     color: 'red',
@@ -313,15 +250,6 @@ const styles = StyleSheet.create({
     width: 70,
     textAlign: 'center'
   },
-  buttons: {
-    bottom: 20,
-    left: 0,
-    right:0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 10,
-    gap: 15
-  },
   stepLine: {
     height: 2,
     width: 0,
@@ -345,12 +273,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     position: 'relative',
   },
-
   stepLineBackground: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#ccc',
   },
-
   stepLineForeground: {
     height: 2,
     backgroundColor: '#000',

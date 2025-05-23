@@ -4,7 +4,7 @@ import { KeyboardTypeOptions } from 'react-native';
 
 
 interface InputProps {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   value: string;
   onChangeText: (text: string) => void;
   onBlur?: (e?: any) => void;
@@ -30,7 +30,9 @@ export default function Input({
 }: InputProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>{icon}</View>
+      {icon ? (
+        <View style={styles.iconContainer}>{icon}</View>
+      ): null}
       <TextInput
         style={styles.input}
         placeholder={placeholder}
@@ -40,11 +42,11 @@ export default function Input({
         onBlur={onBlur}
         keyboardType= {keyboardType}
       />
-      {rightIcon && (
+      {rightIcon ? (
         <TouchableOpacity onPress={onPress} style={styles.eyeIcon}>
           {rightIcon}
         </TouchableOpacity>
-      )}
+      ): null}
     </View>
     
   );
