@@ -12,7 +12,7 @@ import axios, { AxiosError } from 'axios';
 
 
 const LoginSchema = Yup.object().shape({
-    indentityNumber: Yup.string()
+    identityNumber: Yup.string()
         .required('El DNI es necesario')
         .matches(/^\d+$/, 'Solo se permiten numeros'),
 
@@ -29,7 +29,7 @@ export default function Index() {
   const handleLogin= async (values) => {
       try {
         console.log(values)
-        const response = await axios.post('http://localhost:8080/api/users/login', {
+        const response = await axios.post('http://192.168.18.2:8080/api/users/login', {
           identityNumber: values.identityNumber,
           password: values.password,
         });
@@ -38,7 +38,7 @@ export default function Index() {
         const error = err as AxiosError;
   
         if (error.response) {
-          console.log('Error', error.response.data || "Hubo un error al registrar al usuario")
+          console.log('Error', error.response.data as string)
           Alert.alert('Error', error.response.data as string || "Hubo un error al registrar al usuario")
         } else {
           Alert.alert('Error', "No se pudo conectar con el servidor.")
@@ -49,7 +49,7 @@ export default function Index() {
 
   return (
     <Formik
-          initialValues={{ indentityNumber: '', password: '' }}
+          initialValues={{ identityNumber: '', password: '' }}
           validationSchema={LoginSchema}
           onSubmit={(values) => {
             handleLogin(values);
@@ -61,13 +61,13 @@ export default function Index() {
               <Input
                 icon={<DniIcon />}
                 placeholder="Ingrese su DNI"
-                value={values.indentityNumber}          
-                onChangeText={handleChange('indentityNumber')}
-                onBlur={handleBlur('indentityNumber')}
+                value={values.identityNumber}          
+                onChangeText={handleChange('identityNumber')}
+                onBlur={handleBlur('identityNumber')}
                 keyboardType="numeric"
               />
-              {touched.indentityNumber && errors.indentityNumber && (
-                <Text style={styles.error}>{errors.indentityNumber}</Text>
+              {touched.identityNumber && errors.identityNumber && (
+                <Text style={styles.error}>{errors.identityNumber}</Text>
               )}
               <Text style={styles.label}>Contraseña</Text>
               <Input
