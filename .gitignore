@@ -53,3 +53,4 @@ backend/gradlew
 backend/gradlew.bat
 backend/settings.gradle
 backend/build.gradle
+backend/docker/db

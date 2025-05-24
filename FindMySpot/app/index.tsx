@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,10 +7,12 @@ import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
+import axios, { AxiosError } from 'axios';
+
 
 
 const LoginSchema = Yup.object().shape({
-    dni: Yup.string()
+    indentityNumber: Yup.string()
         .required('El DNI es necesario')
         .matches(/^\d+$/, 'Solo se permiten numeros'),
 
@@ -24,12 +26,33 @@ export default function Index() {
     const [isChecked, setChecked] = useState(false);
     const [secureText, setSecureText] = useState(true);
 
+  const handleLogin= async (values) => {
+      try {
+        console.log(values)
+        const response = await axios.post('http://localhost:8080/api/users/login', {
+          identityNumber: values.identityNumber,
+          password: values.password,
+        });
+        console.log(response)
+      } catch (err) {
+        const error = err as AxiosError;
+  
+        if (error.response) {
+          console.log('Error', error.response.data || "Hubo un error al registrar al usuario")
+          Alert.alert('Error', error.response.data as string || "Hubo un error al registrar al usuario")
+        } else {
+          Alert.alert('Error', "No se pudo conectar con el servidor.")
+        }
+          
+      }
+    }
+
   return (
     <Formik
-          initialValues={{ dni: '', password: '' }}
+          initialValues={{ indentityNumber: '', password: '' }}
           validationSchema={LoginSchema}
           onSubmit={(values) => {
-            console.log('Enviado', values);
+            handleLogin(values);
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -38,13 +61,13 @@ export default function Index() {
               <Input
                 icon={<DniIcon />}
                 placeholder="Ingrese su DNI"
-                value={values.dni}          
-                onChangeText={handleChange('dni')}
-                onBlur={handleBlur('dni')}
+                value={values.indentityNumber}          
+                onChangeText={handleChange('indentityNumber')}
+                onBlur={handleBlur('indentityNumber')}
                 keyboardType="numeric"
               />
-              {touched.dni && errors.dni && (
-                <Text style={styles.error}>{errors.dni}</Text>
+              {touched.indentityNumber && errors.indentityNumber && (
+                <Text style={styles.error}>{errors.indentityNumber}</Text>
               )}
               <Text style={styles.label}>Contraseña</Text>
               <Input
