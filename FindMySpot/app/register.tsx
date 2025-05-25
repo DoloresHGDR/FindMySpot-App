@@ -1,10 +1,11 @@
 import { Text, View, StyleSheet, Alert, Animated } from "react-native";
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
 import RegisterButtons from '@/components/registerButtons';
 import axios, { AxiosError } from 'axios';
+import { useUser } from "@/context/UserContext";
 
 const steps = ['Datos', 'Contraseña']
 
@@ -15,7 +16,7 @@ const RegisterSchema = Yup.object().shape({
   surname: Yup.string()
     .required('El apellido es necesario')
     .matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, 'Solo se permiten letras y espacios'),
-  identity_number: Yup.string()
+  identityNumber: Yup.string()
     .required('El DNI es necesario')
     .matches(/^\d{8}$/, 'Solo se permiten números')
     .min(8, 'Minimo 8 caracteres'),
@@ -31,6 +32,8 @@ function Register() {
 
   const [step, setStep] = useState(0);
   const [lineAnim] = useState(new Animated.Value(0));
+  const { setUser } = useUser();
+
 
   const animateLine = () => {
     Animated.timing(lineAnim, {
@@ -50,12 +53,23 @@ function Register() {
 
   const handleRegister = async (values) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/users/register', {
+      const response = await axios.post('http://192.168.18.2:8080/api/users/register', {
         name: values.name,
         surname: values.surname,
-        identity_number: values.identity_number,
+        identityNumber: values.identityNumber,
         password: values.password,
+        confirmPassword: values.confirmPassword,
         role: "USER"
+      });
+
+      const { id, name, surname, identityNumber, role} = response.data
+      setUser ({
+        logged:true,
+        id: id,
+        name: name,
+        surname: surname,
+        identityNumber: identityNumber,
+        role: role,
       });
 
       if (response.status === 201) {
@@ -69,7 +83,8 @@ function Register() {
         console.log('Error', error.response.data || "Hubo un error al registrar al usuario")
         Alert.alert('Error', error.response.data as string || "Hubo un error al registrar al usuario")
       } else {
-        Alert.alert('Error', "No se pudo conectar con el servidor.")
+        console.log('Error general al hacer la solicitud:', error.message);
+        Alert.alert('Error', `Error al hacer la solicitud: ${error.message}`);
       }
         
     }
@@ -77,7 +92,7 @@ function Register() {
 
   return (
     <Formik
-      initialValues={{ name: '', surname: '', identity_number: '', password: '', confirmPassword: '' }}
+      initialValues={{ name: '', surname: '', identityNumber: '', password: '', confirmPassword: '' }}
       validationSchema={RegisterSchema}
       onSubmit={(values) => {
         handleRegister(values);
@@ -141,13 +156,13 @@ function Register() {
                   <Text style={styles.label}>DNI</Text>
                     <Input
                       placeholder="Ingrese su DNI"
-                      value={values.identity_number}          
-                      onChangeText={handleChange('identity_number')}
-                      onBlur={handleBlur('identity_number')}
+                      value={values.identityNumber}          
+                      onChangeText={handleChange('identityNumber')}
+                      onBlur={handleBlur('identityNumber')}
                       keyboardType="numeric"
                     />
-                    {touched.identity_number && errors.identity_number && (
-                      <Text style={styles.error}>{errors.identity_number}</Text>
+                    {touched.identityNumber && errors.identityNumber && (
+                      <Text style={styles.error}>{errors.identityNumber}</Text>
                     )}
                   </View>
                 )}
@@ -192,7 +207,7 @@ function Register() {
                     setStep(step - 1);
                     reverseLine();
                   }}
-                  onSubmit={() => handleSubmit()}
+                  onSubmit={handleSubmit}
                 />
             </View>
       )}

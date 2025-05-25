@@ -1,9 +1,12 @@
-import React, {createContext, useState, ReactNode} from 'react';
+import React, {createContext, useState, ReactNode, useContext} from 'react';
 
 type User = {
     logged: boolean;
-    role: string | null;
     id: string | null;
+    name: string | null;
+    surname: string | null;
+    identityNumber: string | null;
+    role: string | null;
 };
 
 type UserContextType = {
@@ -16,8 +19,11 @@ const UserContext = createContext<UserContextType | null>(null);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User>({
         logged: false,
-        role: null,
         id: null,
+        name: null,
+        surname: null,
+        identityNumber: null,
+        role: null,
     });
 
     return (
@@ -25,6 +31,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             { children }
         </UserContext.Provider>
     );
+};
+
+export const useUser = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
 };
 
 export default UserContext;

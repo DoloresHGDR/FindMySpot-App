@@ -1,14 +1,14 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
+import { useUser } from "@/context/UserContext";
 import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
 import axios, { AxiosError } from 'axios';
-
 
 
 const LoginSchema = Yup.object().shape({
@@ -25,6 +25,7 @@ export default function Index() {
     const router = useRouter();
     const [isChecked, setChecked] = useState(false);
     const [secureText, setSecureText] = useState(true);
+    const { setUser } = useUser();
 
   const handleLogin= async (values) => {
       try {
@@ -33,7 +34,21 @@ export default function Index() {
           identityNumber: values.identityNumber,
           password: values.password,
         });
-        console.log(response)
+
+        const { id, name, surname, identityNumber, role} = response.data
+        setUser ({
+                logged:true,
+                id: id,
+                name: name,
+                surname: surname,
+                identityNumber: identityNumber,
+                role: role,
+            });
+
+        if (response.status === 200) {
+          router.push("/screens/home")
+        }
+
       } catch (err) {
         const error = err as AxiosError;
   
