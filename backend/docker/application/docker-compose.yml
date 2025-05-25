@@ -1,7 +1,7 @@
 services:
   backend-parking:
     container_name: backend-parking
-    image: backend:v1.3.6
+    image: backend:v1.3.7
     build:
       context: ../..
       dockerfile: Dockerfile

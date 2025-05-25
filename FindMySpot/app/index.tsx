@@ -30,7 +30,7 @@ export default function Index() {
   const handleLogin= async (values) => {
       try {
         console.log(values)
-        const response = await axios.post('http://192.168.18.2:8080/api/users/login', {
+        const response = await axios.post('http://192.168.0.103:8080/api/users/login', {
           identityNumber: values.identityNumber,
           password: values.password,
         });
