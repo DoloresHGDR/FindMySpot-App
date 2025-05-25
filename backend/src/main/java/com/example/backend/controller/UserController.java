@@ -35,12 +35,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
+        public ResponseEntity<LoginResponseDTO> registerUser(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
         try {
-            userService.saveUser(registerUserDTO);
-            return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
+            LoginResponseDTO response = userService.saveUser(registerUserDTO);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error registering user", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.badRequest().build();
         }
     }
 

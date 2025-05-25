@@ -16,6 +16,7 @@ public class Users {
     private Long id;
     private String name;
     private String surname;
+    @Column(unique = true, nullable = false)
     private String identityNumber;
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -35,13 +35,14 @@ public class UserService {
             throw new RuntimeException("Wrong password");
         }
         return new LoginResponseDTO(
+                user.getId(),
                 user.getName(),
                 user.getSurname(),
                 user.getIdentityNumber(),
                 user.getRole()
         );
     }
-    public void saveUser(RegisterUserDTO registerUserDTO) {
+    public LoginResponseDTO saveUser(RegisterUserDTO registerUserDTO) {
         Users user = new Users();
         user.setName(registerUserDTO.getName());
         user.setSurname(registerUserDTO.getSurname());
@@ -49,6 +50,15 @@ public class UserService {
         user.setPassword(registerUserDTO.getPassword());
         user.setRole(registerUserDTO.getRole());
         userRepository.save(user);
+
+        return new LoginResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getIdentityNumber(),
+                user.getRole()
+        );
+
     }
 
     public void deleteUser(Long id) {
