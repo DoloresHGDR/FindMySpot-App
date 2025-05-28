@@ -33,7 +33,7 @@ public class UserController {
         Optional<Users> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    /*
     @PostMapping("/register")
         public ResponseEntity<LoginResponseDTO> registerUser(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
         try {
@@ -53,6 +53,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

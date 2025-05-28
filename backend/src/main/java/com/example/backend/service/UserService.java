@@ -5,6 +5,7 @@ import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UsersRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UsersRepository userRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public List<Users> getAllUsers() {
@@ -31,7 +34,7 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
         Users user = optionalUsers.get();
-        if (!user.getPassword().equals(loginRequestDTO.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
             throw new RuntimeException("Wrong password");
         }
         return new LoginResponseDTO(
@@ -43,11 +46,17 @@ public class UserService {
         );
     }
     public LoginResponseDTO saveUser(RegisterUserDTO registerUserDTO) {
+        Optional<Users> existingUser = userRepository.findByIdentityNumber(registerUserDTO.getIdentityNumber());
+
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
         Users user = new Users();
         user.setName(registerUserDTO.getName());
         user.setSurname(registerUserDTO.getSurname());
         user.setIdentityNumber(registerUserDTO.getIdentityNumber());
-        user.setPassword(registerUserDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
         user.setRole(registerUserDTO.getRole());
         userRepository.save(user);
 
