@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
@@ -8,7 +8,9 @@ import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
-import axios, { AxiosError } from 'axios';
+import { saveToken, getToken } from '@/services/storage';
+import apiClient from '@/api/apiClient';
+import { isTokenExpired } from "@/utils/jwt";
 
 
 const LoginSchema = Yup.object().shape({
@@ -26,16 +28,46 @@ export default function Index() {
     const [isChecked, setChecked] = useState(false);
     const [secureText, setSecureText] = useState(true);
     const { setUser } = useUser();
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+  const checkLoginStatus = async () => {
+    try {
+      const token = await getToken();
+      if (token && !isTokenExpired(token)) {
+        router.replace('/screens/home');
+      } else {
+        setCheckingAuth(false);
+      }
+    } catch (error) {
+      setCheckingAuth(false);
+    }
+  };
+
+  checkLoginStatus();
+}, [router]);
+  
+  if (checkingAuth) {
+    return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Cargando...</Text>
+    </View>
+  );
+  };
 
   const handleLogin= async (values) => {
       try {
         console.log(values)
-        const response = await axios.post('http://192.168.0.103:8080/api/users/login', {
+        const response = await apiClient.post('/api/auth/login', {
           identityNumber: values.identityNumber,
           password: values.password,
         });
 
-        const { id, name, surname, identityNumber, role} = response.data
+        const { token, id, name, surname, identityNumber, role} = response.data
+        if (isChecked) {
+          await saveToken(token);
+        }
+        
         setUser ({
                 logged:true,
                 id: id,
@@ -46,7 +78,7 @@ export default function Index() {
             });
 
         if (response.status === 200) {
-          router.push("/screens/home")
+          router.replace("/screens/home")
         }
 
       } catch (err) {

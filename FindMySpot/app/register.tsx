@@ -53,7 +53,7 @@ function Register() {
 
   const handleRegister = async (values) => {
     try {
-      const response = await axios.post('http://192.168.18.2:8080/api/users/register', {
+      const response = await axios.post('http://192.168.18.2:8080/api/auth/register', {
         name: values.name,
         surname: values.surname,
         identityNumber: values.identityNumber,

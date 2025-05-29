@@ -9,7 +9,7 @@ GET http://localhost:8080/api/users/2
 Accept: application/json
 
 ###POST
-POST http://localhost:8080/api/users/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
@@ -19,12 +19,23 @@ Content-Type: application/json
   "password": "dolopiola123",
   "role": "USER"
 }
+### POST2
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+"name": "Pachi",
+"surname": "Sepulveda",
+"identityNumber": "44462927",
+"password": "12345678",
+"role": "USER"
+}
 
 ###DELETE
 DELETE http://localhost:8080/api/users/2
 
 ###LOGIN
-POST http://localhost:8080/api/users/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
