@@ -1,6 +1,6 @@
 package com.example.backend.controller;
-import com.example.backend.dtos.JwtResponse;
 import com.example.backend.dtos.LoginRequestDTO;
+import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.security.JwtUtils;
 import com.example.backend.security.UserDetailsImpl;
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public JwtResponse authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDTO.getIdentityNumber(),
@@ -44,7 +44,16 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwt = jwtUtils.generateToken(userDetails.getUsername());
-        return new JwtResponse(jwt);
+        LoginResponseDTO response = new LoginResponseDTO(
+                jwt,
+                userDetails.getId(),
+                userDetails.getName(),
+                userDetails.getSurname(),
+                userDetails.getIdentityNumber(),
+                userDetails.getRole()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -54,7 +63,16 @@ public class AuthController {
 
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(registerUserDTO.getIdentityNumber());
             String jwt = jwtUtils.generateToken(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt));
+            LoginResponseDTO response = new LoginResponseDTO(
+                    jwt,
+                    userDetails.getId(),
+                    userDetails.getName(),
+                    userDetails.getSurname(),
+                    userDetails.getIdentityNumber(),
+                    userDetails.getRole()
+            );
+
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)

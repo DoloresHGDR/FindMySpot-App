@@ -28,24 +28,8 @@ public class UserService {
     public Optional<Users> getUserById(Long id) {
         return userRepository.findById(id);
     }
-    public LoginResponseDTO loginUser(LoginRequestDTO loginRequestDTO) {
-        Optional<Users> optionalUsers = userRepository.findByIdentityNumber(loginRequestDTO.getIdentityNumber());
-        if (optionalUsers.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-        Users user = optionalUsers.get();
-        if (!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Wrong password");
-        }
-        return new LoginResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getSurname(),
-                user.getIdentityNumber(),
-                user.getRole()
-        );
-    }
-    public LoginResponseDTO saveUser(RegisterUserDTO registerUserDTO) {
+
+    public void saveUser(RegisterUserDTO registerUserDTO) {
         Optional<Users> existingUser = userRepository.findByIdentityNumber(registerUserDTO.getIdentityNumber());
 
         if (existingUser.isPresent()) {
@@ -59,15 +43,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
         user.setRole(registerUserDTO.getRole());
         userRepository.save(user);
-
-        return new LoginResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getSurname(),
-                user.getIdentityNumber(),
-                user.getRole()
-        );
-
     }
 
     public void deleteUser(Long id) {
