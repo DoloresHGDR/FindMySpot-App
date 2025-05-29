@@ -1,11 +1,13 @@
 import { Text, View, StyleSheet, Alert, Animated } from "react-native";
-import React, {useState, useContext} from "react";
+import React, {useState} from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
 import RegisterButtons from '@/components/registerButtons';
 import axios, { AxiosError } from 'axios';
 import { useUser } from "@/context/UserContext";
+import { useRouter } from 'expo-router';
+import { saveToken } from '@/services/storage';
 
 const steps = ['Datos', 'Contraseña']
 
@@ -29,7 +31,7 @@ const RegisterSchema = Yup.object().shape({
 });
 
 function Register() {
-
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [lineAnim] = useState(new Animated.Value(0));
   const { setUser } = useUser();
@@ -51,7 +53,7 @@ function Register() {
   };
 
 
-  const handleRegister = async (values) => {
+  const handleRegister = async (values: any) => {
     try {
       const response = await axios.post('http://192.168.18.2:8080/api/auth/register', {
         name: values.name,
@@ -62,7 +64,8 @@ function Register() {
         role: "USER"
       });
 
-      const { id, name, surname, identityNumber, role} = response.data
+      const { token, id, name, surname, identityNumber, role} = response.data
+      await saveToken(token);
       setUser ({
         logged:true,
         id: id,
@@ -72,10 +75,9 @@ function Register() {
         role: role,
       });
 
-      if (response.status === 201) {
-        console.log('Registro exitoso')
-        Alert.alert('Registro exitoso')
-      }
+      if (response.status === 200) {
+          router.replace("/screens/home")
+        }
     } catch (err) {
       const error = err as AxiosError;
 

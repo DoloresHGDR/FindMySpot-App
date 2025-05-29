@@ -10,6 +10,7 @@ import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
 import { saveToken } from '@/services/storage';
 import apiClient from '@/api/apiClient';
+import { AxiosError } from 'axios';
 
 const LoginSchema = Yup.object().shape({
     identityNumber: Yup.string()
