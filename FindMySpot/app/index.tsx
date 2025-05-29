@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
@@ -8,10 +8,8 @@ import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
-import { saveToken, getToken } from '@/services/storage';
+import { saveToken } from '@/services/storage';
 import apiClient from '@/api/apiClient';
-import { isTokenExpired } from "@/utils/jwt";
-
 
 const LoginSchema = Yup.object().shape({
     identityNumber: Yup.string()
@@ -28,36 +26,9 @@ export default function Index() {
     const [isChecked, setChecked] = useState(false);
     const [secureText, setSecureText] = useState(true);
     const { setUser } = useUser();
-    const [checkingAuth, setCheckingAuth] = useState(true);
 
-  useEffect(() => {
-  const checkLoginStatus = async () => {
-    try {
-      const token = await getToken();
-      if (token && !isTokenExpired(token)) {
-        router.replace('/screens/home');
-      } else {
-        setCheckingAuth(false);
-      }
-    } catch (error) {
-      setCheckingAuth(false);
-    }
-  };
-
-  checkLoginStatus();
-}, [router]);
-  
-  if (checkingAuth) {
-    return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Cargando...</Text>
-    </View>
-  );
-  };
-
-  const handleLogin= async (values) => {
+  const handleLogin= async (values: any) => {
       try {
-        console.log(values)
         const response = await apiClient.post('/api/auth/login', {
           identityNumber: values.identityNumber,
           password: values.password,

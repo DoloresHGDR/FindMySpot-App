@@ -1,14 +1,9 @@
 package com.example.backend.controller;
-import com.example.backend.dtos.LoginRequestDTO;
-import com.example.backend.dtos.LoginResponseDTO;
-import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +23,15 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
         Optional<Users> user = userService.getUserById(id);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/identity/{identityNumber}")
+    public ResponseEntity<Users> getUserByIdentityNumber(@PathVariable String identityNumber) {
+        Optional<Users> user = userService.getUserByIdentityNumber(identityNumber);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
     /*

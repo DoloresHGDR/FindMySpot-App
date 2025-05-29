@@ -1,6 +1,4 @@
 package com.example.backend.service;
-import com.example.backend.dtos.LoginRequestDTO;
-import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterUserDTO;
 import com.example.backend.models.Users;
 import com.example.backend.repository.UsersRepository;
@@ -25,8 +23,13 @@ public class UserService {
     public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
+
     public Optional<Users> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public Optional<Users> getUserByIdentityNumber(String identityNumber) {
+        return userRepository.findByIdentityNumber(identityNumber);
     }
 
     public void saveUser(RegisterUserDTO registerUserDTO) {
