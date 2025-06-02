@@ -1,4 +1,5 @@
 package com.example.backend.controller;
+import com.example.backend.dtos.ParkingMapDTO;
 import com.example.backend.models.Parkings;
 import com.example.backend.service.ParkingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("api/parkings")
+@RequestMapping("/api/parkings")
 public class ParkingsController {
     private final ParkingsService parkingsService;
 
@@ -29,9 +30,24 @@ public class ParkingsController {
         return parkings.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Parkings save(@RequestBody Parkings parkings) {
-        return parkingsService.save(parkings);
+    @GetMapping("/history/user/{userId}")
+    public List<Parkings> getParkingHistoryByUserId(@PathVariable Long userId){
+        return parkingsService.getParkingHistoryByUserId(userId);
+    }
+
+    @GetMapping("/about-to-finish/map")
+    public List<ParkingMapDTO> getParkingsAboutToFinish(){
+        return parkingsService.getParkingsAboutToFinish();
+    }
+
+    @PostMapping("/create")
+    public Parkings create(@RequestBody Parkings parkings) {
+        return parkingsService.createParking(parkings);
+    }
+
+    @PostMapping("/finish/{id}")
+    public Parkings finish(@PathVariable Long id){
+        return parkingsService.finishParking(id);
     }
 
     @DeleteMapping("/{id}")

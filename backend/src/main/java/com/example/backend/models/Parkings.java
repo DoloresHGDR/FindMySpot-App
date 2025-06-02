@@ -1,77 +1,66 @@
 package com.example.backend.models;
+import com.example.backend.models.enums.ParkingStatus;
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
 @Entity
 public class Parkings {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
-    @ManyToOne
-    @JoinColumn(name = "plate_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plate_id", nullable = false)
     private Plates plate;
-    private LocalDate date;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String address;
-    private LocalTime duration;
-    private String status;
+    private int durationMinutes;
+    @Enumerated(EnumType.STRING)
+    private ParkingStatus status;
+    private BigDecimal price;
 
     public Parkings() {}
 
-    public Parkings(Users user, Plates plate, LocalDate date, String address, LocalTime duration, String status) {
+    public Parkings(Users user, Plates plate, LocalDateTime startTime, LocalDateTime endTime, String address, int durationMinutes, ParkingStatus status, BigDecimal price) {
         this.user = user;
         this.plate = plate;
-        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.address = address;
-        this.duration = duration;
+        this.durationMinutes = durationMinutes;
         this.status = status;
+        this.price = price;
     }
 
-    public Long getId() {
-        return id;
+    public boolean isAboutToFinish() {
+        LocalDateTime endTime = startTime.plusMinutes(durationMinutes);
+        return LocalDateTime.now().isAfter(endTime.minusMinutes(5)) &&
+                LocalDateTime.now().isBefore(endTime);
     }
-    public void setId(Long id) {
-        this.id = id;
+
+    public boolean isFinished() {
+        return LocalDateTime.now().isAfter(startTime.plusMinutes(durationMinutes));
     }
-    public LocalDate getDate() {
-        return date;
+
+    public void updateEndTime() {
+        this.endTime = this.startTime.plusMinutes(this.durationMinutes);
     }
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-    public String getAddress() {
-        return address;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public LocalTime getDuration() {
-        return duration;
-    }
-    public void setDuration(LocalTime duration) {
-        this.duration = duration;
-    }
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    public Users getUser() {
-        return user;
-    }
-    public void setUser(Users user) {
-        this.user = user;
-    }
-    public Plates getPlate() {
-        return plate;
-    }
-    public void setPlate(Plates plate) {
-        this.plate = plate;
+
+    public void calculatePrice() {
+        int timeBlocks = (int) Math.ceil(durationMinutes / 10.0);
+        this.price = BigDecimal.valueOf(timeBlocks * 100L);
+        updateEndTime();
     }
 
 }
