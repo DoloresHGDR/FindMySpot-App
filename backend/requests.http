@@ -49,12 +49,13 @@ Content-Type: application/json
 ### POST
 POST http://localhost:8080/api/plates
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODgyNzQ3NywiZXhwIjoxNzQ4ODI4Mzc3fQ.GV73-V2Dv2V9_m3mbF38TOx7BnpNcUeun7IGcGK3mIY
 
 {
     "number": "AH 192 WL",
     "parked": false,
     "user": {
-      "id": 1
+      "id": 14
     }
 }
 
@@ -70,21 +71,27 @@ GET http://localhost:8080/api/parkings/1
 Accept: application/json
 
 ### POST
-POST http://localhost:8080/api/parkings
+POST http://localhost:8080/api/parkings/create
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODg3NDkwMCwiZXhwIjoxNzQ4ODc1ODAwfQ.OglXBe8jSazVpSqV5ilqRyHSAgi4n4GoRYX6fCNyPA4
 
 {
   "user": {
-    "id": 1
+    "id": 14
   },
   "plate": {
-    "id": 1
+    "id": 4
   },
-  "date": "2025-05-04",
-  "address": "Tupi123",
-  "duration": "00:30:00",
-  "status": "parked"
+  "address": "Tupu 123",
+  "durationMinutes": 10,
+  "status": "ACTIVE",
+  "price": 0
 }
+
+### GET Por Finalizar
+GET http://localhost:8080/api/parkings/about-to-finish/map
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODgyNzQ3NywiZXhwIjoxNzQ4ODI4Mzc3fQ.GV73-V2Dv2V9_m3mbF38TOx7BnpNcUeun7IGcGK3mIY
 
 ### DELETE
 DELETE http://localhost:8080/api/parkings/1
