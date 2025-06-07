@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useUser } from '@/context/UserContext';
 import HomeButtons from '@/components/homeButtons'
-import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
-
+import { EyeIconClosed, EyeIconOpen} from '@/components/icons';
+import { useRouter } from 'expo-router';
 
 
 export default function HomeScreen() {
@@ -17,7 +17,6 @@ export default function HomeScreen() {
           <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text>   
         </View>
 
-        <HomeLines/>
     </View>
 
       <View style={styles.body}>
@@ -40,6 +39,7 @@ export default function HomeScreen() {
         <View style={styles.buttonGrid}>
           <HomeButtons 
                     tittle='New Park'
+                    onPress={() => useRouter().push('/screens/parking')}
                   />
                   <HomeButtons 
                     tittle='Mis Cars'

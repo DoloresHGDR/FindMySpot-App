@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface Props {
     tittle: string,
+    onPress?:() => void
 }
 
-export default function HomeButtons({ tittle }: Props) {
+export default function HomeButtons({ tittle, onPress }: Props) {
   return (
-    <TouchableOpacity style={[styles.actionButton]}>
+    <TouchableOpacity style={[styles.actionButton]} onPress={onPress}>
         <Text style={styles.buttonText}>{tittle}</Text>
     </TouchableOpacity>
   );
