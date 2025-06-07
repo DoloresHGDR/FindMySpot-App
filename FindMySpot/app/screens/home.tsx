@@ -1,71 +1,119 @@
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useUser } from '@/context/UserContext';
-import HomeButtons from '@/components/homeButtons';
+import HomeButtons from '@/components/homeButtons'
+import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
+
+
 
 export default function HomeScreen() {
     const { user } = useUser();
+    const [secureBalance, setSecureBalance] = useState(false)
 
-    return (
-    <View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.headerGrid}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text>   
+        </View>
+
+        <HomeLines/>
+    </View>
+
+      <View style={styles.body}>
+        <Text style={styles.label}>Saldo disponible</Text>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap:10}}>
+          <Text style={styles.balance}> 
+            $ {secureBalance ? "*****" : "10000"}
+          </Text>
+          <TouchableOpacity style={{justifyContent: 'center'}} onPress={() => setSecureBalance(!secureBalance)}> 
+            {secureBalance ? <EyeIconClosed/> : <EyeIconOpen/>}
+          </TouchableOpacity>
+        </View>
         
-    <Text style={styles.tittle}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text>
-    <Text style={[styles.tittle,{fontSize: 40, paddingLeft: 25}]}> 0,01 $</Text>
-    <Text style={[styles.tittle,{fontSize: 20}]}> ¿Que quieres hacer hoy? </Text>
-      
 
-      <View style={styles.buttonGrid}>
-        <HomeButtons 
-          tittle='New Park'
-          color= '#f1948a'
-        />
-        <HomeButtons 
-          tittle='Mis Cars'
-          color= '#c39bd3'
-        />
-        <HomeButtons 
-          tittle='Historial'
-          color= '#f7dc6f'
-        />
-        <HomeButtons 
-          tittle='Multas'
-          color= '#76d7c4'
-        />
+        <TouchableOpacity style={styles.questionButton}>
+          <Text style={styles.questionText}>?</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.label}>¿Qué quieres hacer hoy?</Text>
+        <View style={styles.buttonGrid}>
+          <HomeButtons 
+                    tittle='New Park'
+                  />
+                  <HomeButtons 
+                    tittle='Mis Cars'
+                  />
+                  <HomeButtons 
+                    tittle='Historial'
+                  />
+                  <HomeButtons 
+                    tittle='Multas'
+                  />
+        </View>
+
+        <Text style={styles.label}>Novedades</Text>
+        <ScrollView horizontal style={styles.carousel} showsHorizontalScrollIndicator={false}>
+          <View style={styles.carouselItem} />
+          <View style={styles.carouselItem} />
+          <View style={styles.carouselItem} />
+          <View style={styles.carouselItem} />
+          <View style={styles.carouselItem} />
+        </ScrollView>
+
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  tittle: {
-    justifyContent: 'space-between',
-    padding: 15,
-    fontSize: 25
-  },
+  headerGrid:{
+    flexDirection: 'row',
+    justifyContent: 'space-between'
 
+  },
+  container: { flex: 1 },
+  header: {
+    backgroundColor: '#000000',
+    height: 70,
+    width: "100%",
+    paddingTop: 30,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  headerText: { color: 'white', fontSize: 16 },
+  body: {
+    flex: 1,
+    backgroundColor: '#f2f2f2',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  label: { marginTop: 10, marginBottom: 5, fontSize: 14 },
+  balance: { fontSize: 30, fontWeight: 'bold' },
+  questionButton: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  questionText: { fontSize: 24 },
   buttonGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 20,
-    margin: 15
+    marginTop: 10,
   },
-  button: {
-    width: '47%',
-    aspectRatio: 1,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 12,
-    padding: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5, 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+  
+  carousel: {
+    marginTop: 10,
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingBottom: 50,
+  carouselItem: {
+    width: 100,
+    height: 80,
+    backgroundColor: '#ccc',
+    borderRadius: 10,
+    marginRight: 10,
   },
 });
