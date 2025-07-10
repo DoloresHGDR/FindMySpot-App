@@ -19,9 +19,11 @@ public class PlatesService {
     public List<Plates> findAll() {
         return platesRepository.findAll();
     }
+
     public Optional<Plates> findById(Long id) {
         return platesRepository.findById(id);
     }
+
     public Plates save(Plates plates) {
         return platesRepository.save(plates);
     }

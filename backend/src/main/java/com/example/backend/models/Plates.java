@@ -10,18 +10,19 @@ public class Plates {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String number;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public Plates() {
     }
 
-    public Plates(String number, Users user) {
+    public Plates(String number, Long userId) {
         this.number = number;
-        this.user = user;
+        this.userId = userId;
     };
 }
 
