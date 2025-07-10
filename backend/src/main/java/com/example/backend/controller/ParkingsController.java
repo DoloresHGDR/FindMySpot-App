@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 import com.example.backend.dtos.ParkingMapDTO;
+import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parkings;
 import com.example.backend.service.ParkingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ public class ParkingsController {
     }
 
     @PostMapping("/create")
-    public Parkings create(@RequestBody Parkings parkings) {
-        return parkingsService.createParking(parkings);
+    public Parkings create(@RequestBody ParkingRequestDTO ParkingRequestDTO) {
+        return parkingsService.createParking(ParkingRequestDTO);
     }
 
     @PostMapping("/finish/{id}")

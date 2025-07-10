@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface ParkingsRepository extends JpaRepository<Parkings, Long> {
-    List<Parkings> findByUser_Id (Long userId);
+    List<Parkings> findByUserId (Long userId);
 
-    List<Parkings> findByPlate_Id (Long plateId);
+    List<Parkings> findByPlateId (Long plateId);
 
     List<Parkings> findByStatus (ParkingStatus status);
 

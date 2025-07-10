@@ -15,13 +15,10 @@ public class Parkings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plate_id", nullable = false)
-    private Plates plate;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+    @Column(name = "plate_id", nullable = false)
+    private Long plateId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String address;
@@ -32,9 +29,9 @@ public class Parkings {
 
     public Parkings() {}
 
-    public Parkings(Users user, Plates plate, LocalDateTime startTime, LocalDateTime endTime, String address, int durationMinutes, ParkingStatus status, BigDecimal price) {
-        this.user = user;
-        this.plate = plate;
+    public Parkings(Long userId, Long plateId, LocalDateTime startTime, LocalDateTime endTime, String address, int durationMinutes, ParkingStatus status, BigDecimal price) {
+        this.userId = userId;
+        this.plateId = plateId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.address = address;

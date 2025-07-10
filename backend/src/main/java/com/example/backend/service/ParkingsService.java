@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parkings;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingsRepository;
@@ -7,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.example.backend.dtos.ParkingMapDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +34,7 @@ public class ParkingsService {
 
     // Busca una lista de parkings hechos por un usuario especifico, sirve para el historial.
     public List<Parkings> getParkingHistoryByUserId(Long userId){
-        return parkingsRepository.findByUser_Id(userId);
+        return parkingsRepository.findByUserId(userId);
     }
 
     // Busca Parkings que esten por finalizar
@@ -43,13 +45,18 @@ public class ParkingsService {
                 .collect(Collectors.toList());
     }
 
-    public Parkings createParking(Parkings parking){
-        if (parking.getDurationMinutes() < 10) {
-            throw new IllegalArgumentException("The duration minutes must be at least 10");
-        }
+    public Parkings createParking(ParkingRequestDTO ParkingRequestDTO){
+        Parkings parking = new Parkings(
+                ParkingRequestDTO.getUserId(),
+                ParkingRequestDTO.getPlateId(),
+                LocalDateTime.now(),
+                null,
+                ParkingRequestDTO.getAddress(),
+                ParkingRequestDTO.getDurationMinutes(),
+                ParkingStatus.ACTIVE,
+                BigDecimal.ZERO
+        );
 
-        parking.setStartTime(LocalDateTime.now());
-        parking.setStatus(ParkingStatus.ACTIVE);
         parking.calculatePrice();
         return parkingsRepository.save(parking);
     }
