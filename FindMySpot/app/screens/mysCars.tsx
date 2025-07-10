@@ -5,7 +5,7 @@ import Buttons from '@/components/buttons';
 import PatenteModal from '@/components/plateModal';
 import { useState } from 'react';
 
-export default function HomeScreen() {
+export default function myPlatesScreen() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const abrirModal = () => setModalVisible(true);
