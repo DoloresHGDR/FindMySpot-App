@@ -1,5 +1,11 @@
 import React, {createContext, useState, ReactNode, useContext} from 'react';
 
+type Plate = {
+    id: number;
+    number: string;
+    userId: number
+}
+
 type User = {
     logged: boolean;
     id: string | null;
@@ -7,6 +13,7 @@ type User = {
     surname: string | null;
     identityNumber: string | null;
     role: string | null;
+    plate: Plate[] | [];
 };
 
 type UserContextType = {
@@ -24,6 +31,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         surname: null,
         identityNumber: null,
         role: null,
+        plate: []
     });
 
     return (
