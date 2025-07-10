@@ -76,7 +76,7 @@ export default function Index() {
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <View style={styles.container}>
-              <Text style={styles.label}>DNI</Text>
+              <Text style={styles.label}>Ingrese su DNI</Text>
               <Input
                 icon={<DniIcon />}
                 placeholder="Ingrese su DNI"
@@ -88,7 +88,7 @@ export default function Index() {
               {touched.identityNumber && errors.identityNumber && (
                 <Text style={styles.error}>{errors.identityNumber}</Text>
               )}
-              <Text style={styles.label}>Contraseña</Text>
+              <Text style={styles.label}>Ingrese su Contraseña</Text>
               <Input
                 icon={<LockIcon />}
                 placeholder="Ingrese su contraseña"
@@ -104,16 +104,16 @@ export default function Index() {
                 )}
 
               <View style={styles.checkbox}>
-                <Checkbox value={isChecked} onValueChange={setChecked} color={isChecked ? '#000' : undefined} />
-                <Text style={{ marginLeft: 8 }}>Recuérdame</Text>
+                <Checkbox value={isChecked} onValueChange={setChecked} color={isChecked ? '#43985b' : undefined} />
+                <Text style={{ marginLeft: 8 , color: '#cecece'}}>Recuérdame</Text>
               </View>
 
               <LoginButton title="Login" onPress={handleSubmit} />
 
               <View style={styles.registerContainer}>
-              <Text>¿No tienes una cuenta?</Text>
+              <Text style={{ color: '#cecece'}} >¿No tienes una cuenta?</Text>
               <Text
-                  style={{ color: 'blue', fontWeight: 'bold' }}
+                  style={{ color: '#43985b', fontWeight: 'bold' }}
                   onPress={() => router.push('/register')}
                 >
                 Regístrate
@@ -128,7 +128,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#111111',
     padding: 30,
     borderRadius: 20,
     width: 330,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: '#43985b',
     marginBottom: 5
   },
   checkbox: {

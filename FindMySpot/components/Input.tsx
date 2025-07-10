@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: '100%',
+    color: '#cecece'
   },
   eyeIcon: {
     padding: 5,

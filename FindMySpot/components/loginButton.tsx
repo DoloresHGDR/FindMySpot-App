@@ -12,7 +12,7 @@ export default function LoginButton({ title, onPress }: { title: string, onPress
 const styles = StyleSheet.create({
   btn: {
     marginTop: 20,
-    backgroundColor: '#151717',
+    backgroundColor: '#223826',
     borderRadius: 10,
     height: 50,
     width: "100%",
@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: '500',
-    color: 'white',
+    color: '#43985b',
   },
 });
