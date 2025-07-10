@@ -1,12 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface Props {
     tittle: string,
-    onPress?:() => void
+    onPress?: () => void
 }
 
-export default function HomeButtons({ tittle, onPress }: Props) {
+export default function HomeButtons({ tittle, onPress}: Props) {
   return (
     <TouchableOpacity style={[styles.actionButton]} onPress={onPress}>
         <Text style={styles.buttonText}>{tittle}</Text>
@@ -19,6 +19,7 @@ buttonText: {
     fontWeight: 'bold',
     paddingBottom: 20,
     paddingTop: 20,
+    color: '#43975a'
   },
   
 actionButton: {
@@ -29,6 +30,7 @@ actionButton: {
     marginVertical: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#cccccc'
+    backgroundColor:'#223726',
+    borderColor:"#223726"
   },
 })
