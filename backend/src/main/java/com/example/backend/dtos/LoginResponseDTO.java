@@ -1,7 +1,10 @@
 package com.example.backend.dtos;
+import com.example.backend.models.Plates;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,4 +16,7 @@ public class LoginResponseDTO {
     private String surname;
     private String identityNumber;
     private String role;
+    private List<Plates> plates;
+
 }
+

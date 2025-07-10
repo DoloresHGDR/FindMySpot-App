@@ -1,5 +1,6 @@
 package com.example.backend.models;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@AllArgsConstructor
 public class Users {
 
     @Id
@@ -19,9 +21,11 @@ public class Users {
     @Column(unique = true, nullable = false)
     private String identityNumber;
     private String password;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private List<Plates> plates;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private List<Parkings> parkings;
     private String role;
 

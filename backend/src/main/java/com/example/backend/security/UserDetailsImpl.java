@@ -1,5 +1,6 @@
 package com.example.backend.security;
 import com.example.backend.models.Users;
+import com.example.backend.models.Plates;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,15 +23,17 @@ public class UserDetailsImpl implements UserDetails {
     private final String identityNumber;
     private final String password;
     private final String role;
+    private final List<Plates> plates;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String name, String surname, String identityNumber, String password, String role, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String name, String surname, String identityNumber, String password, String role, List<Plates> plates, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.identityNumber = identityNumber;
         this.password = password;
         this.role = role;
+        this.plates = plates;
         this.authorities = authorities;
     }
 
@@ -43,6 +46,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getIdentityNumber(),
                 user.getPassword(),
                 user.getRole(),
+                user.getPlates(),
                 authorities
         );
     }

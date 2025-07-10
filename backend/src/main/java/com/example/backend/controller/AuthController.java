@@ -2,6 +2,8 @@ package com.example.backend.controller;
 import com.example.backend.dtos.LoginRequestDTO;
 import com.example.backend.dtos.LoginResponseDTO;
 import com.example.backend.dtos.RegisterUserDTO;
+import com.example.backend.models.Plates;
+import com.example.backend.models.Users;
 import com.example.backend.security.JwtUtils;
 import com.example.backend.security.UserDetailsImpl;
 import com.example.backend.service.UserService;
@@ -14,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,7 +46,6 @@ public class AuthController {
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwt = jwtUtils.generateToken(userDetails.getUsername());
         LoginResponseDTO response = new LoginResponseDTO(
@@ -50,7 +54,8 @@ public class AuthController {
                 userDetails.getName(),
                 userDetails.getSurname(),
                 userDetails.getIdentityNumber(),
-                userDetails.getRole()
+                userDetails.getRole(),
+                userDetails.getPlates()
         );
 
         return ResponseEntity.ok(response);
@@ -69,7 +74,8 @@ public class AuthController {
                     userDetails.getName(),
                     userDetails.getSurname(),
                     userDetails.getIdentityNumber(),
-                    userDetails.getRole()
+                    userDetails.getRole(),
+                    userDetails.getPlates()
             );
 
             return ResponseEntity.ok(response);

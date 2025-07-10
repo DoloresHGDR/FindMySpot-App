@@ -1,5 +1,6 @@
 package com.example.backend.service;
 import com.example.backend.dtos.RegisterUserDTO;
+import com.example.backend.models.Plates;
 import com.example.backend.models.Users;
 import com.example.backend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
