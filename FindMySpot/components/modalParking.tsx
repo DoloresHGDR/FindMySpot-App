@@ -7,10 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+
 interface ModalParkingProps {
   visible: boolean;
   onClose: () => void;
-  plates: string[];
+  plates: { id: string; number: string }[];
   onSubmit: (data: { plate: string; address: string; duration: string }) => void;
   googleApiKey: string;
 }
@@ -47,7 +48,7 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
   const { control, handleSubmit, setValue, formState: { errors }, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
       defaultValues: {
-        plate: plates[0] || '',
+        plate: plates[0]?.id || '',
         address: '',
         height: '',
         duration: '',
@@ -113,8 +114,8 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                       onValueChange={onChange}
                       style={styles.input}
                     >
-                      {plates.map((plate, idx) => (
-                        <Picker.Item key={idx} label={plate} value={plate} />
+                      {plates.map((plate) => (
+                        <Picker.Item key={plate.id} label={plate.number} value={plate.id} />
                       ))}
                     </Picker>
                   )}
