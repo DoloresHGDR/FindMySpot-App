@@ -51,4 +51,5 @@ Join our community of developers creating universal apps.
 
 
 ##Dependencias
-
+npm install react-hook-form yup @hookform/resolvers
+npm install react-native-google-places-autocomplete

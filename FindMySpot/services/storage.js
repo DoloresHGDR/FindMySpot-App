@@ -1,10 +1,24 @@
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from "react-native";
 
+let memoryToken = null;
+
+export const setMemoryToken = (token) => {
+    memoryToken = token
+}
+
+export const getMemoryToken = () => {
+    return memoryToken
+}
+
+export const clearMemoryToken = () => {
+    memoryToken = null;
+}
+
 export async function saveToken(token) {
     try {
         await SecureStore.setItemAsync('auth_token', token);
-        Alert.alert('Token guardado con exito')
+        Alert.alert('Token guardado con exito', token)
     } catch (error) {
         console.error('Error al guardar token seguro:', error);
     }

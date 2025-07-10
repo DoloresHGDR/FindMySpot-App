@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import Input from '@/components/Input';
 import RegisterButtons from '@/components/registerButtons';
 import axios, { AxiosError } from 'axios';
+import apiClient from '@/api/apiClient';
 import { useUser } from "@/context/UserContext";
 import { useRouter } from 'expo-router';
 import { saveToken } from '@/services/storage';
@@ -55,7 +56,7 @@ function Register() {
 
   const handleRegister = async (values: any) => {
     try {
-      const response = await axios.post('http://192.168.18.2:8080/api/auth/register', {
+      const response = await apiClient.post('/api/auth/register', {
         name: values.name,
         surname: values.surname,
         identityNumber: values.identityNumber,
@@ -64,7 +65,7 @@ function Register() {
         role: "USER"
       });
 
-      const { token, id, name, surname, identityNumber, role} = response.data
+      const { token, id, name, surname, identityNumber, role, plate} = response.data
       await saveToken(token);
       setUser ({
         logged:true,
@@ -73,6 +74,7 @@ function Register() {
         surname: surname,
         identityNumber: identityNumber,
         role: role,
+        plate: plate
       });
 
       if (response.status === 200) {

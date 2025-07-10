@@ -6,3 +6,4 @@ yup == 1.6.1
 jwt-decode
 react-hook-form yup @hookform/resolvers
 react-native-google-places-autocomplete
+react-native-maps
