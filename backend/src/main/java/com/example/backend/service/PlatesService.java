@@ -24,6 +24,10 @@ public class PlatesService {
         return platesRepository.findById(id);
     }
 
+    public Plates findByUserId(Long userId) {
+        return platesRepository.findByUserId(userId);
+    }
+
     public Plates save(Plates plates) {
         return platesRepository.save(plates);
     }
