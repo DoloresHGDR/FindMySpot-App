@@ -8,7 +8,7 @@ import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
-import { saveToken } from '@/services/storage';
+import { saveToken, setMemoryToken, getMemoryToken } from '@/services/storage';
 import apiClient from '@/api/apiClient';
 import { AxiosError } from 'axios';
 
@@ -35,11 +35,12 @@ export default function Index() {
           password: values.password,
         });
 
-        const { token, id, name, surname, identityNumber, role} = response.data
+        const { token, id, name, surname, identityNumber, role, plates} = response.data
         if (isChecked) {
           await saveToken(token);
+        } else {
+          setMemoryToken(token);
         }
-        
         setUser ({
                 logged:true,
                 id: id,
@@ -47,6 +48,7 @@ export default function Index() {
                 surname: surname,
                 identityNumber: identityNumber,
                 role: role,
+                plate: plates
             });
 
         if (response.status === 200) {
@@ -128,12 +130,15 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: 'center',
     backgroundColor: '#111111',
     padding: 30,
     borderRadius: 20,
-    width: 330,
+    width: '85%',
     alignSelf: 'center',
-    marginTop: 100,
+    maxHeight: '45%',
+    marginTop: '55%',
   },
   label: {
     fontSize: 14,

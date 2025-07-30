@@ -27,7 +27,7 @@ export default function HomeScreen() {
           <Text style={[styles.balance, {color:"#43975a"}]}> 
             $ {secureBalance ? "*****" : "10000"}
           </Text>
-          <TouchableOpacity style={[{justifyContent: 'center', color:'#43975a'}]} onPress={() => setSecureBalance(!secureBalance)}> 
+          <TouchableOpacity style={[{justifyContent: 'center'}]} onPress={() => setSecureBalance(!secureBalance)}> 
             {secureBalance ? <EyeIconClosed/> : <EyeIconOpen/>}
           </TouchableOpacity>
         </View>
@@ -41,6 +41,7 @@ export default function HomeScreen() {
         <View style={styles.buttonGrid}>
                   <HomeButtons 
                     tittle='New Park'
+                    onPress={() => useRouter().push('/screens/parking')}
                   />
                   <HomeButtons 
                     tittle='Mis Cars'
@@ -48,6 +49,7 @@ export default function HomeScreen() {
                   />
                   <HomeButtons 
                     tittle='Historial'
+                    onPress={() => useRouter().push('/screens/history')}
                   />
                   <HomeButtons 
                     tittle='Multas'

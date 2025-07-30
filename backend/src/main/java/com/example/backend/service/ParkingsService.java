@@ -1,9 +1,13 @@
 package com.example.backend.service;
+import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parkings;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.example.backend.dtos.ParkingMapDTO;
@@ -18,10 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class ParkingsService {
     private final ParkingsRepository parkingsRepository;
+    private final PlatesService platesService;
 
     @Autowired
-    public ParkingsService(ParkingsRepository parkingsRepository) {
+    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService) {
         this.parkingsRepository = parkingsRepository;
+        this.platesService = platesService;
     }
 
     public List<Parkings> findAllParkings(){
@@ -33,8 +39,42 @@ public class ParkingsService {
     }
 
     // Busca una lista de parkings hechos por un usuario especifico, sirve para el historial.
-    public List<Parkings> getParkingHistoryByUserId(Long userId){
-        return parkingsRepository.findByUserId(userId);
+
+    public List<HistoryDTO> getParkingHistoryByUserId(Long userId, Integer limit) {
+        List<Parkings> parkings;
+        if(limit != null) {
+            Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "startTime"));
+            parkings = parkingsRepository.findByUserId(userId, pageable).getContent();
+        } else {
+            parkings = parkingsRepository.findByUserIdOrderByStartTimeDesc(userId);
+        }
+
+        return parkings.stream()
+                .map(parking -> {
+                    String plate = platesService.findByUserId(parking.getPlateId()).getNumber();
+                    String address = parking.getAddress();
+                    LocalDateTime startDate = parking.getStartTime();
+                    LocalDateTime endDate = parking.getEndTime();
+                    String duration = formatDuration(parking.getDurationMinutes());
+                    String price = parking.getPrice().toString();
+
+                    return new HistoryDTO(startDate, endDate, address, plate, duration, price);
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    private String formatDuration(int minutes) {
+        int hours = minutes / 60;
+        int remainingMinutes = minutes % 60;
+
+        if (hours > 0 && remainingMinutes > 0) {
+            return hours + "h " + remainingMinutes + "min";
+        } else if (hours > 0) {
+            return hours + "h";
+        } else {
+            return remainingMinutes + "min";
+        }
     }
 
     // Busca Parkings que esten por finalizar

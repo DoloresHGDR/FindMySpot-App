@@ -1,4 +1,5 @@
 package com.example.backend.controller;
+import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingMapDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parkings;
@@ -32,8 +33,8 @@ public class ParkingsController {
     }
 
     @GetMapping("/history/user/{userId}")
-    public List<Parkings> getParkingHistoryByUserId(@PathVariable Long userId){
-        return parkingsService.getParkingHistoryByUserId(userId);
+    public List<HistoryDTO> getParkingHistoryByUserId(@PathVariable Long userId, @RequestParam(name= "limit", required = false) Integer limit){
+        return parkingsService.getParkingHistoryByUserId(userId, limit);
     }
 
     @GetMapping("/about-to-finish/map")
