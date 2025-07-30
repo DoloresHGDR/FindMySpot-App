@@ -113,9 +113,10 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                       selectedValue={value}
                       onValueChange={onChange}
                       style={styles.input}
+                      
                     >
                       {plates.map((plate) => (
-                        <Picker.Item key={plate.id} label={plate.number} value={plate.id} />
+                        <Picker.Item key={plate.id} label={plate.number} value={plate.id}/>
                       ))}
                     </Picker>
                   )}
@@ -171,17 +172,20 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                 predefinedPlaces={[]}
                 predefinedPlacesAlwaysVisible={false}
                 styles={{
+                  listView: {
+                    backgroundColor: '#1a1a1a',
+                    zIndex: 10,
+                    position: 'absolute',
+                    elevation: 10,
+                    top: 45,
+                    
+                  },
                   textInput: styles.textInput,
                   container: {
                     flex: 1,
-                    zIndex: 5,
+                    zIndex: 1,
                   },
-                  listView: {
-                    zIndex: 0,
-                    elevation: 1,
-                    position: 'absolute',
-                    top: 45,
-                  },
+                  
                 }}
                 suppressDefaultStyles={false}
                 textInputHide={false}
@@ -190,6 +194,7 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                     onChangeText: text => setInputAddress(text),
                     autoCorrect: false,
                     autoCapitalize: 'none',
+                    placeholderTextColor: 'grey'
                   }}
                 timeout={20000}
               />
@@ -206,6 +211,7 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Ej: 123"
+                    placeholderTextColor='grey'
                     onChangeText={onChange}
                     value={value}
                   />
@@ -224,6 +230,7 @@ export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, pl
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Ej: 30"
+                    placeholderTextColor='grey'
                     onChangeText={onChange}
                     value={value}
                   />
@@ -256,7 +263,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1a1a19',
     borderRadius: 12,
     width: '100%',
     maxHeight: '108%',
@@ -264,7 +271,7 @@ const styles = StyleSheet.create({
   },
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#223726',
     borderRadius: 6,
     marginBottom: 8,
     height: 45,
@@ -278,25 +285,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 4,
-    color: '#333',
+    color: '#43975a',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#223726',
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginBottom: 8,
     fontSize: 16,
+    color:'#cecece'
   },
   textInput: {
     height: 45,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#223726',
     paddingLeft: 12,
     fontSize: 16,
     marginBottom: 8,
+    backgroundColor: '#1a1a19',
+    color: '#cecece',
   },
   listView: {
     position: 'absolute',
@@ -317,7 +327,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#43975a',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 6,
@@ -325,7 +335,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#974343ff',
   },
   buttonText: {
     color: '#fff',

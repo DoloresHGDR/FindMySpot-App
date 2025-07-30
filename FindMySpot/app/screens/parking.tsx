@@ -1,11 +1,14 @@
 import { ModalParking } from '@/components/modalParking';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView} from 'react-native';
 import axios from 'axios';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import apiClient from '@/api/apiClient';
 import { useUser } from '@/context/UserContext';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import CountDown from 'react-native-countdown-component';
+import { format } from 'date-fns';
 
 type MarkerType = {
   id: number;
@@ -13,10 +16,20 @@ type MarkerType = {
   longitude: number;
 };
 
+interface HistoryDTO {
+  startDate: string;
+  endDate: string;
+  address: string;
+  plate: string;
+  duration: string;
+  price: string;
+}
+
 const ParkingScreen: React.FC = () => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const [markers, setMarkers] = useState<MarkerType[]>([]);
-  const [region, setRegion] = useState({
+  const region = useState({
     latitude: -34.616158,
     longitude: -68.329941,
     latitudeDelta: 0.005,
@@ -26,7 +39,11 @@ const ParkingScreen: React.FC = () => {
   const apiKey = "AIzaSyAc9TkncKPp1e2woZfDIsDQNv-zrAFPqBs";
   const customMarkerIcon = require('@/assets/images/car-parking.png');
   const { user } = useUser();
-
+  const [history, setHistory] = useState([]);
+  const [lastParking, setLastParking] = useState<HistoryDTO | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
+  const [parkingActive, setParkingActive] = useState(false);
 
   const handleSubmit = async (data: { plate: string; address: string; duration: string }) => {
     try {
@@ -36,8 +53,20 @@ const ParkingScreen: React.FC = () => {
         address: data.address,
         durationMinutes: data.duration,
       });
+      const parkingData = response.data;
+      const end = new Date(parkingData.endTime);
+      const now = new Date();
 
-      console.log('Datos recibidos del modal:', data);
+      const diffInSeconds = Math.floor((end.getTime() - now.getTime()) / 1000);
+
+      if (diffInSeconds > 0) {
+        setRemainingSeconds(diffInSeconds);
+        setParkingActive(true);
+      } else {
+        setRemainingSeconds(0);
+        setParkingActive(false);
+      }
+      
       Alert.alert('Datos enviados', `Patente: ${data.plate}\nDirección: ${data.address}\nDuración: ${data.duration} min`);
     } catch (error) {
       console.error('Error al registrar el estacionamiento', error)
@@ -119,9 +148,41 @@ const ParkingScreen: React.FC = () => {
     }
   };
 
+  const fetchHistory = async () => {
+    try {
+      const response = await apiClient.get(`/api/parkings/history/user/${user.id}?limit=3`)
+      setHistory(response.data)
+      if (response.data.length > 0) {
+      const latest = response.data[0];
+      setLastParking(latest);
+
+      const now = new Date();
+      const endTime = new Date(latest.endDate);
+      const remaining = Math.floor((endTime.getTime() - now.getTime()) / 1000);
+
+      if (remaining > 0) {
+        setRemainingSeconds(remaining);
+        setParkingActive(true);
+      } else {
+        setRemainingSeconds(0);
+        setParkingActive(false);
+      }
+    }
+      
+    } catch (error) {
+      console.error('Error al obtener el historial de estacionamiento', error);
+    }
+  }
+
+  const formatLastParkingDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return format(date, "dd MMM 'a las' HH:mm");
+  };
+
 
   useEffect(() => {
     getUserLocation();
+    fetchHistory();
   }, []);
 
   useEffect(() => {
@@ -130,22 +191,73 @@ const ParkingScreen: React.FC = () => {
     }
   }, [userLocation]);
 
-  const mapHeight = Dimensions.get('window').height * 0.5;
+
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Estacionarme</Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
+      <TouchableOpacity
+        style={[styles.button, parkingActive && styles.buttonDisabled]}
+        onPress={() => {
+          if (parkingActive) {
+            Alert.alert('Estacionamiento activo', 'Ya tienes un estacionamiento activo, no puedes registrar otro.');
+            return;
+          }
+          setModalVisible(true);
+        }}
+        disabled={parkingActive}
+      >
+        <Text style={styles.buttonText}>
+          {parkingActive ? 'Estacionamiento activo' : 'Estacionarme'}
+        </Text>
       </TouchableOpacity>
+
+      {parkingActive && remainingSeconds !== null && remainingSeconds > 0 && (
+        <View
+          style={{
+            backgroundColor: '#223726',
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 12,
+            marginVertical: 10,
+          }}
+        >
+          <CountDown
+            until={remainingSeconds}
+            onFinish={() => {
+              setParkingActive(false);
+              Alert.alert('Tiempo terminado', 'Tu estacionamiento ha finalizado.');
+            }}
+            size={22}
+            timeToShow={['M', 'S']}
+            timeLabels={{ m: '', s: '' }}
+            showSeparator
+            digitStyle={{
+              backgroundColor: 'transparent',
+              width: undefined,
+            }}
+            digitTxtStyle={{
+              color: '#43975a',
+              fontSize: 28,
+              fontWeight: 'bold',
+            }}
+            separatorStyle={{
+              color: '#43975a',
+              fontSize: 28,
+              fontWeight: 'bold',
+            }}
+          />
+        </View>
+      )}
+
       <ModalParking
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        plates={user.plate.map((plates) => ({ id: String(plates.id), number: plates.number }))}
+        plates={user.plate?.map((plates) => ({ id: String(plates.id), number: plates.number })) || []}
         onSubmit={handleSubmit}
         googleApiKey={apiKey}
       />
 
-      <View style={[styles.mapContainer, { maxHeight: mapHeight }]}>
+      <View style={styles.mapContainer}>
         <MapView
           provider="google"
           style={styles.map}
@@ -165,7 +277,91 @@ const ParkingScreen: React.FC = () => {
           ))}
         </MapView>
       </View>
-    </View>
+      
+      <View style={styles.lastParking}>
+        {[
+          {label: 'Ultimo estacionamiento', value: lastParking? formatLastParkingDate(lastParking.endDate) : 'Cargando...', icon: require('@/assets/images/history-time-clock.png') },
+          {label: 'Patente', value: lastParking?.plate, icon: require('@/assets/images/license-plate.png')},
+          {label: 'Ubicacion', value: lastParking?.address, icon: require('@/assets/images/ubication.png')},          
+        ].map((item, index) => (
+          <View key={index} style={styles.infoLastParking}>
+            <Image source={item.icon} style={styles.icon} />
+            <Text style={styles.label}>
+              {item.label}:
+              <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}> {item.value}</Text>
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.lastThreeParkingsContainer}>
+        <Text style={styles.lastThreeParkingsTitle}> Volver a estacionar aqui</Text>
+        {history.map((parking : any, index) => (
+          <TouchableOpacity key={index} style={styles.lastThreeParkingsItems} onPress={() => setShowAlert(true)}>
+            <Text style={{ color: 'white', flex: 1, marginRight: 10, fontSize: 16 }}>
+              {parking.address}
+            </Text>
+            <Text style={{ color: 'white', flexShrink: 0, marginRight: 6, textAlign: 'right', fontSize: 16 }}>
+              {parking.duration}
+            </Text> 
+            <Image source={require('@/assets/images/repeat.png')} style={{resizeMode: 'contain', width: 28, height: 28}} />
+          </TouchableOpacity>
+        ))}
+
+        <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        title="Volver a estacionar"
+        message="¿Seguro que quieres estacionar aquí? La duracion sera la misma que la ultima vez"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={true}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Cancelar"
+        confirmText="Sí"
+        confirmButtonColor="#43975a"
+        cancelButtonColor='#974343ff'
+        onCancelPressed={() => setShowAlert(false)}
+        onConfirmPressed={() => {
+          setShowAlert(false);
+        }}
+
+        overlayStyle={{
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        }}
+        confirmButtonStyle={{
+          paddingVertical: 12,
+          paddingHorizontal: 40,
+          borderRadius: 8,    
+          fontSize: 18,   
+        }}
+        cancelButtonStyle={{
+          paddingVertical: 12,
+          paddingHorizontal: 20,
+          borderRadius: 8,
+          fontSize: 18,
+        }}
+
+        titleStyle={{
+          color: '#e6e6e6',
+          fontWeight: 'bold'
+        }}
+
+        messageStyle={{
+          color: '#e6e6e6',
+          textAlign: 'center',
+          lineHeight: 20,
+          fontSize: 16
+        }}
+
+        contentContainerStyle={{
+          backgroundColor: '#1a1a19'
+          
+        }}
+      />
+      </View>
+
+    </ScrollView>
   );
 };
 
@@ -173,43 +369,108 @@ export default ParkingScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 10,
+    backgroundColor: '#1a1a19'
   },
   button: {
-    backgroundColor: '#2196F3',
-    paddingVertical: 14,
-    width: 200,
-    borderRadius: 12,
+    backgroundColor:'#223726',
+    paddingVertical: 16,
+    paddingHorizontal: 40,
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-    top: 40,
-    marginBottom: 20,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+    marginVertical: 20,
+    marginTop: 50
   },
   buttonText: {
-    color: '#fff',
+    color: '#43975a',
     fontSize: 18,
     fontWeight: 'bold',
     letterSpacing: 0.5,
   },
   mapContainer: {
-    flex: 1,
-    width: '100%',
-    marginTop: 'auto',
-    borderColor: '#000',
-    borderRadius: 10,
-    borderWidth: 2,
+    width: '95%',
+    maxHeight: '40%',
+    height: 350,
+    borderColor: '#43975a',
+    borderRadius: 16,
+    borderWidth: 1.5,
     overflow: 'hidden',
-    bottom: 40,
+    marginVertical: 15,
+    alignSelf: 'center'
   },
   map: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  lastParking: {
+    marginTop: 30,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    gap: 20,
+    borderRadius: 10,
+    borderBottomColor: '#276437ff',
+    borderWidth: 1,
+    borderBottomWidth: 2,
+    padding: 10,
+    width: '90%',
+    backgroundColor: '#29292642'
+  },
+  label: {
+    color: 'white',
+    fontWeight: 'bold'
+  },
+  icon: {
+    resizeMode: 'contain',
+    width: 24,
+    height: 24,
+  },
+  infoLastParking: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    maxWidth: '90%'
+  },
+  lastThreeParkingsContainer: {
+    marginTop: 40,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
+    gap: 10,
+    borderRadius: 10,
+    borderBottomColor: '#276437ff',
+    borderWidth: 1,
+    borderBottomWidth: 2,
+    padding: 10,
+    width: '90%',
+    backgroundColor: '#29292642',
+    
+  },
+  lastThreeParkingsItems: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    width: '100%',
+    borderBottomColor: '#27643788',
+    borderBottomWidth: 2,
+    borderRadius: 20,
+    
+  },
+  lastThreeParkingsTitle: {
+    color: '#43975a', 
+    textAlign: 'center', 
+    fontWeight: 'bold',
+    fontSize: 18
+  },
+  buttonDisabled: {
+    backgroundColor: '#555',
+    opacity: 0.6,
   },
 });

@@ -36,6 +36,7 @@ export default function Input({
       <TextInput
         style={styles.input}
         placeholder={placeholder}
+        placeholderTextColor="grey"
         value={value}
         secureTextEntry={secureTextEntry}
         onChangeText={onChangeText}
@@ -73,4 +74,5 @@ const styles = StyleSheet.create({
   eyeIcon: {
     padding: 5,
   },
+  
 });
