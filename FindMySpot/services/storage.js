@@ -18,7 +18,6 @@ export const clearMemoryToken = () => {
 export async function saveToken(token) {
     try {
         await SecureStore.setItemAsync('auth_token', token);
-        Alert.alert('Token guardado con exito', token)
     } catch (error) {
         console.error('Error al guardar token seguro:', error);
     }

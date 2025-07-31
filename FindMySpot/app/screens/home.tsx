@@ -1,21 +1,40 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image} from 'react-native';
 import { useUser } from '@/context/UserContext';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
-
+import { clearMemoryToken, removeToken } from '@/services/storage';
 
 
 export default function HomeScreen() {
-    const { user } = useUser();
+    const { user, setUser } = useUser();
     const [secureBalance, setSecureBalance] = useState(false)
+    const router = useRouter();
+
+    const handleLogOut = () => {
+      setUser({
+        logged: false,
+        id: null,
+        name: null,
+        surname: null,
+        identityNumber: null,
+        role: null,
+        plate: []
+      });
+      removeToken();
+      clearMemoryToken();
+      router.push('/')
+    }
 
   return (
     <View style={styles.container}>
       <View style={styles.headerGrid}>
         <View style={styles.header}>
-          <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text>   
+          <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text> 
+          <TouchableOpacity onPress={()=> {handleLogOut()}}>
+            <Image source={require('@/assets/images/logout.png')} style={{resizeMode: 'contain', width: 24, height: 24}} />
+          </TouchableOpacity>  
         </View>
 
         <HomeLines/>
@@ -64,7 +83,7 @@ export default function HomeScreen() {
           <View style={styles.carouselItem} />
           <View style={styles.carouselItem} />
         </ScrollView>
-
+        
       </View>
     </View>
   );
@@ -78,11 +97,12 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     backgroundColor: '#1a1b18',
-    height: 70,
+    height: 75,
     width: "100%",
-    paddingTop: 30,
-    justifyContent: 'center',
+    paddingTop: 40,
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
+    flexDirection: 'row'
   },
   headerText: { color: '#90d6a6', fontSize: 16 },
   body: {
@@ -119,4 +139,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
+
 });
