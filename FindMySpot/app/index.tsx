@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -8,7 +8,7 @@ import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
-import { saveToken, setMemoryToken, getMemoryToken } from '@/services/storage';
+import { saveToken, setMemoryToken } from '@/services/storage';
 import apiClient from '@/api/apiClient';
 import { AxiosError } from 'axios';
 
@@ -69,7 +69,9 @@ export default function Index() {
     }
 
   return (
-    <Formik
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Formik
           initialValues={{ identityNumber: '', password: '' }}
           validationSchema={LoginSchema}
           onSubmit={(values) => {
@@ -77,68 +79,77 @@ export default function Index() {
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-            <View style={styles.container}>
-              <Text style={styles.label}>Ingrese su DNI</Text>
-              <Input
-                icon={<DniIcon />}
-                placeholder="Ingrese su DNI"
-                value={values.identityNumber}          
-                onChangeText={handleChange('identityNumber')}
-                onBlur={handleBlur('identityNumber')}
-                keyboardType="numeric"
-              />
-              {touched.identityNumber && errors.identityNumber && (
-                <Text style={styles.error}>{errors.identityNumber}</Text>
-              )}
-              <Text style={styles.label}>Ingrese su Contraseña</Text>
-              <Input
-                icon={<LockIcon />}
-                placeholder="Ingrese su contraseña"
-                value={values.password}
-                secureTextEntry={secureText}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                rightIcon={secureText ? <EyeIconClosed /> : <EyeIconOpen />}
-                onPress={() => setSecureText(!secureText)}
-              />
-              {touched.password && errors.password && (
+            
+              <View style={styles.login}>
+                <Text style={styles.label}>Ingrese su DNI</Text>
+                <Input
+                  icon={<DniIcon />}
+                  placeholder="Ingrese su DNI"
+                  value={values.identityNumber}          
+                  onChangeText={handleChange('identityNumber')}
+                  onBlur={handleBlur('identityNumber')}
+                  keyboardType="numeric"
+                />
+                {touched.identityNumber && errors.identityNumber && (
+                  <Text style={styles.error}>{errors.identityNumber}</Text>
+                )}
+                <Text style={styles.label}>Ingrese su Contraseña</Text>
+                <Input
+                  icon={<LockIcon />}
+                  placeholder="Ingrese su contraseña"
+                  value={values.password}
+                  secureTextEntry={secureText}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  rightIcon={secureText ? <EyeIconClosed /> : <EyeIconOpen />}
+                  onPress={() => setSecureText(!secureText)}
+                />
+                {touched.password && errors.password && (
                   <Text style={styles.error}>{errors.password}</Text>
                 )}
 
-              <View style={styles.checkbox}>
-                <Checkbox value={isChecked} onValueChange={setChecked} color={isChecked ? '#43985b' : undefined} />
-                <Text style={{ marginLeft: 8 , color: '#cecece'}}>Recuérdame</Text>
-              </View>
+                <View style={styles.checkbox}>
+                  <Checkbox value={isChecked} onValueChange={setChecked} color={isChecked ? '#43985b' : undefined} />
+                  <Text style={{ marginLeft: 8 , color: '#cecece'}}>Recuérdame</Text>
+                </View>
 
-              <LoginButton title="Login" onPress={handleSubmit} />
+                <LoginButton title="Login" onPress={handleSubmit} />
 
-              <View style={styles.registerContainer}>
-              <Text style={{ color: '#cecece'}} >¿No tienes una cuenta?</Text>
-              <Text
-                  style={{ color: '#43985b', fontWeight: 'bold' }}
-                  onPress={() => router.push('/register')}
-                >
-                Regístrate
-                </Text>
+                <View style={styles.registerContainer}>
+                  <Text style={{ color: '#cecece'}} >¿No tienes una cuenta?</Text>
+                  <Text
+                    style={{ color: '#43985b', fontWeight: 'bold' }}
+                    onPress={() => router.push('/register')}
+                  >
+                    Regístrate
+                  </Text>
+                </View>
+                
               </View>
-              
-            </View>
+            
           )}
         </Formik>
-      );
-    }
+      </View>
+    </TouchableWithoutFeedback>
+
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: '#1a1a19'
+  },
+  login: {
     justifyContent: 'center',
     backgroundColor: '#111111',
     padding: 30,
     borderRadius: 20,
     width: '85%',
+    height: '100%',
     alignSelf: 'center',
     maxHeight: '45%',
     marginTop: '55%',
+    
   },
   label: {
     fontSize: 14,
