@@ -63,7 +63,8 @@ export default function HistoryScreen () {
     return (
         <View style={styles.container}>
             <Text style={styles.title}> HISTORIAL </Text>
-            <View style={styles.history}>
+            {parkings? (
+                <View style={styles.history}>
                 {parkings.map((parking, index) => (
                     <TouchableOpacity
                         key={index}
@@ -81,7 +82,10 @@ export default function HistoryScreen () {
 
                     </TouchableOpacity>
                 ))}
-            </View>
+                </View>
+            ):(<Text style={styles.title}> No tienes estacionamientos aun</Text>)
+            }
+            
         </View>
     );
 }

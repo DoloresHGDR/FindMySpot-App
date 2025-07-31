@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class HistoryDTO {
+    private Long id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String address;

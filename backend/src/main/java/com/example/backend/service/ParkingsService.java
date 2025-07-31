@@ -51,6 +51,7 @@ public class ParkingsService {
 
         return parkings.stream()
                 .map(parking -> {
+                    Long id = parking.getId();
                     String plate = platesService.findByUserId(parking.getPlateId()).getNumber();
                     String address = parking.getAddress();
                     LocalDateTime startDate = parking.getStartTime();
@@ -58,7 +59,7 @@ public class ParkingsService {
                     String duration = formatDuration(parking.getDurationMinutes());
                     String price = parking.getPrice().toString();
 
-                    return new HistoryDTO(startDate, endDate, address, plate, duration, price);
+                    return new HistoryDTO(id, startDate, endDate, address, plate, duration, price);
                 })
                 .collect(Collectors.toList());
 
@@ -106,7 +107,7 @@ public class ParkingsService {
         Parkings parking = parkingsRepository.findById(parkingId)
                 .orElseThrow(()-> new RuntimeException("Parking not found"));
 
-        if (parking.getStatus() == ParkingStatus.ACTIVE){
+        if (parking.getStatus() == ParkingStatus.FINISHED){
             return parking;
         }
 

@@ -1,6 +1,6 @@
 import { ModalParking } from '@/components/modalParking';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, RefreshControl} from 'react-native';
 import axios from 'axios';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -17,6 +17,7 @@ type MarkerType = {
 };
 
 interface HistoryDTO {
+  id: string,
   startDate: string;
   endDate: string;
   address: string;
@@ -27,9 +28,10 @@ interface HistoryDTO {
 
 const ParkingScreen: React.FC = () => {
 
+  const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [markers, setMarkers] = useState<MarkerType[]>([]);
-  const region = useState({
+  const [region, setRegion] = useState({
     latitude: -34.616158,
     longitude: -68.329941,
     latitudeDelta: 0.005,
@@ -44,6 +46,14 @@ const ParkingScreen: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
   const [parkingActive, setParkingActive] = useState(false);
+  const [selectedParkingData, setSelectedParkingData] = useState<HistoryDTO | null>(null);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    fetchHistory();
+    setRefreshing(false);
+  };
 
   const handleSubmit = async (data: { plate: string; address: string; duration: string }) => {
     try {
@@ -56,7 +66,6 @@ const ParkingScreen: React.FC = () => {
       const parkingData = response.data;
       const end = new Date(parkingData.endTime);
       const now = new Date();
-
       const diffInSeconds = Math.floor((end.getTime() - now.getTime()) / 1000);
 
       if (diffInSeconds > 0) {
@@ -179,11 +188,65 @@ const ParkingScreen: React.FC = () => {
     return format(date, "dd MMM 'a las' HH:mm");
   };
 
+  const handleConfirmRepark = () => {
+    setShowAlert(false);
+    if (!selectedParkingData) return;
+
+    if (parkingActive) {
+      Alert.alert('Error', 'Ya tenés un estacionamiento activo.');
+      console.log('Ya tenés un estacionamiento activo.');
+      return;
+    }
+
+    let numericDuration = selectedParkingData.duration.replace(/\D/g, '');
+
+    if (Number(numericDuration) < 10) {
+        numericDuration = "10";
+    }
+
+    const matchedPlate = user.plate?.find(
+      (plate) => plate.number.trim() === selectedParkingData.plate.trim()
+    );
+
+    if (!matchedPlate) {
+      Alert.alert('Error', 'No se encontró la patente en el usuario.');
+      return;
+    }
+
+    handleSubmit({
+      plate: String(matchedPlate.id),
+      address: selectedParkingData.address,
+      duration: numericDuration,
+    });
+  };
+
+  const handleParkingButtonPress = () => {
+    if (parkingActive) {
+      if (lastParking) {
+        handleStopParking(lastParking.id);
+      } else {
+        console.log('No se encuentra el ultimo estacionamiento.')
+      }
+    } else {
+      setModalVisible(true);
+    }
+  };
+
+  const handleStopParking = async (id: string) => {
+    try {
+        await apiClient.post(`api/parkings/finish/${id}`)
+        setRemainingSeconds(0);
+        setParkingActive(false);
+        Alert.alert('Finalizado', 'Se detuvo el estacionamiento')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     getUserLocation();
     fetchHistory();
-  }, []);
+  }, [parkingActive]);
 
   useEffect(() => {
     if (userLocation) {
@@ -194,21 +257,9 @@ const ParkingScreen: React.FC = () => {
 
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
-      <TouchableOpacity
-        style={[styles.button, parkingActive && styles.buttonDisabled]}
-        onPress={() => {
-          if (parkingActive) {
-            Alert.alert('Estacionamiento activo', 'Ya tienes un estacionamiento activo, no puedes registrar otro.');
-            return;
-          }
-          setModalVisible(true);
-        }}
-        disabled={parkingActive}
-      >
-        <Text style={styles.buttonText}>
-          {parkingActive ? 'Estacionamiento activo' : 'Estacionarme'}
-        </Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }} keyboardShouldPersistTaps="handled" refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity style={[styles.button]} onPress={() => handleParkingButtonPress()}>
+        <Text style={styles.buttonText}>{parkingActive ? 'Detener' : 'Estacionarme'}</Text>
       </TouchableOpacity>
 
       {parkingActive && remainingSeconds !== null && remainingSeconds > 0 && (
@@ -262,6 +313,9 @@ const ParkingScreen: React.FC = () => {
           provider="google"
           style={styles.map}
           initialRegion={region}
+          minZoomLevel={13}
+          showsUserLocation={true}
+          followsUserLocation={true}
         >
           {markers.map((marker) => (
             <Marker
@@ -275,6 +329,8 @@ const ParkingScreen: React.FC = () => {
               image={customMarkerIcon}
             />
           ))}
+
+          
         </MapView>
       </View>
       
@@ -297,7 +353,7 @@ const ParkingScreen: React.FC = () => {
       <View style={styles.lastThreeParkingsContainer}>
         <Text style={styles.lastThreeParkingsTitle}> Volver a estacionar aqui</Text>
         {history.map((parking : any, index) => (
-          <TouchableOpacity key={index} style={styles.lastThreeParkingsItems} onPress={() => setShowAlert(true)}>
+          <TouchableOpacity key={index} style={styles.lastThreeParkingsItems} onPress={() => {setSelectedParkingData(parking); setShowAlert(true)}}>
             <Text style={{ color: 'white', flex: 1, marginRight: 10, fontSize: 16 }}>
               {parking.address}
             </Text>
@@ -322,9 +378,7 @@ const ParkingScreen: React.FC = () => {
         confirmButtonColor="#43975a"
         cancelButtonColor='#974343ff'
         onCancelPressed={() => setShowAlert(false)}
-        onConfirmPressed={() => {
-          setShowAlert(false);
-        }}
+        onConfirmPressed={() => handleConfirmRepark()}
 
         overlayStyle={{
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -375,9 +429,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor:'#223726',
     paddingVertical: 16,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     borderRadius: 50,
-    alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -385,13 +439,19 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
     marginVertical: 20,
-    marginTop: 50
+    marginTop: 50,
+    width: '50%',
+    
   },
   buttonText: {
     color: '#43975a',
     fontSize: 18,
     fontWeight: 'bold',
     letterSpacing: 0.5,
+    textAlign: 'center',
+    textShadowColor: '#252525ff',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
   },
   mapContainer: {
     width: '95%',
