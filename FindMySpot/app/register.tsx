@@ -224,9 +224,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     paddingHorizontal: 20,
+    backgroundColor:'#1a1a19'
   },
   containerForm: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#111111',
     padding: 30,
     width: 330,
     borderRadius: 20,
@@ -237,8 +238,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
-    marginBottom: 3
+    marginBottom: 3,
+    color: '#43985b',
   },
   error: {
     color: 'red',
@@ -254,20 +255,21 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: '#999',
+    borderColor: '#43985b',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 5,
   },
   activeStep: {
-    backgroundColor: 'black',
-    borderColor: 'black'
+    backgroundColor: '#43985b',
+    borderColor: '#43985b'
   },
   stepLabel: {
     fontSize: 12,
     color: '#555',
     width: 70,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#43985b'
   },
   stepLine: {
     height: 2,
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginHorizontal: 5,
     alignSelf: 'center',
-    backgroundColor: '#ccc',
+    backgroundColor: '#43985b',
   },
   stepsRow: {
     flexDirection: 'row',
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
   stepLineContainer: {
     height: 2,
     width: 150,
-    backgroundColor: '#ccc',
+    backgroundColor: '#43985b',
     overflow: 'hidden',
     marginHorizontal: 5,
     marginBottom: 16,
@@ -294,11 +296,11 @@ const styles = StyleSheet.create({
   },
   stepLineBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#ccc',
+    backgroundColor: '#010101ff',
   },
   stepLineForeground: {
     height: 2,
-    backgroundColor: '#000',
+    backgroundColor: '#43985b',
     position: 'absolute',
     left: 0,
     top: 0,
@@ -311,3 +313,4 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
+

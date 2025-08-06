@@ -32,7 +32,7 @@ export default function RegisterButtons({ step, maxSteps, onNext, onBack, onSubm
 
 const styles = StyleSheet.create({
   buttons: {
-    bottom: 20,
+    bottom: 75,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#151717',
+    backgroundColor: '#223826',
     borderRadius: 10,
     height: 50,
     width: '40%',
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: '500',
-    color: 'white',
+    color: '#43985b',
   },
 });
