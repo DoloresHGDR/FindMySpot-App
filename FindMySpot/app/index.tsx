@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     width: '85%',
     height: '100%',
     alignSelf: 'center',
-    maxHeight: '45%',
+    maxHeight: '50%',
     marginTop: '55%',
     
   },
@@ -155,7 +155,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#43985b',
-    marginBottom: 5
+    marginBottom: 5,
+    marginTop: 25,
+    paddingBottom: 5
+    
   },
   checkbox: {
     flexDirection: 'row',
