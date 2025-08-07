@@ -1,8 +1,12 @@
 import React from 'react';
-import { Modal, View, Text, TextInput, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import Buttons from './buttons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import apiClient from '@/api/apiClient';
+import { saveToken } from '@/services/storage';
+import { AxiosError } from 'axios';
+import { router } from 'expo-router';
 
 const plateRegex = /^[A-Z]{3} [0-9]{3}$|^[A-Z]{2} [0-9]{3} [A-Z]{2}$/;
 
@@ -32,6 +36,33 @@ const formatPlate = (text) => {
   }
 };
 
+const handlePlates = async (values: any, onClose: () => void, resetForm: () => void) => {
+  try {
+    const response = await apiClient.post('/api/auth/plates', {
+      plate: values.plate
+    });
+
+    const { token } = response.data;
+    await saveToken(token);
+
+    if (response.status === 200) {
+      resetForm();
+      onClose();
+      router.replace("/screens/mysCars");
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+
+    if (error.response) {
+            console.log('Error', error.response.data || "Hubo un error al registrar la matricula")
+            Alert.alert('Error', error.response.data as string || "Hubo un error al registrar la matricula")
+          } else {
+            console.log('Error general al hacer la solicitud:', error.message);
+            Alert.alert('Error', `Error al hacer la solicitud: ${error.message}`);
+          }
+  }
+};
+
 const PlateModal = ({ visible, onClose }) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -43,18 +74,10 @@ const PlateModal = ({ visible, onClose }) => {
             initialValues={{ plate: '' }}
             validationSchema={validationSchema}
             onSubmit={(values, { resetForm }) => {
-              resetForm();
-              onClose();
+              handlePlates(values, onClose, resetForm);
             }}
           >
-            {({
-              handleSubmit,
-              values,
-              errors,
-              touched,
-              setFieldValue,
-              resetForm,
-            }) => (
+            {({ handleSubmit, values, errors, touched, setFieldValue, resetForm }) => (
               <>
                 <TextInput
                   style={[
@@ -67,7 +90,7 @@ const PlateModal = ({ visible, onClose }) => {
                     setFieldValue('plate', formatted);
                   }}
                   placeholder="Ej: XYZ 123 o XY 123 ZA"
-                  placeholderTextColor="#48925d"
+                  placeholderTextColor="#3f3f3cff"
                   autoCapitalize="characters"
                   maxLength={9}
                 />
@@ -116,7 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     color: '#43985b'
   },
-    error: {
+  error: {
     color: '#ff4d4d',
     marginBottom: 10,
     fontSize: 14,
@@ -130,10 +153,14 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   buttons: {
-    width: 560,
-    height: 120
+    width: 290,
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 15
+}
 
-  }
 });
 
 export default PlateModal;
