@@ -5,8 +5,10 @@ GET http://localhost:8080/api/users
 Accept: application/json
 
 ###GETBYID
-GET http://localhost:8080/api/users/2
+GET http://localhost:8080/api/users/id/1
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MjAwNjQ2MCwiZXhwIjoxNzUyMDA3MzYwfQ.0cq8HSoK6cbahQNdVfvy1HJCWJ_ptI3EZykwx-X9ukM
+
 
 ###POST
 POST http://localhost:8080/api/auth/register
@@ -43,21 +45,42 @@ Content-Type: application/json
   "password": "dolopiola123"
 }
 
+###LOGIN2
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "identityNumber": "44462927",
+  "password": "12345678"
+}
+
 
 ### PLATES
 
 ### POST
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODgyNzQ3NywiZXhwIjoxNzQ4ODI4Mzc3fQ.GV73-V2Dv2V9_m3mbF38TOx7BnpNcUeun7IGcGK3mIY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MjAwNjQ2MCwiZXhwIjoxNzUyMDA3MzYwfQ.0cq8HSoK6cbahQNdVfvy1HJCWJ_ptI3EZykwx-X9ukM
 
 {
     "number": "AH 192 WL",
-    "parked": false,
-    "user": {
-      "id": 14
-    }
+    "userId": 1
 }
+
+### POST 2
+POST http://localhost:8080/api/plates
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MjAwNjQ2MCwiZXhwIjoxNzUyMDA3MzYwfQ.0cq8HSoK6cbahQNdVfvy1HJCWJ_ptI3EZykwx-X9ukM
+
+{
+    "number": "ABC 123",
+    "userId": 2
+}
+
+### GET
+GET http://localhost:8080/api/plates
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0OTQwMjcxOSwiZXhwIjoxNzQ5NDAzNjE5fQ.FSYckSmBSB1qlbvr0p06KWzKUpjaU_z5LXrqs-F-_lY
 
 
 ### PARKINGS
@@ -73,16 +96,12 @@ Accept: application/json
 ### POST
 POST http://localhost:8080/api/parkings/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODg3NDkwMCwiZXhwIjoxNzQ4ODc1ODAwfQ.OglXBe8jSazVpSqV5ilqRyHSAgi4n4GoRYX6fCNyPA4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMTk0MywiZXhwIjoxNzUzOTEyODQzfQ.ojm6bniTIbCSm5NWUUAkkzpEfI3vMuZej-OIz6LiFZM
 
 {
-  "user": {
-    "id": 14
-  },
-  "plate": {
-    "id": 4
-  },
-  "address": "Tupu 123",
+  "userId": 2,
+  "plateId": 2,
+  "address": "Av.Mitre 10",
   "durationMinutes": 10,
   "status": "ACTIVE",
   "price": 0
@@ -91,10 +110,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0O
 ### GET Por Finalizar
 GET http://localhost:8080/api/parkings/about-to-finish/map
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0ODgyNzQ3NywiZXhwIjoxNzQ4ODI4Mzc3fQ.GV73-V2Dv2V9_m3mbF38TOx7BnpNcUeun7IGcGK3mIY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzM2ODY3NywiZXhwIjoxNzUzMzY5NTc3fQ.75Wk4EwrbEKGzhsnGftJgZhvdpnapA3Lwa0BDFksewk
 
 ### DELETE
 DELETE http://localhost:8080/api/parkings/1
+
+### FINISH
+POST http://localhost:8080/api/parkings/finish/17
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMTk0MywiZXhwIjoxNzUzOTEyODQzfQ.ojm6bniTIbCSm5NWUUAkkzpEfI3vMuZej-OIz6LiFZM
+
+### History
+GET http://localhost:8080/api/parkings/history/user/2?limit=3
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMDk5MywiZXhwIjoxNzUzOTExODkzfQ.Wm6e_UEcjePWqg6O8g9Ucva0MiylhmG85GT8DiM33sw
 
 
 ### FINES

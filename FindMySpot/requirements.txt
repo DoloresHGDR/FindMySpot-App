@@ -10,4 +10,5 @@ react-native-maps
 react-native-paper
 react-native-awesome-alerts
 react-native-countdown-component
-date-fns 
+date-fns
+expo-notifications

@@ -6,7 +6,6 @@ import { decodeJwtToken, isTokenExpired } from '@/utils/tokenUtils';
 import { useUser } from '@/context/UserContext';
 import apiClient from '@/api/apiClient';
 
-
 export default function Splash() {
   const router = useRouter();
   const { setUser } = useUser();
@@ -48,7 +47,11 @@ export default function Splash() {
       }
     };
 
-    checkAuth();
+    const initialize = async () => {
+      await checkAuth();
+    };
+
+    initialize();
   }, []);
 
   return (
