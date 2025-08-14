@@ -9,8 +9,7 @@ import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icon
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
 import { saveToken, setMemoryToken } from '@/services/storage';
-import apiClient from '@/api/apiClient';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const LoginSchema = Yup.object().shape({
     identityNumber: Yup.string()
@@ -30,7 +29,7 @@ export default function Index() {
 
   const handleLogin= async (values: any) => {
       try {
-        const response = await apiClient.post('/api/auth/login', {
+        const response = await axios.post('http://192.168.1.40:8080/api/auth/login', {
           identityNumber: values.identityNumber,
           password: values.password,
         });
