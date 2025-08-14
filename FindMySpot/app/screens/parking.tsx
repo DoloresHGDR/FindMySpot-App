@@ -29,6 +29,7 @@ const ParkingScreen: React.FC = () => {
     handleSubmit,
     onRefresh,
     setParkingActive,
+    setParkingDateTime,
   } = useParkingLogic({
     userId: user?.id || null,
     userPlates: user?.plate,
@@ -51,17 +52,19 @@ const ParkingScreen: React.FC = () => {
             paddingHorizontal: 20,
             borderRadius: 12,
             marginVertical: 10,
+            marginHorizontal: 60
           }}
         >
           <CountDown
             until={remainingSeconds}
             onFinish={() => {
               setParkingActive(false);
+              setParkingDateTime(null);
               Alert.alert('Tiempo terminado', 'Tu estacionamiento ha finalizado.');
             }}
             size={22}
-            timeToShow={['M', 'S']}
-            timeLabels={{ m: '', s: '' }}
+            timeToShow={['H','M','S']}
+            timeLabels={{h: '',m: '',s: '' }}
             showSeparator
             digitStyle={{
               backgroundColor: 'transparent',

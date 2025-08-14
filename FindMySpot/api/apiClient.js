@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {getToken, removeToken, getMemoryToken, clearMemoryToken} from '@/services/storage';
+import { useRouter } from 'expo-router';
 
 const apiClient = axios.create({
-    baseURL: 'http://192.168.1.33:8080',
+    baseURL: 'http://192.168.1.40:8080',    
 });
 
 apiClient.interceptors.request.use(
@@ -18,6 +19,8 @@ apiClient.interceptors.request.use(
     },
     error => Promise.reject(error)
 );
+
+const router = useRouter();
 
 apiClient.interceptors.response.use(
     (response) => response,
