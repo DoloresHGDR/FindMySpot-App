@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useUser } from "@/context/UserContext";
 import { AxiosError } from 'axios';
@@ -61,7 +61,7 @@ export default function HistoryScreen () {
       };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }}>
             <Text style={styles.title}> HISTORIAL </Text>
             {parkings? (
                 <View style={styles.history}>
@@ -86,7 +86,7 @@ export default function HistoryScreen () {
             ):(<Text style={styles.title}> No tienes estacionamientos aun</Text>)
             }
             
-        </View>
+        </ScrollView>
     );
 }
 
