@@ -28,6 +28,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                      HttpServletResponse response,
                                      FilterChain filterChain)
         throws ServletException, IOException {
+        logger.info(String.format(
+                "Método: %s, URL: %s, Protocolo: %s",
+                request.getMethod(),
+                request.getRequestURI(),
+                request.getProtocol()
+        ));
 
         //Lee el header Authorization y si no empieza por Bearer lo ignora y deja pasar la peticion.
         final String authHeader = request.getHeader("Authorization");
@@ -43,7 +49,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             identityNumber = jwtUtil.extractIdentityNumber(jwt);
         } catch (Exception e) {
-            logger.warn("Token inválido: {}", e);
+            logger.warn(String.format(
+                    "Token inválido para request %s %s: %s",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    e.getMessage()
+            ));
         }
 
         //Verifica si el usuario no esta ya autenticado. Si no lo esta se continua con la validacion.

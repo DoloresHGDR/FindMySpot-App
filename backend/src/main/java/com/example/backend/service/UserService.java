@@ -29,14 +29,14 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<Users> getUserByIdentityNumber(String identityNumber) {
+    public Users getUserByIdentityNumber(String identityNumber) {
         return userRepository.findByIdentityNumber(identityNumber);
     }
 
     public void saveUser(RegisterUserDTO registerUserDTO) {
-        Optional<Users> existingUser = userRepository.findByIdentityNumber(registerUserDTO.getIdentityNumber());
+        Users existingUser = userRepository.findByIdentityNumber(registerUserDTO.getIdentityNumber());
 
-        if (existingUser.isPresent()) {
+        if (existingUser != null) {
             throw new RuntimeException("User already exists");
         }
 

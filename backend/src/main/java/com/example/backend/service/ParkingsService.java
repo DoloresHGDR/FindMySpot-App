@@ -1,7 +1,9 @@
 package com.example.backend.service;
 import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
+import com.example.backend.models.FcmToken;
 import com.example.backend.models.Parkings;
+import com.example.backend.models.Users;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +25,19 @@ import java.util.stream.Collectors;
 public class ParkingsService {
     private final ParkingsRepository parkingsRepository;
     private final PlatesService platesService;
+    private final UserService userService;
+    private final FcmMessagingService fcmMessagingService;
+    private final FcmTokenService fcmTokenService;
 
     @Autowired
-    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService) {
+    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, FcmTokenService fcmTokenService) {
         this.parkingsRepository = parkingsRepository;
         this.platesService = platesService;
+        this.userService = userService;
+        this.fcmMessagingService = fcmMessagingService;
+        this.fcmTokenService = fcmTokenService;
     }
+
 
     public List<Parkings> findAllParkings(){
         return parkingsRepository.findAll();
@@ -142,6 +151,17 @@ public class ParkingsService {
             if (p.isAboutToFinish()) {
                 p.setStatus(ParkingStatus.ABOUT_TO_FINISH);
                 parkingsRepository.save(p);
+
+                Optional<Users> user = userService.getUserById(p.getUserId());
+
+                List<FcmToken> tokens = fcmTokenService.findByUser(user);
+                for (FcmToken token : tokens) {
+                    fcmMessagingService.sendNotification(
+                            token.getFcmToken(),
+                            "Estacionamiento por finalizar",
+                            "Tu estacionamiento en " + p.getAddress() + " esta por finalizar."
+                    );
+                }
             }
         }
     }

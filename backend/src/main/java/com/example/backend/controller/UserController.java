@@ -32,30 +32,15 @@ public class UserController {
 
     @GetMapping("/identity/{identityNumber}")
     public ResponseEntity<Users> getUserByIdentityNumber(@PathVariable String identityNumber) {
-        Optional<Users> user = userService.getUserByIdentityNumber(identityNumber);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    /*
-    @PostMapping("/register")
-        public ResponseEntity<LoginResponseDTO> registerUser(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
-        try {
-            LoginResponseDTO response = userService.saveUser(registerUserDTO);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+        Users user = userService.getUserByIdentityNumber(identityNumber);
+        ResponseEntity<Users> response;
+        if (user != null) {
+            response = ResponseEntity.ok(user);
+        } else {
+            response = ResponseEntity.notFound().build();
         }
+        return response;
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
-        try {
-            LoginResponseDTO response = userService.loginUser(loginRequestDTO);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

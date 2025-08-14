@@ -18,8 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identityNumber) throws UsernameNotFoundException {
-        Users user = userRepository.findByIdentityNumber(identityNumber)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con identityNumber: " + identityNumber));
+        Users user = userRepository.findByIdentityNumber(identityNumber);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado con identityNumber: " + identityNumber);
+        }
         return UserDetailsImpl.build(user);
     }
 }

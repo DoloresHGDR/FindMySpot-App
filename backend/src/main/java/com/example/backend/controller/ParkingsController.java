@@ -59,3 +59,9 @@ public class ParkingsController {
     }
 
 }
+
+/*
+Deberia cambiar los entrypoint con userId, no son muy seguros.
+Se puede usar algo como lo que esta implementado en FcmTokenController
+La autenticacion del usuario se puede hacer desde el mismo token que llega en la request.
+ */
