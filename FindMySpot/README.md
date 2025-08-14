@@ -53,3 +53,28 @@ Join our community of developers creating universal apps.
 ##Dependencias
 npm install react-hook-form yup @hookform/resolvers
 npm install react-native-google-places-autocomplete
+
+Notificaciones:
+-npm install -g eas-cli
+-eas login
+-eas init
+-eas credentials (crear una nueva key si el eas init no lo hace solo)
+-npx expo prebuild
+-npx eas build:configure (ejecutar si no se crea el eas.json)
+-npm install @react-native-firebase/app @react-native-firebase/messaging
+
+Crear un proyecto firebase en https://console.firebase.google.com/:
+-Descargar archivo google-services.json del proyecto firebase y guardarlo en carpeta android/app
+-Añadir dependencias en ambos build.gradle, tanto de la raiz de la carpeta android como de android/app
+
+Backend:
+- Crear una carpeta config en resources si no la hay y colocar el archivo firebase que se indica en el proyecto firebase.
+- Añadir implementation 'com.google.firebase:firebase-admin:9.5.0' en el build.gradle del backend.
+- Actualizar dependencias
+- Volver a hacer la build del backend ./gradlew build -x test y volver a crear otra imagen para docker.
+
+Buildear la app:
+- Desde Android Studio (Instalar) ir a las herramientas de arriba y en build ir al apartado generate app bundles or Apks
+- Ejecutar Generate Apk.
+- El archivo app-debug.apk que se crea en la carpeta android/app/build/outputs/apk/debug instalarlo en el celular y seguir programando desde ahi.
+- Ejecutar el proyecto como npx expo start y el backend para que funcione.
