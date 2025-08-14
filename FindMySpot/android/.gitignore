@@ -1,0 +1,29 @@
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Bundle artifacts
+*.jsbundle
+
+
+.gradle
+app/build/
+build/
+.idea/
+local.properties
+captures/
+.DS_Store
+app/src/main/res/
+
+# Extras
+app/google-services.json

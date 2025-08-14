@@ -36,15 +36,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# Android
-/android/.gradle
-/android/app/build/
-/android/build/
-/android/.idea/
-/android/local.properties
-/android/captures/
-/android/.DS_Store
-
-# Extras
-package-lock.json
-backend/src/main/resources/config
+.package-lock.json
