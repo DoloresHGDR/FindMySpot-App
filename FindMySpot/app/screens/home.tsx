@@ -5,6 +5,8 @@ import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
 import { clearMemoryToken, removeToken } from '@/services/storage';
+import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
+
 
 
 export default function HomeScreen() {
@@ -26,6 +28,20 @@ export default function HomeScreen() {
       clearMemoryToken();
       router.push('/')
     }
+
+    useEffect(() => {
+      if (!user?.logged) return;
+
+      let cleanup: (() => void) | undefined;
+
+      (async () => {
+        cleanup = await setupFirebaseMessaging();
+      })();
+
+      return () => {
+        if (cleanup) cleanup();
+      };
+    }, [user]);
 
   return (
     <View style={styles.container}>
