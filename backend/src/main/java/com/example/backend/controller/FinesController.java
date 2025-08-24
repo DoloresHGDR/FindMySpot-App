@@ -1,9 +1,13 @@
 package com.example.backend.controller;
+
 import com.example.backend.models.Fines;
+import com.example.backend.models.Users;
+import com.example.backend.service.AuthService;
 import com.example.backend.service.FinesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,20 +17,28 @@ public class FinesController {
 
     private final FinesService finesService;
 
-    @Autowired
     public FinesController(FinesService finesService) {
         this.finesService = finesService;
     }
 
     @GetMapping
-    public List<Fines> getAll() {
+    public List<Fines> findAll() {
         return finesService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Fines> getById(@PathVariable Long id) {
+    public ResponseEntity<Fines> findById(@PathVariable Long id) {
         Optional<Fines> fines = finesService.findById(id);
-        return fines.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return fines.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<Fines>> findByUserId() {
+        Users user = AuthService.getAuthenticatedUser();
+        List<Fines> fines = finesService.findByUserId(user.getId());
+
+        return ResponseEntity.ok(fines);
+
     }
 
     @PostMapping
