@@ -1,7 +1,9 @@
 package com.example.backend.service;
 import com.example.backend.models.Plates;
+import com.example.backend.models.Users;
 import com.example.backend.repository.PlatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,23 @@ public class PlatesService {
         return platesRepository.findByUserId(userId);
     }
 
-    public Plates save(Plates plates) {
-        return platesRepository.save(plates);
+    public List<Plates> findAllByUserId(Long userId) {
+        return platesRepository.findAllByUserId(userId);
     }
+
+    public Plates save (String plate) {
+        Long userId = AuthService.getAuthenticatedUserId();
+        Plates p = new Plates(
+                plate,
+                userId
+        );
+        return platesRepository.save(p);
+    }
+
     public void delete(Long id) {
         platesRepository.deleteById(id);
     }
-    
-}
+
+
+
+ }

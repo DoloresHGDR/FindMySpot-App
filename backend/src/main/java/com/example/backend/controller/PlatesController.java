@@ -1,4 +1,5 @@
 package com.example.backend.controller;
+import com.example.backend.dtos.PlateRequestDTO;
 import com.example.backend.models.Plates;
 import com.example.backend.service.PlatesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,14 @@ public class PlatesController {
         return plates.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/user/{id}")
+    public List<Plates> getByUserId(@PathVariable Long id) {
+        return platesService.findAllByUserId(id);
+    }
+
     @PostMapping
-    public Plates save(@RequestBody Plates plates) {
-        return platesService.save(plates);
+    public Plates save(@RequestBody PlateRequestDTO plateRequest) {
+        return platesService.save(plateRequest.getNumber());
     }
 
     @DeleteMapping("/{id}")
