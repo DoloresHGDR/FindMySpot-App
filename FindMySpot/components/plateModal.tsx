@@ -4,7 +4,6 @@ import Buttons from './buttons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import apiClient from '@/api/apiClient';
-import { saveToken } from '@/services/storage';
 import { AxiosError } from 'axios';
 import { router } from 'expo-router';
 
@@ -15,11 +14,11 @@ const validationSchema = Yup.object().shape({
     .required('La patente es obligatoria')
     .matches(
       plateRegex,
-      'Formato inválido. Usa mayúsculas y espacios: ABC 123 o AB 123 CD'
+      'Formato inválido.'
     ),
 });
 
-const formatPlate = (text) => {
+const formatPlate = (text: any) => {
   const cleaned = text.replace(/\s+/g, '').toUpperCase();
   if (cleaned.length <= 6 && /^[A-Z]{3}[0-9]{0,3}/.test(cleaned)) {
     return cleaned.length > 3
@@ -38,17 +37,14 @@ const formatPlate = (text) => {
 
 const handlePlates = async (values: any, onClose: () => void, resetForm: () => void) => {
   try {
-    const response = await apiClient.post('/api/auth/plates', {
-      plate: values.plate
+    const response = await apiClient.post('/api/plates', {
+      number: values.plate
     });
-
-    const { token } = response.data;
-    await saveToken(token);
 
     if (response.status === 200) {
       resetForm();
       onClose();
-      router.replace("/screens/mysCars");
+      router.replace("/screens/plates");
     }
   } catch (err) {
     const error = err as AxiosError;
@@ -63,12 +59,12 @@ const handlePlates = async (values: any, onClose: () => void, resetForm: () => v
   }
 };
 
-const PlateModal = ({ visible, onClose }) => {
+const PlateModal = ({ visible, onClose } : any) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <Text style={styles.title}>Ingresa el número de patente</Text>
+          <Text style={styles.title}>Matrícula</Text>
 
           <Formik
             initialValues={{ plate: '' }}
@@ -81,15 +77,14 @@ const PlateModal = ({ visible, onClose }) => {
               <>
                 <TextInput
                   style={[
-                    styles.input,
-                    touched.plate && errors.plate ? styles.inputError : null,
+                    styles.input
                   ]}
                   value={values.plate}
                   onChangeText={(text) => {
                     const formatted = formatPlate(text);
                     setFieldValue('plate', formatted);
                   }}
-                  placeholder="Ej: XYZ 123 o XY 123 ZA"
+                  placeholder="Ingrese una matrícula"
                   placeholderTextColor="#3f3f3cff"
                   autoCapitalize="characters"
                   maxLength={9}
@@ -125,40 +120,43 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000088'
   },
   container: {
-    margin: 20,
-    padding: 20,
+    margin: 35,
     backgroundColor: '#1a1a19',
     borderRadius: 12,
     elevation: 5,
-    display: 'flex'
+    width: '80%',
+    height: '27%',
+    justifyContent: 'center',
+    padding: 25
   },
   title: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 24,
     fontFamily: 'arial',
-    fontWeight: 600,
-    color: '#43985b'
+    fontWeight: 'bold',
+    color: '#43985b',
+    textAlign: 'center',
+    top: -20
   },
   error: {
     color: '#ff4d4d',
-    marginBottom: 10,
     fontSize: 14,
+    paddingLeft: 6
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#cecece',
     borderRadius: 6,
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 8,
     color: 'white'
   },
   buttons: {
-    width: 290,
+    width: '85%',
     height: 60,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 15
+    marginLeft: 6,
+    gap: 30,
+    bottom: -18,
 }
 
 });
