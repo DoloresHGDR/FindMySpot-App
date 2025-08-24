@@ -67,14 +67,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1M
     "userId": 1
 }
 
+### GET
+GET http://localhost:8080/api/plates/user/2
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTk4ODgyMSwiZXhwIjoxNzU1OTg5NzIxfQ.k5DAE1S7MhDAT0xd6T4ZWx3JKxLltxxG_9-vxISPMII
+
 ### POST 2
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MjAwNjQ2MCwiZXhwIjoxNzUyMDA3MzYwfQ.0cq8HSoK6cbahQNdVfvy1HJCWJ_ptI3EZykwx-X9ukM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTk5Mzc3MSwiZXhwIjoxNzU1OTk0NjcxfQ.zy0m91tJe3A9B4C7tnxl5qC5ljSYqWYCqXET6Nm4enE
 
 {
-    "number": "ABC 123",
-    "userId": 2
+    "number": "ABC 124"
 }
 
 ### GET
@@ -139,15 +143,22 @@ Accept: application/json
 ###POST
 POST http://localhost:8080/api/fines
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTkwOTIyNSwiZXhwIjoxNzU1OTEwMTI1fQ.zHUwDr3PzdNKBJ4BQaFYX-n1m7HDx884wIiS1yMuz8Q
 
 {
-  "description": "Estacionado en una ochava",
-  "amount": 100000,
-  "datetime": "2025-05-18T19:57:00",
+  "description": "Adulterar tarjetas de estacionamiento",
+  "amount": 15000,
+  "datetime": "2024-05-18T11:30:00",
   "plate": {
-    "id": 1
+    "id": 2
   }
 }
+
+### GETBYUSERID
+GET http://localhost:8080/api/fines/user
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTk5Mzc3MSwiZXhwIjoxNzU1OTk0NjcxfQ.zy0m91tJe3A9B4C7tnxl5qC5ljSYqWYCqXET6Nm4enE
+
 
 ###DELETE
 DELETE http://localhost:8080/api/fines/1

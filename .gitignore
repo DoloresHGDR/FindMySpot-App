@@ -54,3 +54,6 @@ backend/gradlew.bat
 backend/settings.gradle
 backend/build.gradle
 backend/docker/db
+backend/src/main/resources/application.properties
+backend/src/main/resources/config/
+backend/local.properties
