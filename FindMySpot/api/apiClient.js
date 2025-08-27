@@ -11,9 +11,7 @@ apiClient.interceptors.request.use(
         const token = await getToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
-        } else {
-            config.headers.Authorization = `Bearer ${tokenMemory}`;
-        }    
+        }
         return config;
     },
     error => Promise.reject(error)
@@ -25,14 +23,8 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const status = error.response?.status;
-        const data = error.response?.data;
 
         if (status === 401) {
-            await removeToken();
-            router.replace('/login');
-        }
-
-        if (status === 403 && data?.message?.toLowerCase().includes('token expired')) {
             await removeToken();
             router.replace('/login');
         }
