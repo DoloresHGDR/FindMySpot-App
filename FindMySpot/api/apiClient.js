@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getToken, removeToken, getMemoryToken, clearMemoryToken} from '@/services/storage';
+import {getToken, removeToken} from '@/services/storage';
 import { useRouter } from 'expo-router';
 
 const apiClient = axios.create({
@@ -9,7 +9,6 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
     async config => {
         const token = await getToken();
-        let tokenMemory = getMemoryToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         } else {
@@ -26,11 +25,18 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const status = error.response?.status;
-        if (status === 401 || status === 403) {
+        const data = error.response?.data;
+
+        if (status === 401) {
             await removeToken();
-            clearMemoryToken();
-            router.replace('/');
+            router.replace('/login');
         }
+
+        if (status === 403 && data?.message?.toLowerCase().includes('token expired')) {
+            await removeToken();
+            router.replace('/login');
+        }
+
         return Promise.reject(error);
     }
 );

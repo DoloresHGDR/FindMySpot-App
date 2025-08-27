@@ -1,23 +1,14 @@
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from "react-native";
+import { AppState } from 'react-native';
 
-let memoryToken = null;
+let rememberMe = false;
+let tokenKey = 'auth_token';
 
-export const setMemoryToken = (token) => {
-    memoryToken = token
-}
-
-export const getMemoryToken = () => {
-    return memoryToken
-}
-
-export const clearMemoryToken = () => {
-    memoryToken = null;
-}
-
-export async function saveToken(token) {
+export async function saveToken(token, remember = false) {
     try {
-        await SecureStore.setItemAsync('auth_token', token);
+        rememberMe = remember
+        await SecureStore.setItemAsync(tokenKey, token);
     } catch (error) {
         console.error('Error al guardar token seguro:', error);
     }
@@ -25,7 +16,7 @@ export async function saveToken(token) {
 
 export async function getToken() {
     try {
-        const token = await SecureStore.getItemAsync('auth_token');
+        const token = await SecureStore.getItemAsync(tokenKey);
         return token;
     } catch (error) {
         Alert.alert('error leyendo token seguro:', error.message || 'Error')
@@ -36,8 +27,16 @@ export async function getToken() {
 
 export async function removeToken() {
     try {
-        await SecureStore.deleteItemAsync('auth_token');
+        await SecureStore.deleteItemAsync(tokenKey);
     } catch (error) {
         console.error('Error al eliminar token seguro:', error)
     }
 }
+
+AppState.addEventListener('change', async (state) => {
+  if (state === 'background' || state === 'inactive') {
+    if (!rememberMe) {
+      await removeToken();
+    }
+  }
+});
