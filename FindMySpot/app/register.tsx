@@ -265,7 +265,6 @@ const styles = StyleSheet.create({
   },
   stepLabel: {
     fontSize: 12,
-    color: '#555',
     width: 70,
     textAlign: 'center',
     color: '#43985b'

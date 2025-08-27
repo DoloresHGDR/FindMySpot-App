@@ -4,7 +4,7 @@ import { useUser } from '@/context/UserContext';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
-import { clearMemoryToken, removeToken } from '@/services/storage';
+import { removeToken } from '@/services/storage';
 import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
 
 
@@ -14,7 +14,7 @@ export default function HomeScreen() {
     const [secureBalance, setSecureBalance] = useState(false)
     const router = useRouter();
 
-    const handleLogOut = () => {
+    const handleLogOut = async () => {
       setUser({
         logged: false,
         id: null,
@@ -24,9 +24,8 @@ export default function HomeScreen() {
         role: null,
         plate: []
       });
-      removeToken();
-      clearMemoryToken();
-      router.push('/')
+      await removeToken();
+      router.push('/login')
     }
 
     useEffect(() => {
@@ -75,12 +74,12 @@ export default function HomeScreen() {
         <Text style={[styles.label, {color:'#e9e9e9', fontFamily:'arial', fontSize:15} ]}>¿Qué quieres hacer hoy?</Text>
         <View style={styles.buttonGrid}>
                   <HomeButtons 
-                    tittle='New Park'
+                    tittle='Estacionamiento'
                     onPress={() => useRouter().push('/screens/parking')}
                   />
                   <HomeButtons 
-                    tittle='Mis Cars'
-                    onPress={() => useRouter().push('/screens/mysCars')}
+                    tittle='Matriculas'
+                    onPress={() => useRouter().push('/screens/plates')}
                   />
                   <HomeButtons 
                     tittle='Historial'
