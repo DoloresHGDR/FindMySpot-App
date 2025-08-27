@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { fetchHistory, fetchNearbyParkingLocations, submitParking, stopParking } from '@/services/parkingService';
-import { getUserLocation } from '@/utils/location';
+import { submitParking, stopParking } from '@/services/parkingService';
+import { saveParkingData, clearParkingData, getParkingData } from '@/services/parkingStorage';
+import { useParkingHistory } from '@/hooks/useParkingHistory';
+import { setTimeOffset } from '@/utils/timer';
+
+interface UseParkingLogicProps {
+  userId: string | null;
+  userPlates: { id: number; number: string }[] | undefined;
+}
 
 export interface HistoryDTO {
   id: string;
@@ -13,101 +20,29 @@ export interface HistoryDTO {
   price: string;
 }
 
-type MarkerType = {
-  id: number;
-  latitude: number;
-  longitude: number;
-};
-
-interface UseParkingLogicProps {
-  userId: string | null;
-  userPlates: { id: number; number: string }[] | undefined;
-  googleApiKey: string;
-}
-
-export const useParkingLogic = ({ userId, userPlates, googleApiKey }: UseParkingLogicProps) => {
+export const useParkingLogic = ({ userId, userPlates}: UseParkingLogicProps) => {
     const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [markers, setMarkers] = useState<MarkerType[]>([]);
-    const [region, setRegion] = useState({
-        latitude: -34.616158,
-        longitude: -68.329941,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.02,
-    });
-    const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [history, setHistory] = useState<HistoryDTO[]>([]);
-    const [lastParking, setLastParking] = useState<HistoryDTO | null>(null);
     const [showAlert, setShowAlert] = useState(false);
-    const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
     const [parkingActive, setParkingActive] = useState(false);
     const [selectedParkingData, setSelectedParkingData] = useState<HistoryDTO | null>(null);
-    const [parkingDateTime, setParkingDateTime] = useState<string | null>(null);
+    const {loadHistory, lastParking} = useParkingHistory();
 
-
-    const fetchUserLocation = async () => {
-        const coords = await getUserLocation();
-        if (coords) setUserLocation(coords);
-    };
-
-    const fetchParkingLocations = async () => {
-        if (!userLocation) return;
-        const nearbyMarkers = await fetchNearbyParkingLocations(userLocation, googleApiKey);
-        setMarkers(nearbyMarkers);
-    };
-
-    const countdownCalculate = (endDate: string) => {
-
-        const now = new Date();
-        const endTime = new Date(endDate);
-        let remaining = Math.floor((endTime.getTime() - now.getTime()) / 1000);
-        remaining -= 8;
-
-        if (remaining > 0) {
-            setRemainingSeconds(remaining);
-            setParkingActive(true);
-        } else {
-            setRemainingSeconds(0);
-            setParkingActive(false);
-        }
-
-    }
-
-    const loadHistory = async () => {
-        if (!userId) return;
-        try {
-        const data = await fetchHistory(userId);
-        setHistory(data);
-
-        if (data.length > 0) {
-            const latest = data[0];
-            setLastParking(latest);
-            
-            if (parkingDateTime == null) {
-                countdownCalculate(latest.endDate)
-            } else {
-                countdownCalculate(parkingDateTime)
-            }        
-        } else {
-            setLastParking(null);
-            setRemainingSeconds(null);
-            setParkingActive(false);
-        }
-        } catch (error) {
-        console.error('Error al obtener el historial de estacionamiento', error);
-        }
-    };
 
     const handleSubmit = async (data: { plate: string; address: string; duration: string }) => {
-        if (!userId) return;
         try {
             const submit = await submitParking(userId, data.plate, data.address, data.duration);
-            setLastParking(submit);
-            setParkingDateTime(submit.endDate)
             setModalVisible(false);
             loadHistory();
-        } catch {
-        Alert.alert('Error', 'No se pudo iniciar el estacionamiento.');
+            setTimeOffset(submit.startTime); 
+            await saveParkingData({
+                startTime: submit.startTime,
+                duration: Number(submit.durationMinutes),
+                });
+            setParkingActive(true);
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo iniciar el estacionamiento.');
+            console.log(error);
         }
     };
 
@@ -150,16 +85,21 @@ export const useParkingLogic = ({ userId, userPlates, googleApiKey }: UseParking
     const handleStopParking = async (parkingId: string) => {
         try {
         await stopParking(parkingId);
-        setRemainingSeconds(0);
+        await clearParkingData();
         setParkingActive(false);
-        setParkingDateTime(null);
-        Alert.alert('Finalizado', 'Se detuvo el estacionamiento');
         loadHistory();
+        Alert.alert('Finalizado', 'Se detuvo el estacionamiento');
         } catch (error) {
         console.error(error);
         }
     };
 
+    const handleFinishPark = async () => {
+        await clearParkingData();
+        setParkingActive(false);
+        loadHistory();
+    }
+ 
     const onRefresh = async () => {
         setRefreshing(true);
         await loadHistory();
@@ -167,12 +107,12 @@ export const useParkingLogic = ({ userId, userPlates, googleApiKey }: UseParking
     };
 
     useEffect(() => {
-        fetchUserLocation();
-    }, []);
-
-    useEffect(() => {
-        if (userLocation) fetchParkingLocations();
-    }, [userLocation]);
+    const checkParking = async () => {
+      const parkingData = await getParkingData();
+      if (parkingData) setParkingActive(true);
+    };
+    void checkParking();
+  }, []);
 
     useEffect(() => {
         loadHistory();
@@ -181,12 +121,8 @@ export const useParkingLogic = ({ userId, userPlates, googleApiKey }: UseParking
     return {
         refreshing,
         modalVisible,
-        markers,
-        region,
-        history,
         lastParking,
         showAlert,
-        remainingSeconds,
         parkingActive,
         selectedParkingData,
         setSelectedParkingData,
@@ -198,6 +134,6 @@ export const useParkingLogic = ({ userId, userPlates, googleApiKey }: UseParking
         handleSubmit,
         onRefresh,
         setParkingActive,
-        setParkingDateTime
+        handleFinishPark
     };
 };

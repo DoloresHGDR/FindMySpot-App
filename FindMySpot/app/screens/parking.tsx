@@ -1,12 +1,13 @@
 import { ModalParking } from '@/components/modalParking';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, RefreshControl} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, RefreshControl, Button} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useUser } from '@/context/UserContext';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import CountDown from 'react-native-countdown-component';
 import { useParkingLogic } from '@/hooks/useParkingLogic';
 import { formatLastParkingDate } from '@/utils/format';
-
+import ParkingTimer from '@/components/parkingTimer';
+import { useParkingMap } from '@/hooks/useParkingMap';
+import { useParkingHistory } from '@/hooks/useParkingHistory';
 
 const ParkingScreen: React.FC = () => {
   const apiKey= 'AIzaSyAc9TkncKPp1e2woZfDIsDQNv-zrAFPqBs'
@@ -14,12 +15,8 @@ const ParkingScreen: React.FC = () => {
   const {
     refreshing,
     modalVisible,
-    markers,
-    region,
-    history,
     lastParking,
     showAlert,
-    remainingSeconds,
     parkingActive,
     setSelectedParkingData,
     setShowAlert,
@@ -29,12 +26,16 @@ const ParkingScreen: React.FC = () => {
     handleSubmit,
     onRefresh,
     setParkingActive,
-    setParkingDateTime,
+    handleFinishPark
   } = useParkingLogic({
     userId: user?.id || null,
-    userPlates: user?.plate,
-    googleApiKey: apiKey,
+    userPlates: user?.plate
   });
+
+  const { markers, region } = useParkingMap(apiKey);
+  const { history } = useParkingHistory();
+
+  
 
   const customMarkerIcon = require('@/assets/images/car-parking.png');
 
@@ -44,43 +45,9 @@ const ParkingScreen: React.FC = () => {
         <Text style={styles.buttonText}>{parkingActive ? 'Detener' : 'Estacionarme'}</Text>
       </TouchableOpacity>
 
-      {parkingActive && remainingSeconds !== null && remainingSeconds > 0 && (
-        <View
-          style={{
-            backgroundColor: '#223726',
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            borderRadius: 12,
-            marginVertical: 10,
-            marginHorizontal: 60
-          }}
-        >
-          <CountDown
-            until={remainingSeconds}
-            onFinish={() => {
-              setParkingActive(false);
-              setParkingDateTime(null);
-              Alert.alert('Tiempo terminado', 'Tu estacionamiento ha finalizado.');
-            }}
-            size={22}
-            timeToShow={['H','M','S']}
-            timeLabels={{h: '',m: '',s: '' }}
-            showSeparator
-            digitStyle={{
-              backgroundColor: 'transparent',
-              width: undefined,
-            }}
-            digitTxtStyle={{
-              color: '#43975a',
-              fontSize: 28,
-              fontWeight: 'bold',
-            }}
-            separatorStyle={{
-              color: '#43975a',
-              fontSize: 28,
-              fontWeight: 'bold',
-            }}
-          />
+      {parkingActive && (
+        <View>
+          <ParkingTimer onFinish={() => handleFinishPark()}/>
         </View>
       )}
 
@@ -113,8 +80,6 @@ const ParkingScreen: React.FC = () => {
               image={customMarkerIcon}
             />
           ))}
-
-          
         </MapView>
       </View>
       
@@ -149,54 +114,54 @@ const ParkingScreen: React.FC = () => {
         ))}
 
         <AwesomeAlert
-        show={showAlert}
-        showProgress={false}
-        title="Volver a estacionar"
-        message="¿Seguro que quieres estacionar aquí? La duracion sera la misma que la ultima vez"
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={true}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="Cancelar"
-        confirmText="Sí"
-        confirmButtonColor="#43975a"
-        cancelButtonColor='#974343ff'
-        onCancelPressed={() => setShowAlert(false)}
-        onConfirmPressed={() => handleConfirmRepark()}
+          show={showAlert}
+          showProgress={false}
+          title="Volver a estacionar"
+          message="¿Seguro que quieres estacionar aquí? La duracion sera la misma que la ultima vez"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Cancelar"
+          confirmText="Sí"
+          confirmButtonColor="#43975a"
+          cancelButtonColor='#974343ff'
+          onCancelPressed={() => setShowAlert(false)}
+          onConfirmPressed={() => handleConfirmRepark()}
 
-        overlayStyle={{
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        }}
-        confirmButtonStyle={{
-          paddingVertical: 12,
-          paddingHorizontal: 40,
-          borderRadius: 8,    
-          fontSize: 18,   
-        }}
-        cancelButtonStyle={{
-          paddingVertical: 12,
-          paddingHorizontal: 20,
-          borderRadius: 8,
-          fontSize: 18,
-        }}
+          overlayStyle={{
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          }}
+          confirmButtonStyle={{
+            paddingVertical: 12,
+            paddingHorizontal: 40,
+            borderRadius: 8,    
+            fontSize: 18,   
+          }}
+          cancelButtonStyle={{
+            paddingVertical: 12,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+            fontSize: 18,
+          }}
 
-        titleStyle={{
-          color: '#e6e6e6',
-          fontWeight: 'bold'
-        }}
+          titleStyle={{
+            color: '#e6e6e6',
+            fontWeight: 'bold'
+          }}
 
-        messageStyle={{
-          color: '#e6e6e6',
-          textAlign: 'center',
-          lineHeight: 20,
-          fontSize: 16
-        }}
+          messageStyle={{
+            color: '#e6e6e6',
+            textAlign: 'center',
+            lineHeight: 20,
+            fontSize: 16
+          }}
 
-        contentContainerStyle={{
-          backgroundColor: '#1a1a19'
-          
-        }}
-      />
+          contentContainerStyle={{
+            backgroundColor: '#1a1a19'
+            
+          }}
+        />
       </View>
 
     </ScrollView>

@@ -6,3 +6,4 @@ export function formatMiliseconds(ms: number): string {
     const seconds = totalSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
+
