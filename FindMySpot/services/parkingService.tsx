@@ -17,8 +17,8 @@ interface MarkerType {
     longitude: number;
 }
 
-export const fetchHistory = async (userId: string | null): Promise<ParkingHistory[]> => {
-    const response = await apiClient.get(`/api/parkings/history/user/${userId}?limit=3`);
+export const fetchHistory = async (): Promise<ParkingHistory[]> => {
+    const response = await apiClient.get(`/api/parkings/history/user?limit=3`);
     return response.data;
 }
 
@@ -38,7 +38,7 @@ export const submitParking = async (
 };
 
 export const stopParking = async (parkingId: string) => {
-    return apiClient.post(`api/parkings/finish/${parkingId}`);
+    return apiClient.post(`/api/parkings/finish/${parkingId}`);
 };
 
 export const fetchNearbyParkingLocations = async (

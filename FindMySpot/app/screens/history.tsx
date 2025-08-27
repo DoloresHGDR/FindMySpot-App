@@ -26,7 +26,7 @@ export default function HistoryScreen () {
     useEffect(() => {
         const fetchParkings = async () => {
             try {
-                const response = await apiClient.get(`/api/parkings/history/user/${user.id}`);
+                const response = await apiClient.get(`/api/parkings/history/user`);
                 setParkings(response.data)
             } catch (error) {
                 const err = error as AxiosError;

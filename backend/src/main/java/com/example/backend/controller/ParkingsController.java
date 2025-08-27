@@ -3,6 +3,7 @@ import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingMapDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parkings;
+import com.example.backend.service.AuthService;
 import com.example.backend.service.ParkingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,9 @@ public class ParkingsController {
         return parkings.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/history/user/{userId}")
-    public List<HistoryDTO> getParkingHistoryByUserId(@PathVariable Long userId, @RequestParam(name= "limit", required = false) Integer limit){
+    @GetMapping("/history/user")
+    public List<HistoryDTO> getParkingHistoryByUserId(@RequestParam(name= "limit", required = false) Integer limit){
+        Long userId = AuthService.getAuthenticatedUser().getId();
         return parkingsService.getParkingHistoryByUserId(userId, limit);
     }
 
