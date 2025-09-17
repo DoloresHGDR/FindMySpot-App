@@ -1,45 +1,51 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useUser } from "@/context/UserContext";
 import { AxiosError } from 'axios';
 import apiClient from '@/api/apiClient';
 import { format } from 'date-fns';
-
-
-
-interface ParkingHistory {
-  startDate: string;
-  endDate: string;
-  address: string;
-  plate: string;
-  duration: string;
-  price: number;
-}
+import PlatePicker from "@/components/pickerPlate"
+import { useUser } from '@/context/UserContext';
+import ParkingHistory from '@/models/history';
 
 export default function HistoryScreen () {
-
     const [parkings, setParkings] = useState<ParkingHistory[]>([]);
     const parkingIcon = require('@/assets/images/parking.png')
+    const [selectedPlateId, setSelectedPlateId] = useState<number | null>(null);
     const { user } = useUser();
 
     useEffect(() => {
         const fetchParkings = async () => {
-            try {
-                const response = await apiClient.get(`/api/parkings/history/user`);
-                setParkings(response.data)
-            } catch (error) {
-                const err = error as AxiosError;
-                if (err.response) {
-                    Alert.alert('Error', err.response.data as string || "Hubo un error al encontrar parkings")
-                } else {
-                    Alert.alert('Error', "No se pudo conectar con el servidor.")
+            if (selectedPlateId) {
+                const plateId = Number(selectedPlateId);
+                try {
+                    const response = await apiClient.get(`/api/parkings/history/user/${plateId}`);
+                    setParkings(response.data)
+                } catch (error) {
+                    const err = error as AxiosError;
+                    if (err.response) {
+                        Alert.alert('Error', err.response.data as string || "Hubo un error al encontrar parkings")
+                        console.log(err)
+                    } else {
+                        Alert.alert('Error', "No se pudo conectar con el servidor.")
+                    }
                 }
-            }
+            };
+            return;
         };
         
         fetchParkings();
-    }, []);
+    }, [selectedPlateId, user]);
+
+    useEffect(() => {
+        if (user?.plate?.length > 0) {
+            setSelectedPlateId(user.plate[0].id);
+        }
+    }, [user]);
+
+    const handlePlateChange = (plateId: number | null) => {
+        setSelectedPlateId(plateId);
+    };
 
     const handleViewDetails = (parking: any) => {
         useRouter().push({
@@ -63,28 +69,34 @@ export default function HistoryScreen () {
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }}>
             <Text style={styles.title}> HISTORIAL </Text>
-            {parkings? (
+            <PlatePicker
+                selectedPlateId={selectedPlateId}
+                onPlateChange={handlePlateChange}
+                plates={user.plate}
+            />
+            
+            {parkings && selectedPlateId ? (
                 <View style={styles.history}>
-                {parkings.map((parking, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        style={styles.historyItem}
-                        onPress={() => handleViewDetails(parking)}
-                    >
-                        <Image source={parkingIcon} style={styles.icon} />
+                    {parkings?.map((parking, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.historyItem}
+                            onPress={() => handleViewDetails(parking)}
+                        >
+                            <Image source={parkingIcon} style={styles.icon} />
 
-                        <View style={styles.infoContainer}>
-                            <Text style={styles.date}>{formatParkingDate(parking.startDate)}</Text>
-                            <Text style={styles.address} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>{parking.address}</Text>
-                        </View>
+                            <View style={styles.infoContainer}>
+                                <Text style={styles.date}>{formatParkingDate(parking.startDate)}</Text>
+                                <Text style={styles.address} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>{parking.address}</Text>
+                            </View>
 
-                        <Text style={styles.price} numberOfLines={1}>${parking.price.toLocaleString('es-AR')}</Text>
+                            <Text style={styles.price} numberOfLines={1}>${parking.price.toLocaleString('es-AR')}</Text>
 
-                    </TouchableOpacity>
-                ))}
+                        </TouchableOpacity>
+                    ))}
                 </View>
-            ):(<Text style={styles.title}> No tienes estacionamientos aun</Text>)
-            }
+            ) : (<Text style={styles.title}> No tienes estacionamientos aun</Text>)}
+            
             
         </ScrollView>
     );
@@ -148,5 +160,5 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 30,
         height: 30,
-    }
+    },
 });
