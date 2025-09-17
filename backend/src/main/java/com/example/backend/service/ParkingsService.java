@@ -1,9 +1,7 @@
 package com.example.backend.service;
 import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
-import com.example.backend.models.FcmToken;
-import com.example.backend.models.Parkings;
-import com.example.backend.models.Users;
+import com.example.backend.models.*;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import com.example.backend.dtos.ParkingMapDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,30 +46,33 @@ public class ParkingsService {
         return parkingsRepository.findById(id);
     }
 
+    private HistoryDTO mapToHistoryDTO(Parkings parking) {
+        Long id = parking.getId();
+        String plate = platesService.findById(parking.getPlateId()).get().getNumber();
+        String address = parking.getAddress();
+        LocalDateTime startDate = parking.getStartTime();
+        LocalDateTime endDate = parking.getEndTime();
+        String duration = formatDuration(parking.getDurationMinutes());
+        String price = parking.getPrice().toString();
+
+        return new HistoryDTO(id, startDate, endDate, address, plate, duration, price);
+    }
+
+    public List<HistoryDTO> getLast3DistinctParkings(Long userId) {
+        List<Parkings> parkings = parkingsRepository.findLast3DistinctByAddress(userId);
+        // stream convierte la lista en una secuencia de elementos al que se le puede aplicar map
+        // map toma cada elemento del stream parkings y el this:: dice que para cada objeto parking de parkings va a llamar a la funcion
+        // collect toma todos los elementos del stream y con toList los convierte nuevamente en una lista.
+        return parkings.stream().map(this::mapToHistoryDTO).collect(Collectors.toList());
+
+    }
+
     // Busca una lista de parkings hechos por un usuario especifico, sirve para el historial.
 
-    public List<HistoryDTO> getParkingHistoryByUserId(Long userId, Integer limit) {
-        List<Parkings> parkings;
-        if(limit != null) {
-            Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "startTime"));
-            parkings = parkingsRepository.findByUserId(userId, pageable).getContent();
-        } else {
-            parkings = parkingsRepository.findByUserIdOrderByStartTimeDesc(userId);
-        }
+    public List<HistoryDTO> getParkingHistoryByUserId(Long userId, Long plateId) {
+        List<Parkings> parkings = parkingsRepository.findByUserIdAndPlateIdOrderByStartTimeDesc(userId, plateId);
 
-        return parkings.stream()
-                .map(parking -> {
-                    Long id = parking.getId();
-                    String plate = platesService.findByUserId(parking.getPlateId()).getNumber();
-                    String address = parking.getAddress();
-                    LocalDateTime startDate = parking.getStartTime();
-                    LocalDateTime endDate = parking.getEndTime();
-                    String duration = formatDuration(parking.getDurationMinutes());
-                    String price = parking.getPrice().toString();
-
-                    return new HistoryDTO(id, startDate, endDate, address, plate, duration, price);
-                })
-                .collect(Collectors.toList());
+        return parkings.stream().map(this::mapToHistoryDTO).collect(Collectors.toList());
 
     }
 
@@ -165,6 +167,8 @@ public class ParkingsService {
             }
         }
     }
+
+
 
     public void delete(Long id){
         parkingsRepository.deleteById(id);

@@ -33,10 +33,17 @@ public class ParkingsController {
         return parkings.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/history/user")
-    public List<HistoryDTO> getParkingHistoryByUserId(@RequestParam(name= "limit", required = false) Integer limit){
+    @GetMapping("/history/user/{plateId}")
+    public List<HistoryDTO> getParkingHistoryByUserId(@PathVariable Long plateId){
         Long userId = AuthService.getAuthenticatedUser().getId();
-        return parkingsService.getParkingHistoryByUserId(userId, limit);
+
+        return parkingsService.getParkingHistoryByUserId(userId, plateId);
+    }
+
+    @GetMapping("/history/last-three")
+    public List<HistoryDTO> getLast3Distinct() {
+        Long userId = AuthService.getAuthenticatedUser().getId();
+        return parkingsService.getLast3DistinctParkings(userId);
     }
 
     @GetMapping("/about-to-finish/map")

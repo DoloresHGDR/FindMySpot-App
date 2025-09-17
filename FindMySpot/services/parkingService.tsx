@@ -1,15 +1,7 @@
 import apiClient from "@/api/apiClient";
 import { getCoordinates, isNearby } from "@/utils/location";
+import ParkingHistory from "@/models/history";
 
-interface ParkingHistory {
-    id: string;
-    startDate: string;
-    endDate: string;
-    address: string;
-    plate: string;
-    duration: string;
-    price: string
-}
 
 interface MarkerType {
     id: number;
@@ -18,7 +10,7 @@ interface MarkerType {
 }
 
 export const fetchHistory = async (): Promise<ParkingHistory[]> => {
-    const response = await apiClient.get(`/api/parkings/history/user?limit=3`);
+    const response = await apiClient.get(`/api/parkings/history/last-three`);
     return response.data;
 }
 
