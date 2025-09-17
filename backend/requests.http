@@ -60,10 +60,10 @@ Content-Type: application/json
 ### POST
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MjAwNjQ2MCwiZXhwIjoxNzUyMDA3MzYwfQ.0cq8HSoK6cbahQNdVfvy1HJCWJ_ptI3EZykwx-X9ukM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzExMDczNiwiZXhwIjoxNzU3MTExNjM2fQ.TyY4VC9hW4VYYvgYMrrL-UbD-dwUwuuCaijamYv4zd8
 
 {
-    "number": "AH 192 WL",
+    "number": "RAU 123",
     "userId": 1
 }
 
@@ -75,16 +75,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1N
 ### POST 2
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTk5Mzc3MSwiZXhwIjoxNzU1OTk0NjcxfQ.zy0m91tJe3A9B4C7tnxl5qC5ljSYqWYCqXET6Nm4enE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1Nzk2NDg3NCwiZXhwIjoxNzU3OTY1Nzc0fQ.5Wxr9B_swZywYHCjq4Bye_0Biys3vqaqgZfHnlIfotU
 
 {
-    "number": "ABC 124"
+    "number": "RAU 123"
 }
 
 ### GET
 GET http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NTI1NzE4OSIsImlhdCI6MTc0OTQwMjcxOSwiZXhwIjoxNzQ5NDAzNjE5fQ.FSYckSmBSB1qlbvr0p06KWzKUpjaU_z5LXrqs-F-_lY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzIwMDM1OSwiZXhwIjoxNzU3MjAxMjU5fQ.rb7cGoeeuX1gs1aRJoWPIaNVL0e-ymBVXdfTfFyvfMM
 
 
 ### PARKINGS
@@ -96,19 +96,20 @@ Accept: application/json
 ### GETBYID
 GET http://localhost:8080/api/parkings/1
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzIwMDM1OSwiZXhwIjoxNzU3MjAxMjU5fQ.rb7cGoeeuX1gs1aRJoWPIaNVL0e-ymBVXdfTfFyvfMM
 
 ### POST
 POST http://localhost:8080/api/parkings/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMTk0MywiZXhwIjoxNzUzOTEyODQzfQ.ojm6bniTIbCSm5NWUUAkkzpEfI3vMuZej-OIz6LiFZM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzcxOTk3NywiZXhwIjoxNzU3NzIwODc3fQ.UVGffG9JU6voEdYvBwqaNxjj6ER-n33ukOIsLCgB9g4
 
 {
-  "userId": 2,
-  "plateId": 2,
+  "userId": 1,
+  "plateId": 1,
   "address": "Av.Mitre 10",
   "durationMinutes": 10,
-  "status": "ACTIVE",
-  "price": 0
+  "status": "FINISHED",
+  "price": 100
 }
 
 ### GET Por Finalizar
@@ -125,9 +126,19 @@ Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMTk0MywiZXhwIjoxNzUzOTEyODQzfQ.ojm6bniTIbCSm5NWUUAkkzpEfI3vMuZej-OIz6LiFZM
 
 ### History
-GET http://localhost:8080/api/parkings/history/user/2?limit=3
+GET http://localhost:8080/api/parkings/history/user?limit=3
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1MzkxMDk5MywiZXhwIjoxNzUzOTExODkzfQ.Wm6e_UEcjePWqg6O8g9Ucva0MiylhmG85GT8DiM33sw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzE4OTExOSwiZXhwIjoxNzU3MTkwMDE5fQ.nyfcEiXQGiGHkOy6MrlTjJoXZq2x0EpAvbmWQp1GAKM
+
+### History Get all
+GET http://localhost:8080/api/parkings/history/user/4
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzcyMTIxNiwiZXhwIjoxNzU3NzIyMTE2fQ.3WqfFvO2de5ELMU0I7RMU4VuKabYGxo87AnPRBp3q5M
+
+### History Get 3
+GET http://localhost:8080/api/parkings/history/last-three
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NjM5Njc0OCwiZXhwIjoxNzU2Mzk3NjQ4fQ.zBuIBq_FrI7Nz6IIzEez77cFS89UnorFtF3u53Tkw7I
 
 
 ### FINES
@@ -143,21 +154,22 @@ Accept: application/json
 ###POST
 POST http://localhost:8080/api/fines
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTkwOTIyNSwiZXhwIjoxNzU1OTEwMTI1fQ.zHUwDr3PzdNKBJ4BQaFYX-n1m7HDx884wIiS1yMuz8Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzI3NTcwMywiZXhwIjoxNzU3Mjc2NjAzfQ.vvU72RLvPRp2XLhWwgJ-IHjjxl4dFpaeIcfjFozFJuQ
 
 {
-  "description": "Adulterar tarjetas de estacionamiento",
-  "amount": 15000,
+  "description": "Multa por ser pelado",
+  "amount": 100000,
   "datetime": "2024-05-18T11:30:00",
+  "address": "Av.Mitre 10",
   "plate": {
-    "id": 2
+    "id": 1
   }
 }
 
 ### GETBYUSERID
 GET http://localhost:8080/api/fines/user
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NTk5Mzc3MSwiZXhwIjoxNzU1OTk0NjcxfQ.zy0m91tJe3A9B4C7tnxl5qC5ljSYqWYCqXET6Nm4enE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzE5MTY5MSwiZXhwIjoxNzU3MTkyNTkxfQ.wZMCrT4CIOOQccxu6Nxjxex90h4IRrfq_C3g4nt2hHE
 
 
 ###DELETE
