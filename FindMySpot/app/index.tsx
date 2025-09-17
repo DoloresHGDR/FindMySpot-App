@@ -29,7 +29,7 @@ export default function Splash() {
               surname: user.surname,
               identityNumber: user.identityNumber,
               role: user.role,
-              plate: user.plate
+              plate: user.plates
             });
 
             router.replace('/screens/home');

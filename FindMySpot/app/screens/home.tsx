@@ -8,25 +8,16 @@ import { removeToken } from '@/services/storage';
 import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
 
 
-
 export default function HomeScreen() {
-    const { user, setUser } = useUser();
+    const { user, logout } = useUser();
     const [secureBalance, setSecureBalance] = useState(false)
     const router = useRouter();
 
     const handleLogOut = async () => {
-      setUser({
-        logged: false,
-        id: null,
-        name: null,
-        surname: null,
-        identityNumber: null,
-        role: null,
-        plate: []
-      });
+      await logout();
       await removeToken();
-      router.push('/login')
-    }
+      router.replace('/login')
+    };
 
     useEffect(() => {
       if (!user?.logged) return;
@@ -48,7 +39,7 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text> 
           <TouchableOpacity onPress={()=> {handleLogOut()}}>
-            <Image source={require('@/assets/images/logout.png')} style={{resizeMode: 'contain', width: 24, height: 24}} />
+            <Image source={require('@/assets/images/logout.png')} style={{resizeMode: 'contain', width: 24, height: 24, paddingTop: 32}} />
           </TouchableOpacity>  
         </View>
 
@@ -87,6 +78,7 @@ export default function HomeScreen() {
                   />
                   <HomeButtons 
                     tittle='Multas'
+                    onPress={() => useRouter().push('/screens/fines')}
                   />
         </View>
 
@@ -111,7 +103,7 @@ const styles = StyleSheet.create({
   },
   container: { flex: 1 },
   header: {
-    backgroundColor: '#1a1b18',
+    backgroundColor: '#1b1a17',
     height: 75,
     width: "100%",
     paddingTop: 40,
@@ -119,10 +111,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row'
   },
-  headerText: { color: '#90d6a6', fontSize: 16 },
+  headerText: { 
+    color: '#90d6a6',
+    fontSize: 16,
+    paddingTop: 7,
+   },
   body: {
     flex: 1,
-    backgroundColor: '#1b1a19',
+    backgroundColor: '#1b1a17',
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
