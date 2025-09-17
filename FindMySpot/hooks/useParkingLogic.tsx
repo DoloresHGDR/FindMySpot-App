@@ -4,21 +4,13 @@ import { submitParking, stopParking } from '@/services/parkingService';
 import { saveParkingData, clearParkingData, getParkingData } from '@/services/parkingStorage';
 import { useParkingHistory } from '@/hooks/useParkingHistory';
 import { setTimeOffset } from '@/utils/timer';
+import HistoryDTO from "@/models/history"
 
 interface UseParkingLogicProps {
   userId: string | null;
   userPlates: { id: number; number: string }[] | undefined;
 }
 
-export interface HistoryDTO {
-  id: string;
-  startDate: string;
-  endDate: string;
-  address: string;
-  plate: string;
-  duration: string;
-  price: string;
-}
 
 export const useParkingLogic = ({ userId, userPlates}: UseParkingLogicProps) => {
     const [refreshing, setRefreshing] = useState(false);

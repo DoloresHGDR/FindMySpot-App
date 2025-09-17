@@ -1,16 +1,7 @@
 import { fetchHistory } from "@/services/parkingService";
 import { useCallback, useEffect, useState } from "react";
+import HistoryDTO from "@/models/history"
 
-
-export interface HistoryDTO {
-  id: string;
-  startDate: string;
-  endDate: string;
-  address: string;
-  plate: string;
-  duration: string;
-  price: string;
-}
 
 export const useParkingHistory = () => {
     const [history, setHistory] = useState<HistoryDTO[]>([]);
