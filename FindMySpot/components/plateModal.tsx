@@ -40,6 +40,7 @@ const handlePlates = async (values: any, onClose: () => void, resetForm: () => v
     const response = await apiClient.post('/api/plates', {
       number: values.plate
     });
+    
 
     if (response.status === 200) {
       resetForm();
@@ -50,6 +51,7 @@ const handlePlates = async (values: any, onClose: () => void, resetForm: () => v
     const error = err as AxiosError;
 
     if (error.response) {
+            console.log(error.response.status);
             console.log('Error', error.response.data || "Hubo un error al registrar la matricula")
             Alert.alert('Error', error.response.data as string || "Hubo un error al registrar la matricula")
           } else {

@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { useUser } from '@/context/UserContext';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { useParkingLogic } from '@/hooks/useParkingLogic';
-import { formatLastParkingDate } from '@/utils/format';
+import { formatDate } from '@/utils/format';
 import ParkingTimer from '@/components/parkingTimer';
 import { useParkingMap } from '@/hooks/useParkingMap';
 import { useParkingHistory } from '@/hooks/useParkingHistory';
@@ -75,8 +75,6 @@ const ParkingScreen: React.FC = () => {
                 latitude: marker.latitude,
                 longitude: marker.longitude,
               }}
-              title={`Estacionamiento ${marker.id}`}
-              description={`Ubicación del estacionamiento ${marker.id}`}
               image={customMarkerIcon}
             />
           ))}
@@ -85,7 +83,7 @@ const ParkingScreen: React.FC = () => {
       
       <View style={styles.lastParking}>
         {[
-          {label: 'Ultimo estacionamiento', value: lastParking? formatLastParkingDate(lastParking.endDate) : 'Cargando...', icon: require('@/assets/images/history-time-clock.png') },
+          {label: 'Ultimo estacionamiento', value: lastParking? formatDate(lastParking.endDate) : 'Cargando...', icon: require('@/assets/images/history-time-clock.png') },
           {label: 'Patente', value: lastParking?.plate, icon: require('@/assets/images/license-plate.png')},
           {label: 'Ubicacion', value: lastParking?.address, icon: require('@/assets/images/ubication.png')},          
         ].map((item, index) => (
@@ -123,7 +121,7 @@ const ParkingScreen: React.FC = () => {
           showCancelButton={true}
           showConfirmButton={true}
           cancelText="Cancelar"
-          confirmText="Sí"
+          confirmText="Aceptar"
           confirmButtonColor="#43975a"
           cancelButtonColor='#974343ff'
           onCancelPressed={() => setShowAlert(false)}
@@ -134,15 +132,17 @@ const ParkingScreen: React.FC = () => {
           }}
           confirmButtonStyle={{
             paddingVertical: 12,
-            paddingHorizontal: 40,
+            paddingHorizontal: 25,
             borderRadius: 8,    
-            fontSize: 18,   
+            fontSize: 18,
+            right: 120   
           }}
           cancelButtonStyle={{
             paddingVertical: 12,
-            paddingHorizontal: 20,
+            paddingHorizontal: 25,
             borderRadius: 8,
             fontSize: 18,
+            left: 120
           }}
 
           titleStyle={{

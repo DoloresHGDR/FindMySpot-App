@@ -59,7 +59,7 @@ export default function Index() {
   
         if (error.response) {
           console.log('Error', error)
-          Alert.alert('Error', error.response.data as string || "Hubo un error al registrar al usuario")
+          Alert.alert('Error', error.response.data as string || "DNI o Contraseña incorrectas.")
         } else {
           Alert.alert('Error', "No se pudo conectar con el servidor.")
         }

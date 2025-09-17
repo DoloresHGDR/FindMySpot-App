@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export const formatLastParkingDate = (dateString: string | undefined): string => {
+export const formatDate = (dateString: string | undefined): string => {
   if (!dateString) {
     return 'Cargando...';
   }

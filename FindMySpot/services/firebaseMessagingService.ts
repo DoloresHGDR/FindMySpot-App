@@ -13,7 +13,6 @@ const platformName = Platform.OS;
 async function getFcmToken(): Promise<string | undefined> {
   try {
     const token = await getToken(messaging);
-    console.log('FCM Token:', token);
     return token;
   } catch (error) {
     console.error('Error getting FCM token', error);
@@ -32,9 +31,8 @@ function listenForegroundMessages(callback: (message: any) => void) {
 async function saveFcmToken(token: string) {
   try {
     await apiClient.post('/api/notifications/save-fcm-token', { token, platform: platformName });
-    console.log('Token saved successfully');
   } catch (error) {
-    console.log('Error saving FCM token:', error);
+    console.error('Error saving FCM token:', error);
   }
 }
 
@@ -71,12 +69,7 @@ export async function setupFirebaseMessaging() {
     await saveFcmToken(newToken);
   });
 
-  const unsubscribeOnMessage = listenForegroundMessages(message => {
-    console.log('Foreground FCM message:', message);
-  });
-
   return () => {
     unsubscribeTokenRefresh();
-    unsubscribeOnMessage();
   };
 }

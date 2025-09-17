@@ -43,7 +43,7 @@ const schema = yup.object().shape({
     }),
 });
 
-export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, plates, onSubmit, googleApiKey }) => {
+export const ModalParking: React.FC<ModalParkingProps> = ({ visible, onClose, plates, onSubmit}) => {
   const [inputAddress, setInputAddress] = useState('');
   const { control, handleSubmit, setValue, formState: { errors }, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
