@@ -16,6 +16,7 @@ public class Fines {
     private String description;
     private Float amount;
     private LocalDateTime datetime;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "plate_id")

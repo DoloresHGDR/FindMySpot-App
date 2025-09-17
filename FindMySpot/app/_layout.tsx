@@ -16,6 +16,7 @@ export default function RootLayout() {
             <Stack.Screen name="screens/plates" />
             <Stack.Screen name="screens/history" />
             <Stack.Screen name="screens/parkingDetailsScreen" />
+            <Stack.Screen name="screens/fines" />
         </Stack>
       </UserProvider>
   );

@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Service
 public class FinesService {
-    private FinesRepository finesRepository;
-    private PlatesService platesService;
+    private final FinesRepository finesRepository;
+    private final PlatesService platesService;
 
     public FinesService(FinesRepository finesRepository, PlatesService platesService) {
         this.finesRepository = finesRepository;
