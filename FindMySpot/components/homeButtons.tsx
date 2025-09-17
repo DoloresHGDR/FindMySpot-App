@@ -27,7 +27,7 @@ actionButton: {
     height: 80,
     borderWidth: 1,
     borderRadius: 10,
-    marginVertical: 8,
+    marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'#223726',

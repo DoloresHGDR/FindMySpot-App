@@ -16,7 +16,7 @@ export default function HomeScreen() {
     const handleLogOut = async () => {
       await logout();
       await removeToken();
-      router.replace('/login')
+      router.replace('/auth/login')
     };
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function HomeScreen() {
 
       <View style={styles.body}>
         <Text style={[styles.label, {color:'#e9e9e9', fontSize:15, fontWeight:"600",fontFamily:"arial"}]}>Saldo disponible</Text>
-        <View style={[{flexDirection: 'row', flexWrap: 'wrap', gap:10}]}>
+        <View style={[{flexDirection: 'row', flexWrap: 'wrap', gap: 10}]}>
           <Text style={[styles.balance, {color:"#43975a"}]}> 
             $ {secureBalance ? "*****" : "10000"}
           </Text>
@@ -58,8 +58,12 @@ export default function HomeScreen() {
         </View>
         
 
-        <TouchableOpacity style={styles.questionButton}>
-          <Text style={styles.questionText}>?</Text>
+        <TouchableOpacity style={styles.containerCard}>
+          <Image source={require("@/assets/images/card.jpg")} style={styles.cardImage}/>
+          <View style={styles.containerCardText}>
+            <Text numberOfLines={1} style={styles.cardTitle}>Mi tarjeta</Text>
+            <Text numberOfLines={4} style={styles.cardText}>Recarga tu saldo aquí</Text>
+          </View>
         </TouchableOpacity>
 
         <Text style={[styles.label, {color:'#e9e9e9', fontFamily:'arial', fontSize:15} ]}>¿Qué quieres hacer hoy?</Text>
@@ -81,8 +85,7 @@ export default function HomeScreen() {
                     onPress={() => useRouter().push('/screens/fines')}
                   />
         </View>
-
-        <Text style={[styles.label, {color:'#ffffff', fontFamily:'arial', fontSize: 15}]}>Novedades</Text>
+        <Text style={[styles.label, {color:'#ffffff', fontFamily:'arial', fontSize: 15, marginTop: 40}]}>Novedades</Text>
         <ScrollView horizontal style={styles.carousel} showsHorizontalScrollIndicator={false}>
           <View style={styles.carouselItem} />
           <View style={styles.carouselItem} />
@@ -113,8 +116,9 @@ const styles = StyleSheet.create({
   },
   headerText: { 
     color: '#90d6a6',
-    fontSize: 16,
-    paddingTop: 7,
+    fontSize: 18,
+    paddingTop: 5,
+    left: -5
    },
   body: {
     flex: 1,
@@ -122,17 +126,60 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
-  label: { marginTop: 10, marginBottom: 5, fontSize: 14 },
-  balance: { fontSize: 30, fontWeight: 'bold' },
-  questionButton: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 8,
-    paddingVertical: 15,
-    alignItems: 'center',
-    marginVertical: 10,
+  label: { 
+    marginTop: 20,
+    marginBottom: 5,
+    fontSize: 14
   },
-  questionText: { fontSize: 24 },
+  balance: { 
+    fontSize: 30,
+    fontWeight: 'bold'
+  },
+  containerCard: {
+    alignSelf: 'center',
+    shadowColor: "#36ca5dff",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 12,
+    width: '95%',
+    height: '10%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    borderColor: '#43975a',
+    borderWidth: 1,
+    backgroundColor: '#1a1a19',
+    marginTop: 30,
+    marginBottom: 15,
+    flexDirection: "row",
+    zIndex: 10,
+    position: "relative"
+  },
+  cardText: {
+    fontSize: 12,
+    color: '#e6e6e6',
+    top: 6
+  },
+  cardTitle: {
+    fontSize: 14,
+    color: '#e6e6e6',
+    fontWeight: "bold"
+  },
+  containerCardText: {
+    top: 5,
+    marginLeft: 28
+  },
+  cardImage: {
+    resizeMode: 'stretch',
+    width: 58,
+    height: 58,
+    top: 3.45,
+    left: 8
+  },
   buttonGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
