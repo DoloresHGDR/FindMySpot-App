@@ -16,6 +16,8 @@ export default function HomeScreen() {
 
     const novedades = [
     { image: require('@/assets/images/dollar.png'), title: 'Dinero que se mueve contigo' },
+    { image: require('@/assets/images/piggybank.png'), title: 'Pagás solo lo \n que usás' },
+    { image: require('@/assets/images/smartphone.png'), title: 'Olvidate del papel, pagá fácil' },
     ];
 
     const handleLogOut = async () => {
