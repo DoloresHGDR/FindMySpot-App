@@ -1,17 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import { useUser } from '@/context/UserContext';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
 import { removeToken } from '@/services/storage';
 import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
+import Carousel from '@/components/carousel';
 
 
 export default function HomeScreen() {
     const { user, logout } = useUser();
     const [secureBalance, setSecureBalance] = useState(false)
     const router = useRouter();
+
+    const novedades = [
+    { image: require('@/assets/images/prueba.jpg'), title: 'Dinero que se mueve contigo' },
+    ];
 
     const handleLogOut = async () => {
       await logout();
@@ -34,7 +39,7 @@ export default function HomeScreen() {
     }, [user]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }}>
       <View style={styles.headerGrid}>
         <View style={styles.header}>
           <Text style={styles.headerText}> Bienvenido, {user.name && user.name[0].toUpperCase() + user.name.slice(1)}</Text> 
@@ -85,17 +90,10 @@ export default function HomeScreen() {
                     onPress={() => useRouter().push('/screens/fines')}
                   />
         </View>
-        <Text style={[styles.label, {color:'#ffffff', fontFamily:'arial', fontSize: 15, marginTop: 40}]}>Novedades</Text>
-        <ScrollView horizontal style={styles.carousel} showsHorizontalScrollIndicator={false}>
-          <View style={styles.carouselItem} />
-          <View style={styles.carouselItem} />
-          <View style={styles.carouselItem} />
-          <View style={styles.carouselItem} />
-          <View style={styles.carouselItem} />
-        </ScrollView>
+        <Carousel title="Novedades" items={novedades} />
         
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
