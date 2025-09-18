@@ -40,7 +40,7 @@ const ParkingScreen: React.FC = () => {
   const customMarkerIcon = require('@/assets/images/car-parking.png');
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 60 }} keyboardShouldPersistTaps="handled" refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled" refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <TouchableOpacity style={[styles.button]} onPress={() => handleParkingButtonPress()}>
         <Text style={styles.buttonText}>{parkingActive ? 'Detener' : 'Estacionarme'}</Text>
       </TouchableOpacity>
