@@ -118,7 +118,7 @@ export default function Index() {
                   <Text style={{ color: '#cecece'}} >¿No tienes una cuenta?</Text>
                   <Text
                     style={{ color: '#43985b', fontWeight: 'bold' }}
-                    onPress={() => router.push('/register')}
+                    onPress={() => router.push('/main/register')}
                   >
                     Regístrate
                   </Text>

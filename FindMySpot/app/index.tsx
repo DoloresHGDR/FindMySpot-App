@@ -36,14 +36,14 @@ export default function Splash() {
           } catch (error) {
             Alert.alert('Error', 'No se pudo obtener el usuario');
             await removeToken();
-            router.replace('/login');
+            router.replace('/auth/login');
           }
         } else {
           await removeToken();
-          router.replace('/login');
+          router.replace('/auth/login');
         }
       } else {
-        router.replace('/login');
+        router.replace('/auth/login');
       }
     };
 

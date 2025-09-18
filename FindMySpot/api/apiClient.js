@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
         if (status === 401) {
             await removeToken();
             Alert.alert('Sesion vencida','Inicie sesion nuevamente')
-            router.replace('/login');
+            router.replace('/auth/login');
         }
 
         return Promise.reject(error);
