@@ -15,7 +15,7 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const novedades = [
-    { image: require('@/assets/images/prueba.jpg'), title: 'Dinero que se mueve contigo' },
+    { image: require('@/assets/images/dollar.png'), title: 'Dinero que se mueve contigo' },
     ];
 
     const handleLogOut = async () => {
@@ -49,11 +49,11 @@ export default function HomeScreen() {
         </View>
 
         <HomeLines/>
-    </View>
+      </View>
 
       <View style={styles.body}>
         <Text style={[styles.label, {color:'#e9e9e9', fontSize:15, fontWeight:"600",fontFamily:"arial"}]}>Saldo disponible</Text>
-        <View style={[{flexDirection: 'row', flexWrap: 'wrap', gap: 10}]}>
+        <View style={[{flexDirection: 'row', gap: 10}]}>
           <Text style={[styles.balance, {color:"#43975a"}]}> 
             $ {secureBalance ? "*****" : "10000"}
           </Text>
@@ -91,7 +91,6 @@ export default function HomeScreen() {
                   />
         </View>
         <Carousel title="Novedades" items={novedades} />
-        
       </View>
     </ScrollView>
   );
@@ -102,7 +101,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  container: { flex: 1 },
+  container: { 
+    flex: 1,
+    backgroundColor: '#1b1a17'
+  },
   header: {
     backgroundColor: '#1b1a17',
     height: 75,
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1b1a17',
     paddingHorizontal: 20,
     paddingVertical: 10,
+    
   },
   label: { 
     marginTop: 20,
@@ -155,7 +158,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     flexDirection: "row",
     zIndex: 10,
-    position: "relative"
+    position: "relative",
+    flex: 1
   },
   cardText: {
     fontSize: 12,
@@ -175,7 +179,7 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     width: 58,
     height: 58,
-    top: 3.45,
+    top: 9.45,
     left: 8
   },
   buttonGrid: {
