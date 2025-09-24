@@ -13,6 +13,7 @@ export default function HistoryScreen () {
     const parkingIcon = require('@/assets/images/parking.png')
     const [selectedPlateId, setSelectedPlateId] = useState<number | null>(null);
     const { user } = useUser();
+    
 
     useEffect(() => {
         const fetchParkings = async () => {
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
 
     },
     infoContainer: {
-        flex: 1,
+        flex: 1
     },
     date: {
         fontSize: 12,

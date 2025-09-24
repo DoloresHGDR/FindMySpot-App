@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     color: '#90d6a6',
     fontSize: 18,
     paddingTop: 5,
-    left: -5
+    left: -5,
    },
   body: {
     flex: 1,

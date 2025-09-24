@@ -13,7 +13,6 @@ export default function Fines() {
     const [showDescriptionId, setShowDescriptionId] = useState<number | null>(null);
     const fineItem = require("@/assets/images/bill.png");
 
-
     useEffect(() => {
         const handleFines = async () => {
             const data = await fetchFines();
@@ -21,7 +20,7 @@ export default function Fines() {
         };
     
         handleFines();
-    }, [fines]);
+    }, []);
 
     useEffect(() => {
         if (user?.plate?.length > 0) {
@@ -138,8 +137,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderBottomColor: '#F44336',
         borderWidth: 1,
-        marginBottom: 20,
-        maxHeight: '50%'
+        maxHeight: '100%',
+        
     },
     address: {
         fontSize: 17,

@@ -4,13 +4,12 @@ import { useLocalSearchParams } from 'expo-router';
 import { format } from 'date-fns';
 
 
-
-export default function parkingDetailsScreen() {
+export default function ParkingDetailsScreen() {
     const { startDate, endDate, address, plate, duration, price } = useLocalSearchParams();
     const formatParkingDate = (dateString: string) => {
-            const date = new Date(dateString);
-            return format(date, "dd MMM 'a las' HH:mm");
-          };
+    const date = new Date(dateString);
+        return format(date, "dd MMM 'a las' HH:mm");
+    };
 
     return (
         <View style={styles.container}>
@@ -20,7 +19,7 @@ export default function parkingDetailsScreen() {
             <View style={styles.infoParking}>
                 {[  
                     { label: 'Dirección', value: address },
-                    { label: 'Fecha de inicio', value: formatParkingDate(String(startDate))},
+                    { label: 'Fecha de inicio', value: formatParkingDate(String(startDate)) },
                     { label: 'Fecha de finalización', value: formatParkingDate(String(endDate)) },
                     { label: 'Patente', value: plate },
                     { label: 'Duración', value: duration },
@@ -97,5 +96,5 @@ const styles = StyleSheet.create({
         maxWidth: 200,
         flexShrink: 1,
         marginBottom: 10,
-    } 
+    },
 });
