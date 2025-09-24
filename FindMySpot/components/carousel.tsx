@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#20532eff',
     alignItems: "center",
+    marginLeft: 12,
+    left: -10
   },
   image: {
     width: 100,
