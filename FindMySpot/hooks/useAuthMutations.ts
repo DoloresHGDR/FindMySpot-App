@@ -3,25 +3,15 @@ import { Plate, User } from "@/models/user";
 import { saveToken } from "@/services/storage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL} from '@env';
+import { ENDPOINTS } from "@/constants/apiEndpoints";
+import { LoginPayload, AuthResponse, RegisterPayload } from "@/models/auth";
 
-type LoginPayload = {
-    identityNumber: string;
-    password: string;
-    rememberMe: boolean;
-};
-
-type AuthResponse = {
-    token: string;
-    id: string;
-    name: string;
-    surname: string;
-    identityNumber: string;
-    role: string;
-    plates: Plate[]; 
-};
+const fullLoginUrl = `${API_BASE_URL}${ENDPOINTS.LOGIN}`;
+const fullRegisterUrl = `${API_BASE_URL}${ENDPOINTS.REGISTER}`;
 
 const performLogin = async (payload: LoginPayload): Promise<AuthResponse> => {
-    const response = await axios.post('http://192.168.1.40:8080/api/auth/login', {
+    const response = await axios.post(fullLoginUrl, {
           identityNumber: payload.identityNumber,
           password: payload.password,
     });
@@ -54,17 +44,8 @@ export const useLoginMutation = () => {
     })
 };
 
-type RegisterPayload = {
-    name: string;
-    surname: string;
-    identityNumber: string;
-    password: string;
-    confirmPassword: string;
-    role: string;
-};
-
 const performRegister = async (payload: RegisterPayload): Promise<AuthResponse> => {
-    const response = await axios.post('http://192.168.1.40:8080/api/auth/register', payload);
+    const response = await axios.post(fullRegisterUrl, payload);
     return response.data;
 };
 

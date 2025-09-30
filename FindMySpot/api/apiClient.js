@@ -2,9 +2,10 @@ import axios from 'axios';
 import {getToken, removeToken} from '@/services/storage';
 import { useRouter } from 'expo-router';
 import { Alert } from 'react-native';
+import { API_BASE_URL} from '@env';
 
 const apiClient = axios.create({
-    baseURL: 'http://192.168.1.40:8080',    
+    baseURL: API_BASE_URL,    
 });
 
 apiClient.interceptors.request.use(

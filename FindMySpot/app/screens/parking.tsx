@@ -8,9 +8,10 @@ import { formatDate } from '@/utils/format';
 import ParkingTimer from '@/components/parkingTimer';
 import { useParkingMap } from '@/hooks/useParkingMap';
 import { useParkingHistory } from '@/hooks/useParkingHistory';
+import { GOOGLE_MAPS_API_KEY } from '@env';
 
 const ParkingScreen: React.FC = () => {
-  const apiKey= 'AIzaSyAc9TkncKPp1e2woZfDIsDQNv-zrAFPqBs'
+  const apiKey= GOOGLE_MAPS_API_KEY
   const { user } = useUser();
   const {
     refreshing,
@@ -40,7 +41,7 @@ const ParkingScreen: React.FC = () => {
   const customMarkerIcon = require('@/assets/images/car-parking.png');
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} keyboardShouldPersistTaps="handled" refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh}  />}>
       <TouchableOpacity style={[styles.button]} onPress={() => handleParkingButtonPress()}>
         <Text style={styles.buttonText}>{parkingActive ? 'Detener' : 'Estacionarme'}</Text>
       </TouchableOpacity>
