@@ -1,9 +1,13 @@
+import { GOOGLE_API } from '@/constants/googleApi';
 import axios from 'axios';
 import * as Location from 'expo-location';
 import { Alert } from 'react-native';
 
 export const getCoordinates = async (address: string, apiKey: string) => {
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+  const baseUrl = GOOGLE_API.GEOCODE_API_BASE_URL;
+  
+  const url = `${baseUrl}?address=${encodeURIComponent(address)}&key=${apiKey}`;
   try {
     const response = await axios.get(url);
     if (response.data.results.length > 0) {
