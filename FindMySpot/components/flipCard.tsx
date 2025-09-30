@@ -1,7 +1,21 @@
 import React, { useRef, useState } from "react";
 import { Animated, StyleSheet, Text, TouchableOpacity, View, ImageBackground } from "react-native";
 
-export default function FlipCard() {
+type FlipCardProps = {
+    plate: {
+        id: number;
+        number: string;
+        info: {
+            modelo: string;
+            marca: string;
+            tipo: string;
+            chasis: string;
+            motor: string;
+        };
+    };
+};
+
+export default function FlipCard({ plate }: FlipCardProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [flipped, setFlipped] = useState(false);
 
@@ -35,8 +49,6 @@ export default function FlipCard() {
       setFlipped(true);
     }
   };
-
-  const plate = {"number": 'ABC 123'};
   
   const info = {"modelo": 'MC', "marca": "LAREN", "tipo": "Deportivo", "chasis": "7ASGDHJK78XCJ", "motor": "KLAJSD89Z8894KFG"}
 
