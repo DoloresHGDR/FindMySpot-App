@@ -2,9 +2,9 @@ import { fetchFines } from "@/services/finesService";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
 import FinesInterface from "@/models/fines"
-import { useUser } from "@/context/UserContext";
 import { formatDate } from '@/utils/format';
 import PlatePicker from "@/components/pickerPlate"
+import { useUser } from "@/hooks/useUserQuery";
 
 export default function Fines() {
     const [fines, setFines] = useState<FinesInterface[] | null>();

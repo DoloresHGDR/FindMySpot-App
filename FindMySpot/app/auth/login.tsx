@@ -3,13 +3,11 @@ import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
-import { useUser } from '@/hooks/useUserQuery';
 import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
-import { saveToken } from '@/services/storage';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useLoginMutation } from "@/hooks/useAuthMutations";
 
 const LoginSchema = Yup.object().shape({
