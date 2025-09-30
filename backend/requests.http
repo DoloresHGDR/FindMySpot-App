@@ -131,14 +131,14 @@ Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzE4OTExOSwiZXhwIjoxNzU3MTkwMDE5fQ.nyfcEiXQGiGHkOy6MrlTjJoXZq2x0EpAvbmWQp1GAKM
 
 ### History Get all
-GET http://localhost:8080/api/parkings/history/user/4
+GET http://localhost:8080/api/parkings/history/user/1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzcyMTIxNiwiZXhwIjoxNzU3NzIyMTE2fQ.3WqfFvO2de5ELMU0I7RMU4VuKabYGxo87AnPRBp3q5M
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1ODI0MDU3MywiZXhwIjoxNzU4MjQxNDczfQ.nqqT7P3xaYzCp05emAztHQ84hNuAg6FMeOWmvLPu6hY
 
 ### History Get 3
 GET http://localhost:8080/api/parkings/history/last-three
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NjM5Njc0OCwiZXhwIjoxNzU2Mzk3NjQ4fQ.zBuIBq_FrI7Nz6IIzEez77cFS89UnorFtF3u53Tkw7I
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1ODI0MDU3MywiZXhwIjoxNzU4MjQxNDczfQ.nqqT7P3xaYzCp05emAztHQ84hNuAg6FMeOWmvLPu6hY
 
 
 ### FINES
@@ -157,7 +157,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzI3NTcwMywiZXhwIjoxNzU3Mjc2NjAzfQ.vvU72RLvPRp2XLhWwgJ-IHjjxl4dFpaeIcfjFozFJuQ
 
 {
-  "description": "Multa por ser pelado",
+  "description": "Multa",
   "amount": 100000,
   "datetime": "2024-05-18T11:30:00",
   "address": "Av.Mitre 10",

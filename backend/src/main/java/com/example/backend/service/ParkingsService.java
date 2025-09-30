@@ -4,6 +4,7 @@ import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.*;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingsRepository;
+import com.example.backend.repository.UserDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,15 +27,15 @@ public class ParkingsService {
     private final PlatesService platesService;
     private final UserService userService;
     private final FcmMessagingService fcmMessagingService;
-    private final FcmTokenService fcmTokenService;
+    private final UserDeviceRepository userDeviceRepository;
 
     @Autowired
-    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, FcmTokenService fcmTokenService) {
+    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, UserDeviceRepository userDeviceRepository) {
         this.parkingsRepository = parkingsRepository;
         this.platesService = platesService;
         this.userService = userService;
         this.fcmMessagingService = fcmMessagingService;
-        this.fcmTokenService = fcmTokenService;
+        this.userDeviceRepository = userDeviceRepository;
     }
 
 
@@ -156,14 +157,16 @@ public class ParkingsService {
 
                 Optional<Users> user = userService.getUserById(p.getUserId());
 
-                List<FcmToken> tokens = fcmTokenService.findByUser(user);
-                for (FcmToken token : tokens) {
-                    fcmMessagingService.sendNotification(
-                            token.getFcmToken(),
-                            "Estacionamiento por finalizar",
-                            "Tu estacionamiento en " + p.getAddress() + " esta por finalizar."
-                    );
-                }
+                user.ifPresent(u -> {
+                    List<UserDevice> userDevices = userDeviceRepository.findAllByUser(u);
+                    for (UserDevice userDevice : userDevices) {
+                        fcmMessagingService.sendNotification(
+                                userDevice.getDeviceToken().getFcmToken(),
+                                "Estacionamiento por finalizar",
+                                "Tu estacionamiento en " + p.getAddress() + " está por finalizar."
+                        );
+                    }
+                });
             }
         }
     }
