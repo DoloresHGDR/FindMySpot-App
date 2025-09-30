@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 interface Props {
   step: number;
@@ -7,23 +7,42 @@ interface Props {
   onNext: () => void;
   onBack: () => void;
   onSubmit: () => void;
+  isLoading?: boolean;
 }
 
-export default function RegisterButtons({ step, maxSteps, onNext, onBack, onSubmit }: Props) {
+export default function RegisterButtons({ step, maxSteps, onNext, onBack, onSubmit, isLoading = false }: Props) {
+
+  const isSubmitDisabled = isLoading;
+  const isSingleButton = step === 0 && step < maxSteps - 1; 
+  const nextButtonMargin = isSingleButton ? 170 : 20;
+
   return (
     <View style={styles.buttons}>
       {step > 0 && (
-        <TouchableOpacity style={styles.button} onPress={onBack}>
+        <TouchableOpacity style={styles.button} onPress={onBack} disabled={isLoading}>
           <Text style={styles.text}>Atrás</Text>
         </TouchableOpacity>
       )}
       {step < maxSteps - 1 ? (
-        <TouchableOpacity style={[styles.button, { marginLeft: step > 0 ? 20 : 170 }]} onPress={onNext}>
+        <TouchableOpacity style={[
+            styles.button, 
+            { marginLeft: nextButtonMargin }, 
+            isLoading && styles.disabledButton
+          ]} 
+          onPress={onNext}
+          disabled={isLoading}>
           <Text style={styles.text}>Siguiente</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.button} onPress={onSubmit}>
-          <Text style={styles.text}>Registrarse</Text>
+        <TouchableOpacity style={[styles.button, isSubmitDisabled && styles.disabledButton]} 
+          onPress={onSubmit}
+          disabled={isSubmitDisabled}
+          >
+          {isLoading ? (
+            <ActivityIndicator color="#43985b" />
+          ) : (
+           <Text style={styles.text}>Registrarse</Text>
+          )}
         </TouchableOpacity>
       )}
     </View>
@@ -53,5 +72,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#43985b',
+  },
+  disabledButton: {
+    opacity: 0.5, 
   },
 });

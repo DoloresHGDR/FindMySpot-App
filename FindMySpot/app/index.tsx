@@ -3,53 +3,26 @@ import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getToken, removeToken } from '@/services/storage';
 import { decodeJwtToken, isTokenExpired } from '@/utils/tokenUtils';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 import apiClient from '@/api/apiClient';
+import { useAuthCheck } from '@/hooks/useAuthCheck';
 
 
 export default function Splash() {
   const router = useRouter();
-  const { setUser } = useUser();
+  const { mutate, isPending } = useAuthCheck();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = await getToken();
-      if (token && !isTokenExpired(token)) {
-        const decoded = decodeJwtToken(token);
-
-        if (decoded?.sub) {
-          try {
-            const response = await apiClient.get(`/api/users/identity/${decoded.sub}`);
-            const user = response.data;
-
-            setUser({
-              logged: true,
-              id: user.id,
-              name: user.name,
-              surname: user.surname,
-              identityNumber: user.identityNumber,
-              role: user.role,
-              plate: user.plates
-            });
-
-            router.replace('/screens/home');
-          } catch (error) {
-            Alert.alert('Error', 'No se pudo obtener el usuario');
-            await removeToken();
-            router.replace('/auth/login');
-          }
-        } else {
-          await removeToken();
-          router.replace('/auth/login');
-        }
-      } else {
+    mutate(undefined, {
+      onSuccess: () => {
+        router.replace('/screens/home');
+      },
+      onError: (error) => {
+        console.error('Auth check failed:', error),
         router.replace('/auth/login');
       }
-    };
-
-    checkAuth();
-
-  }, []);
+    });
+  }, [mutate, router]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

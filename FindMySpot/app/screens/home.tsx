@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
@@ -22,7 +22,6 @@ export default function HomeScreen() {
 
     const handleLogOut = async () => {
       await logout();
-      await removeToken();
       router.replace('/auth/login')
     };
 

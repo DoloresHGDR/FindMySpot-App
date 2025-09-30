@@ -1,12 +1,15 @@
 import { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Alert, ImageBackground, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Alert, ImageBackground, TouchableOpacity, Image, FlatList, Dimensions,} from 'react-native';
 import { useFonts } from 'expo-font';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PatenteModal from '@/components/plateModal';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 import apiClient from '@/api/apiClient';
 import { MaterialIcons } from '@expo/vector-icons';
 import FlipCard from '@/components/flipCard';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { User } from '@/models/user';
 
 const { width } = Dimensions.get('window');
 
@@ -15,9 +18,46 @@ export default function PlatesScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlateToDelete, setSelectedPlateToDelete] = useState<any>(null);
   const [fontsLoaded] = useFonts({'FE-Font': require('@/assets/fonts/FE-FONT.ttf')});
-  const { user, setUser } = useUser();
+  const { user } = useUser();
+  const queryClient = useQueryClient();
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const deletePlateMutation = useMutation({
+    mutationFn: (plateId: number) => {
+      return apiClient.delete(`/api/plates/${plateId}`);
+    },
+    onMutate: async (plateIdToDelete) => {
+      await queryClient.cancelQueries({ queryKey: [QUERY_KEYS.USER]});
+      const previousUser = queryClient.getQueryData<User>([QUERY_KEYS.USER]);
+
+      const updatedPlates = previousUser?.plate.filter(
+        plateUser => plateUser.id !== plateIdToDelete
+      ) || [];
+
+      const updatedUser: User = {
+        ...previousUser!,
+        plate: updatedPlates
+      };
+
+      queryClient.setQueryData([QUERY_KEYS.USER], updatedUser);
+
+      return {previousUser}
+    },
+    onError: (err, plateIdToDelete, context) => {
+        Alert.alert("Error", "No se pudo eliminar la matrícula.");
+        if (context?.previousUser) {
+            queryClient.setQueryData<User>([QUERY_KEYS.USER], context.previousUser);
+        }
+    },
+    onSuccess: () => {
+      Alert.alert("Exito", "Matriculada eliminada correctamente")
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER]});
+    }
+  })
 
   const handleDelete = async (plate: any) => {
     setShowAlert(false);
@@ -26,26 +66,9 @@ export default function PlatesScreen() {
 
     if (!plateToDeleteId) return;
 
-    const updatedPlates = user.plate.filter(plateUser => plateUser.id !== plateToDeleteId);
-    const updatedUser = {
-      ...user,
-      plate: updatedPlates
-    };
-
-    try {
-      await apiClient.delete(`/api/plates/${plateToDeleteId}`);
-      setUser(updatedUser);
-      Alert.alert("Éxito", "Matrícula eliminada correctamente.");
-    } catch (error) {
-      Alert.alert("Error", "No se pudo eliminar la matrícula.");
-    } finally {
-      setSelectedPlateToDelete(null);
-    }
+    deletePlateMutation.mutate(plateToDeleteId);
+    setSelectedPlateToDelete(null);
   };
-
-  const isNewFormat = (plateNumber: any) => {
-    return (/^[A-Z]{2}\s?[0-9]{3}\s?[A-Z]{2}$/.test(plateNumber));
-  }
 
   if (!fontsLoaded) {
     return (
@@ -56,13 +79,9 @@ export default function PlatesScreen() {
   }
 
   const renderPlateItem = ({ item: plate }: any) => {
-    const imageSource = isNewFormat(plate.number)
-      ? require('@/assets/images/plate_new.png')
-      : require('@/assets/images/plate_old.png');
-
     return (
       <View style={styles.plateCardContainer}>
-          <FlipCard></FlipCard>
+          <FlipCard plate={plate}/>
       </View>
     );
   };
@@ -274,7 +293,7 @@ const styles = StyleSheet.create({
     width: 8,
     borderRadius: 4,
     marginHorizontal: 6,
-    bottom: 120
+    bottom: 150
   },
   fab: {
     position: 'absolute',

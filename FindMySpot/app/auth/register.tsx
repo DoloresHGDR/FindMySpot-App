@@ -8,6 +8,7 @@ import axios, { AxiosError } from 'axios';
 import { useUser } from "@/context/UserContext";
 import { useRouter } from 'expo-router';
 import { saveToken } from '@/services/storage';
+import { useRegisterMutation } from "@/hooks/useAuthMutations";
 
 const steps = ['Datos', 'Contraseña']
 
@@ -34,8 +35,7 @@ function Register() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [lineAnim] = useState(new Animated.Value(0));
-  const { setUser } = useUser();
-
+  const registerMutation = useRegisterMutation();
 
   const animateLine = () => {
     Animated.timing(lineAnim, {
@@ -55,30 +55,15 @@ function Register() {
 
   const handleRegister = async (values: any) => {
     try {
-      const response = await axios.post('http://192.168.1.40:8080/api/auth/register', {
-        name: values.name,
-        surname: values.surname,
-        identityNumber: values.identityNumber,
-        password: values.password,
-        confirmPassword: values.confirmPassword,
-        role: "USER"
+      await registerMutation.mutateAsync({
+          name: values.name,
+          surname: values.surname,
+          identityNumber: values.identityNumber,
+          password: values.password,
+          confirmPassword: values.confirmPassword,
+          role: "USER"
       });
-
-      const { token, id, name, surname, identityNumber, role, plate} = response.data
-      await saveToken(token);
-      setUser ({
-        logged:true,
-        id: id,
-        name: name,
-        surname: surname,
-        identityNumber: identityNumber,
-        role: role,
-        plate: plate
-      });
-
-      if (response.status === 200) {
-          router.replace("/screens/home")
-        }
+      router.replace("/screens/home");
     } catch (err) {
       const error = err as AxiosError;
 
@@ -211,6 +196,7 @@ function Register() {
                     reverseLine();
                   }}
                   onSubmit={handleSubmit}
+                  isLoading={registerMutation.isPending}
                 />
             </View>
       )}

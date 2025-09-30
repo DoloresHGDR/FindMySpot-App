@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import apiClient from '@/api/apiClient';
 import { AxiosError } from 'axios';
 import { router } from 'expo-router';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 
 
 const PlateModal = ({ visible, onClose } : any) => {
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 5,
     width: '80%',
-    height: '27%',
+    height: 215,
     justifyContent: 'center',
     padding: 25
   },

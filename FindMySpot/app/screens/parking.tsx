@@ -1,7 +1,7 @@
 import { ModalParking } from '@/components/modalParking';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, RefreshControl, Button} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { useParkingLogic } from '@/hooks/useParkingLogic';
 import { formatDate } from '@/utils/format';

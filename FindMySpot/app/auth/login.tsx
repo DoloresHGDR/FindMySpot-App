@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
-import { useUser } from "@/context/UserContext";
+import { useUser } from '@/hooks/useUserQuery';
 import LoginButton from "@/components/loginButton";
 import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icons';
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
 import { saveToken } from '@/services/storage';
 import axios, { AxiosError } from 'axios';
+import { useLoginMutation } from "@/hooks/useAuthMutations";
 
 const LoginSchema = Yup.object().shape({
     identityNumber: Yup.string()
@@ -21,38 +22,22 @@ const LoginSchema = Yup.object().shape({
         .min(8, 'Minimo 8 caracteres'),
 });
 
-export default function Index() {
-    const router = useRouter();
-    const [isChecked, setChecked] = useState(false);
-    const [secureText, setSecureText] = useState(true);
-    const { setUser } = useUser();
+export default function Login() {
+  const router = useRouter();
+  const [isChecked, setChecked] = useState(false);
+  const [secureText, setSecureText] = useState(true);
+
+  const loginMutation = useLoginMutation();
 
   const handleLogin= async (values: any) => {
       try {
-        const response = await axios.post('http://192.168.1.40:8080/api/auth/login', {
+        await loginMutation.mutateAsync({
           identityNumber: values.identityNumber,
           password: values.password,
+          rememberMe: isChecked,
         });
 
-        const { token, id, name, surname, identityNumber, role, plates} = response.data
-        if (isChecked) {
-            await saveToken(token, isChecked);
-        } else {
-            await saveToken(token, false);
-        }
-        setUser ({
-                logged:true,
-                id: id,
-                name: name,
-                surname: surname,
-                identityNumber: identityNumber,
-                role: role,
-                plate: plates
-            });
-
-        if (response.status === 200) {
-          router.replace("/screens/home")
-        }
+        router.replace('/screens/home');
 
       } catch (err) {
         const error = err as AxiosError;
@@ -112,7 +97,7 @@ export default function Index() {
                   <Text style={{ marginLeft: 8 , color: '#cecece'}}>Recuérdame</Text>
                 </View>
 
-                <LoginButton title="Login" onPress={handleSubmit} />
+                <LoginButton title={loginMutation.isPending ? "Cargando..." : "Login"}  onPress={handleSubmit} disabled={loginMutation.isPending} />
 
                 <View style={styles.registerContainer}>
                   <Text style={{ color: '#cecece'}} >¿No tienes una cuenta?</Text>

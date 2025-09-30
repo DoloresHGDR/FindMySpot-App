@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import apiClient from '@/api/apiClient';
 import { format } from 'date-fns';
 import PlatePicker from "@/components/pickerPlate"
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUserQuery';
 import ParkingHistory from '@/models/history';
 
 export default function HistoryScreen () {
