@@ -68,7 +68,7 @@ export default function HistoryScreen () {
       };
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }}>
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
             <Text style={styles.title}> HISTORIAL </Text>
             <PlatePicker
                 selectedPlateId={selectedPlateId}

@@ -11,6 +11,8 @@ react-native-paper
 react-native-awesome-alerts
 react-native-countdown-component
 date-fns
+dotenv
 npm install @tanstack/react-query 
 npm install @tanstack/react-query-persist-client
 npm install @tanstack/query-async-storage-persister
+npx expo install react-native-dotenv
