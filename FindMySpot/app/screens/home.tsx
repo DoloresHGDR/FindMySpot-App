@@ -4,7 +4,6 @@ import { useUser } from '@/hooks/useUserQuery';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
-import { removeToken } from '@/services/storage';
 import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
 import Carousel from '@/components/carousel';
 
