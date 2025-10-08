@@ -61,12 +61,13 @@ public class PlatesService {
             throw ex;
         }
 
-        if (response == null || !response.valid()) {
+        if (response == null || !response.valid() || response.vehicleDetails() == null) {
             throw new IllegalArgumentException("La matrícula no corresponde al DNI proporcionado");
         }
 
         Plates p = new Plates(
                 plate,
+                response.vehicleDetails(),
                 user.getId()
         );
         return platesRepository.save(p);

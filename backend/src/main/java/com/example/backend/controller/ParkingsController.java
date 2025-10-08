@@ -2,7 +2,7 @@ package com.example.backend.controller;
 import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingMapDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
-import com.example.backend.models.Parkings;
+import com.example.backend.models.Parking;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.ParkingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ public class ParkingsController {
     }
 
     @GetMapping
-    public List<Parkings> getAllParkings(){
+    public List<Parking> getAllParkings(){
         return parkingsService.findAllParkings();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Parkings> getParkingsById(@PathVariable Long id){
-        Optional<Parkings> parkings = parkingsService.findParkingsById(id);
+    public ResponseEntity<Parking> getParkingsById(@PathVariable Long id){
+        Optional<Parking> parkings = parkingsService.findParkingsById(id);
         return parkings.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -52,12 +52,12 @@ public class ParkingsController {
     }
 
     @PostMapping("/create")
-    public Parkings create(@RequestBody ParkingRequestDTO ParkingRequestDTO) {
+    public Parking create(@RequestBody ParkingRequestDTO ParkingRequestDTO) {
         return parkingsService.createParking(ParkingRequestDTO);
     }
 
     @PostMapping("/finish/{id}")
-    public Parkings finish(@PathVariable Long id){
+    public Parking finish(@PathVariable Long id){
         return parkingsService.finishParking(id);
     }
 
