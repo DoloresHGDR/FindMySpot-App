@@ -81,8 +81,8 @@ const ParkingScreen: React.FC = () => {
           ))}
         </MapView>
       </View>
-      
-      <View style={styles.lastParking}>
+      {lastParking? (
+        <View style={styles.lastParking}>
         {[
           {label: 'Ultimo estacionamiento', value: lastParking? formatDate(lastParking.endDate) : 'Cargando...', icon: require('@/assets/images/history-time-clock.png') },
           {label: 'Patente', value: lastParking?.plate, icon: require('@/assets/images/license-plate.png')},
@@ -97,8 +97,12 @@ const ParkingScreen: React.FC = () => {
           </View>
         ))}
       </View>
-
-      <View style={styles.lastThreeParkingsContainer}>
+      ): (
+        <Text style={styles.noLastParking}>Primer estacionamiento: ¡Comienza ahora!</Text>
+      )}
+      
+      {history?.length > 0 && (
+        <View style={styles.lastThreeParkingsContainer}>
         <Text style={styles.lastThreeParkingsTitle}> Volver a estacionar aqui</Text>
         {history.map((parking : any, index) => (
           <TouchableOpacity key={index} style={styles.lastThreeParkingsItems} onPress={() => {setSelectedParkingData(parking); setShowAlert(true)}}>
@@ -164,6 +168,8 @@ const ParkingScreen: React.FC = () => {
           }}
         />
       </View>
+      )}
+      
 
     </ScrollView>
   );
@@ -283,4 +289,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#555',
     opacity: 0.6,
   },
+  noLastParking: {
+    color: '#e6e6e6',
+    alignSelf: 'center',
+    fontSize: 17,
+    marginTop: 70
+  }
 });

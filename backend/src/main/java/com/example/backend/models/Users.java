@@ -26,13 +26,13 @@ public class Users {
     private List<Plates> plates;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private List<Parkings> parkings;
+    private List<Parking> parkings;
     private String role;
 
     public Users() {
     }
 
-    public Users(String name, String surname, String identityNumber, String password, List<Plates> plates, List<Parkings> parkings, String role) {
+    public Users(String name, String surname, String identityNumber, String password, List<Plates> plates, List<Parking> parkings, String role) {
         this.name = name;
         this.surname = surname;
         this.identityNumber = identityNumber;

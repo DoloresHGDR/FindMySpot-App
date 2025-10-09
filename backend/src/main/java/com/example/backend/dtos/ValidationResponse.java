@@ -1,4 +1,6 @@
 package com.example.backend.dtos;
 
-public record ValidationResponse(boolean valid, String message) {}
+import com.example.backend.models.VehicleDetails;
+
+public record ValidationResponse(boolean valid, String message, VehicleDetails vehicleDetails) {}
 

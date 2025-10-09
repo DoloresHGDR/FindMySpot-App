@@ -76,7 +76,7 @@ export default function HistoryScreen () {
                 plates={user.plate}
             />
             
-            {parkings && selectedPlateId ? (
+            {parkings?.length > 0 && selectedPlateId ? (
                 <View style={styles.history}>
                     {parkings?.map((parking, index) => (
                         <TouchableOpacity
@@ -96,7 +96,7 @@ export default function HistoryScreen () {
                         </TouchableOpacity>
                     ))}
                 </View>
-            ) : (<Text style={styles.title}> No tienes estacionamientos aun</Text>)}
+            ) : (<Text style={styles.noHistory}> No tienes estacionamientos aún</Text>)}
             
             
         </ScrollView>
@@ -162,4 +162,9 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
     },
+    noHistory: {
+        color: '#e6e6e6',
+        alignSelf: 'center',
+        fontSize: 18
+    }
 });

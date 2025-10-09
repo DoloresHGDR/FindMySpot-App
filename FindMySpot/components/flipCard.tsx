@@ -5,12 +5,12 @@ type FlipCardProps = {
     plate: {
         id: number;
         number: string;
-        info: {
-            modelo: string;
-            marca: string;
-            tipo: string;
-            chasis: string;
-            motor: string;
+        vehicleDetails: {
+            model: string;
+            brand: string;
+            type: string;
+            chassis: string;
+            engine: string;
         };
     };
 };
@@ -49,8 +49,6 @@ export default function FlipCard({ plate }: FlipCardProps) {
       setFlipped(true);
     }
   };
-  
-  const info = {"modelo": 'MC', "marca": "LAREN", "tipo": "Deportivo", "chasis": "7ASGDHJK78XCJ", "motor": "KLAJSD89Z8894KFG"}
 
   const isNewFormat = (plateNumber: any) => {
     return (/^[A-Z]{2}\s?[0-9]{3}\s?[A-Z]{2}$/.test(plateNumber));
@@ -95,11 +93,11 @@ export default function FlipCard({ plate }: FlipCardProps) {
         >
             <View style={styles.cardInfo}>
                 {[
-                    {label: 'Modelo', value: info.modelo},
-                    {label: 'Marca', value: info.marca},
-                    {label: 'Tipo', value: info.tipo},
-                    {label: 'Chasis', value: info.chasis},
-                    {label: 'Motor', value: info.motor}
+                    {label: 'Modelo', value: plate.vehicleDetails.model},
+                    {label: 'Marca', value: plate.vehicleDetails.brand}, 
+                    {label: 'Tipo', value: plate.vehicleDetails.type},
+                    {label: 'Chasis', value: plate.vehicleDetails.chassis},
+                    {label: 'Motor', value: plate.vehicleDetails.engine}
                 ].map((item, index) => (
                     <View key={index} >
                         <Text style={styles.label}>

@@ -73,7 +73,7 @@ export default function Fines() {
                         </View>
                     )
                 ) : (
-                    <Text style={{ color: 'gray', marginTop: 20 }}>
+                    <Text style={styles.noFines}>
                     No hay multas para esta patente.
                     </Text>
                 )}
@@ -176,6 +176,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#e6e6e6',
         fontWeight: 'bold'
-    }
+    },
+    noFines: {
+        fontSize: 18,
+        color: '#e6e6e6',
+        alignSelf: 'center'
+    },
     
 })    

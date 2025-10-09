@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
-public class Parkings {
+public class Parking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,9 @@ public class Parkings {
     private ParkingStatus status;
     private BigDecimal price;
 
-    public Parkings() {}
+    public Parking() {}
 
-    public Parkings(Long userId, Long plateId, LocalDateTime startTime, LocalDateTime endTime, String address, int durationMinutes, ParkingStatus status, BigDecimal price) {
+    public Parking(Long userId, Long plateId, LocalDateTime startTime, LocalDateTime endTime, String address, int durationMinutes, ParkingStatus status, BigDecimal price) {
         this.userId = userId;
         this.plateId = plateId;
         this.startTime = startTime;
