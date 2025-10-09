@@ -7,7 +7,7 @@ import PlatePicker from "@/components/pickerPlate"
 import { useUser } from "@/hooks/useUserQuery";
 
 export default function Fines() {
-    const [fines, setFines] = useState<FinesInterface[] | null>();
+    const [fines, setFines] = useState();
     const { user } = useUser();
     const [selectedPlateId, setSelectedPlateId] = useState<number | null>(null);
     const [showDescriptionId, setShowDescriptionId] = useState<number | null>(null);
@@ -16,17 +16,13 @@ export default function Fines() {
     useEffect(() => {
         const handleFines = async () => {
             const data = await fetchFines();
+            console.log(data,'data')
             setFines(data);
         };
     
         handleFines();
+        console.log(fines)
     }, []);
-
-    useEffect(() => {
-        if (user?.plate?.length > 0) {
-            setSelectedPlateId(user.plate[0].id);
-        }
-    }, [user]);
 
     const handlePlateChange = (plateId: number | null) => {
         setSelectedPlateId(plateId);

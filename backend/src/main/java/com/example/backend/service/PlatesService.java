@@ -72,6 +72,10 @@ public class PlatesService {
         return platesRepository.save(p);
     }
 
+    public Plates findByPlateNumber (String plateNumber) {
+        return platesRepository.findByNumber(plateNumber);
+    }
+
     public void delete(Long id) {
         platesRepository.deleteById(id);
     }

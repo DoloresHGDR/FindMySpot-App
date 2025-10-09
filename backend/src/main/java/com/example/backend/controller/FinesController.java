@@ -33,9 +33,9 @@ public class FinesController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Fines>> findByUserId() {
+    public ResponseEntity<List<Fines>> findByUserIdentityNumber() {
         Users user = AuthService.getAuthenticatedUser();
-        List<Fines> fines = finesService.findByUserId(user.getId());
+        List<Fines> fines = finesService.findByUserIdentityNumber(user.getIdentityNumber());
 
         return ResponseEntity.ok(fines);
 

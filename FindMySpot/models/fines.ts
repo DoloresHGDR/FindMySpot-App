@@ -10,6 +10,6 @@ export default interface FinesInterface {
     description: string;
     amount: number;
     datetime: string;
-    address: string
-    plate: PlateInterface;
+    address: string | null;
+    plateId: number;
 };

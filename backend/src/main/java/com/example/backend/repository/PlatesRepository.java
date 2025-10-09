@@ -10,6 +10,7 @@ import java.util.List;
 public interface PlatesRepository extends JpaRepository<Plates, Long> {
     Plates findByUserId(Long userId);
     List<Plates> findAllByUserId(Long userId);
+    Plates findByNumber (String plateNumber);
 }
 
 
