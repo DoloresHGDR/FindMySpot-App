@@ -8,7 +8,7 @@ import { EyeIconOpen, EyeIconClosed, DniIcon, LockIcon } from '@/components/icon
 import Checkbox from "expo-checkbox";
 import { useRouter } from 'expo-router';
 import { AxiosError } from 'axios';
-import { useLoginMutation } from "@/hooks/useAuthMutations";
+import { useLoginMutation } from "@/services/remote/queries/auth/useAuthMutations";
 
 const LoginSchema = Yup.object().shape({
     identityNumber: Yup.string()

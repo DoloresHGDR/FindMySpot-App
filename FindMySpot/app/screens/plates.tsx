@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Alert, ImageBackground, TouchableOpacity, Image, FlatList, Dimensions,} from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, FlatList, Dimensions,} from 'react-native';
 import { useFonts } from 'expo-font';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PatenteModal from '@/components/plateModal';
-import { useUser } from '@/hooks/useUserQuery';
-import apiClient from '@/api/apiClient';
+import { useUser } from '@/services/remote/queries/user/useUserQuery';
+import apiClient from "@/services/remote/apiClient";
 import { MaterialIcons } from '@expo/vector-icons';
 import FlipCard from '@/components/flipCard';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -99,7 +99,7 @@ export default function PlatesScreen() {
       <Text style={styles.title}>Mis Matrículas</Text>
       
 
-      {user.plate.length > 0 ? (
+      {user?.plate.length > 0 ? (
         <>
           <FlatList
             data={user.plate}

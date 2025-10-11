@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
-import { useUser } from '@/hooks/useUserQuery';
+import { useUser } from '@/services/remote/queries/user/useUserQuery';
 import HomeButtons from '@/components/homeButtons'
 import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
-import { setupFirebaseMessaging } from '@/services/firebaseMessagingService';
+import { setupFirebaseMessaging } from '@/services/local/notifications/firebaseMessagingService';
 import Carousel from '@/components/carousel';
 
 

@@ -3,7 +3,7 @@ import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.*;
 import com.example.backend.models.enums.ParkingStatus;
-import com.example.backend.repository.ParkingsRepository;
+import com.example.backend.repository.ParkingRepository;
 import com.example.backend.repository.UserDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class ParkingsService {
-    private final ParkingsRepository parkingsRepository;
+public class ParkingService {
+    private final ParkingRepository parkingRepository;
     private final PlatesService platesService;
     private final UserService userService;
     private final FcmMessagingService fcmMessagingService;
     private final UserDeviceRepository userDeviceRepository;
 
     @Autowired
-    public ParkingsService(ParkingsRepository parkingsRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, UserDeviceRepository userDeviceRepository) {
-        this.parkingsRepository = parkingsRepository;
+    public ParkingService(ParkingRepository parkingRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, UserDeviceRepository userDeviceRepository) {
+        this.parkingRepository = parkingRepository;
         this.platesService = platesService;
         this.userService = userService;
         this.fcmMessagingService = fcmMessagingService;
@@ -36,11 +36,11 @@ public class ParkingsService {
 
 
     public List<Parking> findAllParkings(){
-        return parkingsRepository.findAll();
+        return parkingRepository.findAll();
     }
 
     public Optional<Parking> findParkingsById(Long id){
-        return parkingsRepository.findById(id);
+        return parkingRepository.findById(id);
     }
 
     private HistoryDTO mapToHistoryDTO(Parking parking) {
@@ -58,7 +58,7 @@ public class ParkingsService {
     }
 
     public List<HistoryDTO> getLast3DistinctParkings(Long userId) {
-        List<Parking> parkings = parkingsRepository.findLast3DistinctByAddress(userId);
+        List<Parking> parkings = parkingRepository.findLast3DistinctByAddress(userId);
         // stream convierte la lista en una secuencia de elementos al que se le puede aplicar map
         // map toma cada elemento del stream parkings y el this:: dice que para cada objeto parking de parkings va a llamar a la funcion
         // collect toma todos los elementos del stream y con toList los convierte nuevamente en una lista.
@@ -69,7 +69,7 @@ public class ParkingsService {
     // Busca una lista de parkings hechos por un usuario especifico, sirve para el historial.
 
     public List<HistoryDTO> getParkingHistoryByUserId(Long userId, Long plateId) {
-        List<Parking> parkings = parkingsRepository.findByUserIdAndPlateIdOrderByStartTimeDesc(userId, plateId);
+        List<Parking> parkings = parkingRepository.findByUserIdAndPlateIdOrderByStartTimeDesc(userId, plateId);
 
         return parkings.stream().map(this::mapToHistoryDTO).collect(Collectors.toList());
 
@@ -90,7 +90,7 @@ public class ParkingsService {
 
     // Busca Parkings que esten por finalizar
     public List<ParkingMapDTO> getParkingsAboutToFinish(){
-        List<Parking> parkings = parkingsRepository.findByStatus(ParkingStatus.ABOUT_TO_FINISH);
+        List<Parking> parkings = parkingRepository.findByStatus(ParkingStatus.ABOUT_TO_FINISH);
         return parkings.stream()
                 .map(p -> new ParkingMapDTO(p.getId(), p.getAddress()))
                 .collect(Collectors.toList());
@@ -109,12 +109,12 @@ public class ParkingsService {
         );
 
         parking.calculatePrice();
-        return parkingsRepository.save(parking);
+        return parkingRepository.save(parking);
     }
 
     //Finaliza el estacionamiento de manera MANUAL
     public Parking finishParking(Long parkingId){
-        Parking parking = parkingsRepository.findById(parkingId)
+        Parking parking = parkingRepository.findById(parkingId)
                 .orElseThrow(()-> new RuntimeException("Parking not found"));
 
         if (parking.getStatus() == ParkingStatus.FINISHED){
@@ -126,20 +126,20 @@ public class ParkingsService {
         parking.calculatePrice();
         parking.setStatus(ParkingStatus.FINISHED);
 
-        return parkingsRepository.save(parking);
+        return parkingRepository.save(parking);
     }
 
     //Finaliza el estacionamiento Automaticamente una vez que termina el tiempo de duracion
     @Scheduled(fixedRateString = "${parking.schedule.fixedRate}")
     public void AutoFinishExpiredParkings() {
-        List<Parking> expiringParkings = parkingsRepository.findByStatus(ParkingStatus.ABOUT_TO_FINISH);
+        List<Parking> expiringParkings = parkingRepository.findByStatus(ParkingStatus.ABOUT_TO_FINISH);
         for (Parking parking : expiringParkings) {
             if (parking.isFinished()) {
                 long realMinutes = java.time.Duration.between(parking.getStartTime(), LocalDateTime.now()).toMinutes();
                 parking.setDurationMinutes((int) realMinutes);
                 parking.calculatePrice();
                 parking.setStatus(ParkingStatus.FINISHED);
-                parkingsRepository.save(parking);
+                parkingRepository.save(parking);
             }
         }
     }
@@ -147,11 +147,11 @@ public class ParkingsService {
     //Marca automaticamente un estacionamiento como "Por finalizar"
     @Scheduled(fixedRateString = "${parking.schedule.fixedRate}")
     public void markParkingsAboutToFinish() {
-        List<Parking> active = parkingsRepository.findByStatus(ParkingStatus.ACTIVE);
+        List<Parking> active = parkingRepository.findByStatus(ParkingStatus.ACTIVE);
         for (Parking p : active) {
             if (p.isAboutToFinish()) {
                 p.setStatus(ParkingStatus.ABOUT_TO_FINISH);
-                parkingsRepository.save(p);
+                parkingRepository.save(p);
 
                 Optional<Users> user = userService.getUserById(p.getUserId());
 
@@ -169,9 +169,7 @@ public class ParkingsService {
         }
     }
 
-
-
     public void delete(Long id){
-        parkingsRepository.deleteById(id);
+        parkingRepository.deleteById(id);
     }
 }

@@ -1,4 +1,4 @@
-import apiClient from "@/api/apiClient"
+import apiClient from "@/services/remote/apiClient";
 import FinesInterface from "@/models/fines"
 
 

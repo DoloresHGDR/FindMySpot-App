@@ -1,14 +1,13 @@
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { Plate, User } from "@/models/user";
-import { saveToken } from "@/services/storage";
+import { saveToken } from "@/services/local/storage/tokenStorage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { API_BASE_URL} from '@env';
 import { ENDPOINTS } from "@/constants/apiEndpoints";
 import { LoginPayload, AuthResponse, RegisterPayload } from "@/models/auth";
 
-const fullLoginUrl = `${API_BASE_URL}${ENDPOINTS.LOGIN}`;
-const fullRegisterUrl = `${API_BASE_URL}${ENDPOINTS.REGISTER}`;
+const fullLoginUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}${ENDPOINTS.LOGIN}`;
+const fullRegisterUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}${ENDPOINTS.REGISTER}`;
 
 const performLogin = async (payload: LoginPayload): Promise<AuthResponse> => {
     const response = await axios.post(fullLoginUrl, {

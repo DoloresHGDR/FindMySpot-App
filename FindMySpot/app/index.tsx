@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getToken, removeToken } from '@/services/storage';
-import { decodeJwtToken, isTokenExpired } from '@/utils/tokenUtils';
-import { useUser } from '@/hooks/useUserQuery';
-import apiClient from '@/api/apiClient';
-import { useAuthCheck } from '@/hooks/useAuthCheck';
+import { useAuthCheck } from '@/services/remote/queries/auth/useAuthCheck';
 
 
 export default function Splash() {

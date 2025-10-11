@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchNearbyParkingLocations} from '@/services/parkingService';
+import { fetchNearbyParkingLocations} from '@/services/remote/parking/parkingService';
 import { getUserLocation } from '@/utils/location';
 
 type MarkerType = {

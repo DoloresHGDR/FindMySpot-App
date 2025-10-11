@@ -4,7 +4,7 @@ import com.example.backend.dtos.ParkingMapDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
 import com.example.backend.models.Parking;
 import com.example.backend.service.AuthService;
-import com.example.backend.service.ParkingsService;
+import com.example.backend.service.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,22 +14,22 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/parkings")
-public class ParkingsController {
-    private final ParkingsService parkingsService;
+public class ParkingController {
+    private final ParkingService parkingService;
 
     @Autowired
-    public ParkingsController(ParkingsService parkingsService) {
-        this.parkingsService = parkingsService;
+    public ParkingController(ParkingService parkingService) {
+        this.parkingService = parkingService;
     }
 
     @GetMapping
     public List<Parking> getAllParkings(){
-        return parkingsService.findAllParkings();
+        return parkingService.findAllParkings();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Parking> getParkingsById(@PathVariable Long id){
-        Optional<Parking> parkings = parkingsService.findParkingsById(id);
+        Optional<Parking> parkings = parkingService.findParkingsById(id);
         return parkings.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -37,40 +37,34 @@ public class ParkingsController {
     public List<HistoryDTO> getParkingHistoryByUserId(@PathVariable Long plateId){
         Long userId = AuthService.getAuthenticatedUser().getId();
 
-        return parkingsService.getParkingHistoryByUserId(userId, plateId);
+        return parkingService.getParkingHistoryByUserId(userId, plateId);
     }
 
     @GetMapping("/history/last-three")
     public List<HistoryDTO> getLast3Distinct() {
         Long userId = AuthService.getAuthenticatedUser().getId();
-        return parkingsService.getLast3DistinctParkings(userId);
+        return parkingService.getLast3DistinctParkings(userId);
     }
 
     @GetMapping("/about-to-finish/map")
     public List<ParkingMapDTO> getParkingsAboutToFinish(){
-        return parkingsService.getParkingsAboutToFinish();
+        return parkingService.getParkingsAboutToFinish();
     }
 
     @PostMapping("/create")
     public Parking create(@RequestBody ParkingRequestDTO ParkingRequestDTO) {
-        return parkingsService.createParking(ParkingRequestDTO);
+        return parkingService.createParking(ParkingRequestDTO);
     }
 
     @PostMapping("/finish/{id}")
     public Parking finish(@PathVariable Long id){
-        return parkingsService.finishParking(id);
+        return parkingService.finishParking(id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        parkingsService.delete(id);
+        parkingService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
 }
-
-/*
-Deberia cambiar los entrypoint con userId, no son muy seguros.
-Se puede usar algo como lo que esta implementado en FcmTokenController
-La autenticacion del usuario se puede hacer desde el mismo token que llega en la request.
- */

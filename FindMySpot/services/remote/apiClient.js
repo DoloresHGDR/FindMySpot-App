@@ -1,11 +1,10 @@
 import axios from 'axios';
-import {getToken, removeToken} from '@/services/storage';
+import {getToken, removeToken} from "@/services/local/storage/tokenStorage";
 import { useRouter } from 'expo-router';
 import { Alert } from 'react-native';
-import { API_BASE_URL} from '@env';
 
 const apiClient = axios.create({
-    baseURL: API_BASE_URL,    
+    baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,    
 });
 
 apiClient.interceptors.request.use(

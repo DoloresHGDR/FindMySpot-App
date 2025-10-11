@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getParkingData } from "@/services/parkingStorage";
+import { getParkingData } from "@/services/local/storage/parkingStorage";
 import { calculateRemainingTime } from "@/utils/timer";
 
 export const useParkingTimer = (onFinish?: () => void) => {

@@ -1,7 +1,7 @@
-import apiClient from "@/api/apiClient"
+import apiClient from "@/services/remote/apiClient";
 import { QUERY_KEYS } from "@/constants/queryKeys";
 import { User } from "@/models/user";
-import { getToken, removeToken } from "@/services/storage";
+import { getToken, removeToken } from "@/services/local/storage/tokenStorage";
 import { decodeJwtToken, isTokenExpired } from "@/utils/tokenUtils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

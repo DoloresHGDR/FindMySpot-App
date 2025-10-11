@@ -1,4 +1,4 @@
-import apiClient from "@/api/apiClient";
+import apiClient from "@/services/remote/apiClient";
 import { getCoordinates, isNearby } from "@/utils/location";
 import ParkingHistory from "@/models/history";
 
@@ -15,17 +15,17 @@ export const fetchHistory = async (): Promise<ParkingHistory[]> => {
 }
 
 export const submitParking = async (
-    userId: string | null,
     plate: string,
     address: string,
     duration: string
 ) => {
+    console.log('Llamando a /api/parkings/create con:', { plateId: plate, address, durationMinutes: duration });
     const response = await apiClient.post('/api/parkings/create', {
-        userId,
         plateId: plate,
         address,
         durationMinutes: duration,
     });
+    console.log('Respuesta del servidor al iniciar estacionamiento:', response.data);
     return response.data;
 };
 

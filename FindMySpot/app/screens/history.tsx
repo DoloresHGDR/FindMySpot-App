@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { AxiosError } from 'axios';
-import apiClient from '@/api/apiClient';
+import apiClient from "@/services/remote/apiClient";
 import { format } from 'date-fns';
 import PlatePicker from "@/components/pickerPlate"
-import { useUser } from '@/hooks/useUserQuery';
+import { useUser } from '@/services/remote/queries/user/useUserQuery';
 import ParkingHistory from '@/models/history';
 
 export default function HistoryScreen () {

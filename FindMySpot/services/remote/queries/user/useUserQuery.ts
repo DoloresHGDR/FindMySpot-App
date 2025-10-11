@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from "@/models/user";
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { removeToken } from '@/services/storage';
-import { getUserData } from '@/services/authService';
+import { removeToken } from "@/services/local/storage/tokenStorage";
+import { getUserData } from '@/services/remote/user/authService';
 
 const INITIAL_USER_STATE: User = {
     logged: false,

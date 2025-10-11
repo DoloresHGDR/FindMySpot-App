@@ -1,0 +1,47 @@
+@startuml diagram.puml
+title Sistema de Saldo de Usuario - Backend
+
+entity "User" as User {
+  +id: Long
+  +name: String
+  +email: String
+  +balance: Double
+}
+
+entity "Parking" as Parking {
+  +id: Long
+  +userId: Long
+  +startTime: DateTime
+  +endTime: DateTime
+  +amountCharged: Double
+}
+
+entity "BalanceTransaction" as BalanceTransaction {
+  +id: Long
+  +userId: Long
+  +type: String <<enum: {ADD, SUBTRACT}>>
+  +amount: Double
+  +timestamp: DateTime
+  +description: String
+}
+
+User "1" -- "0..*" BalanceTransaction : realiza >
+User "1" -- "0..*" Parking : realiza >
+
+class BalanceService {
+  +addBalance(userId: Long, amount: Double, description: String): void
+  +subtractBalance(userId: Long, amount: Double, description: String): void
+  +getBalance(userId: Long): Double
+}
+
+class ParkingService {
+  +startParking(userId: Long, ...): Parking
+  +endParking(parkingId: Long): void
+}
+
+User o-- BalanceService : usa >
+User o-- ParkingService : usa >
+
+ParkingService ..> BalanceService : utiliza para descontar saldo
+
+@enduml

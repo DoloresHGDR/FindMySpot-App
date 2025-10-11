@@ -1,4 +1,4 @@
-import { fetchHistory } from "@/services/parkingService";
+import { fetchHistory } from "@/services/remote/parking/parkingService";
 import { useCallback, useEffect, useState } from "react";
 import HistoryDTO from "@/models/history"
 

@@ -4,11 +4,9 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Input from '@/components/Input';
 import RegisterButtons from '@/components/registerButtons';
-import axios, { AxiosError } from 'axios';
-import { useUser } from "@/context/UserContext";
+import { AxiosError } from 'axios';
 import { useRouter } from 'expo-router';
-import { saveToken } from '@/services/storage';
-import { useRegisterMutation } from "@/hooks/useAuthMutations";
+import { useRegisterMutation } from "@/services/remote/queries/auth/useAuthMutations";
 
 const steps = ['Datos', 'Contraseña']
 

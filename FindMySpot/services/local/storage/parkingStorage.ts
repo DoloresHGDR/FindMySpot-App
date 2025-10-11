@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const saveParkingData = async (parkingData: { startTime: string; duration: number }) => {
     try {
         await AsyncStorage.setItem('parkingData', JSON.stringify(parkingData));
+        console.log('parkingData guardado correctamente');
     } catch (error) {
         console.error('Error saving parking data', error);
     }

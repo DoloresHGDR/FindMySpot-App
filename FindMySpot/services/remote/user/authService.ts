@@ -1,5 +1,5 @@
-import apiClient from "@/api/apiClient";
-import { getToken, removeToken } from "./storage";
+import apiClient from "@/services/remote/apiClient";
+import { getToken, removeToken } from "../../local/storage/tokenStorage";
 import { decodeJwtToken, isTokenExpired } from "@/utils/tokenUtils";
 import { User } from "@/models/user";
 

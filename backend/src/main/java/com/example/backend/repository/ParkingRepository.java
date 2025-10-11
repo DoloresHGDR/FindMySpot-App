@@ -9,14 +9,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ParkingsRepository extends JpaRepository<Parking, Long> {
+public interface ParkingRepository extends JpaRepository<Parking, Long> {
     List<Parking> findByStatus (ParkingStatus status);
 
     @Query(
             value = "SELECT p.* " +
                     "FROM ( " +
                     "   SELECT DISTINCT ON (address) * " +
-                    "   FROM parkings " +
+                    "   FROM parking " +
                     "   WHERE user_id = :userId " +
                     "   ORDER BY address, start_time DESC " +
                     ") p " +
