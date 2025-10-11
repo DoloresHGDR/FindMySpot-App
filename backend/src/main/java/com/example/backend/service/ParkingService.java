@@ -97,8 +97,9 @@ public class ParkingService {
     }
 
     public Parking createParking(ParkingRequestDTO ParkingRequestDTO){
+        Long userId = AuthService.getAuthenticatedUserId();
         Parking parking = new Parking(
-                ParkingRequestDTO.getUserId(),
+                userId,
                 ParkingRequestDTO.getPlateId(),
                 LocalDateTime.now(),
                 null,

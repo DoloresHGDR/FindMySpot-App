@@ -1,19 +1,15 @@
 package com.example.backend.service;
+
 import com.example.backend.dtos.ValidationRequest;
 import com.example.backend.dtos.ValidationResponse;
 import com.example.backend.models.Plates;
 import com.example.backend.models.Users;
 import com.example.backend.repository.PlatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
 
-
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PlatesService {
@@ -34,15 +30,9 @@ public class PlatesService {
         return platesRepository.findById(id);
     }
 
-    public Plates findByUserId(Long userId) {
-        return platesRepository.findByUserId(userId);
-    }
-
     public List<Plates> findAllByUserId(Long userId) {
         return platesRepository.findAllByUserId(userId);
     }
-
-
 
     public Plates save (String plate) {
         Users user = AuthService.getAuthenticatedUser();

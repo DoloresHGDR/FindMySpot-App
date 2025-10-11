@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ParkingRequestDTO {
 
-    @NotNull(message= "El usuario es obligatorio")
-    private Long userId;
-
     @NotNull(message= "La patente es obligatoria")
     private Long plateId;
 

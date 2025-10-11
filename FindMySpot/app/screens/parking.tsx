@@ -1,17 +1,16 @@
 import { ModalParking } from '@/components/modalParking';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, RefreshControl, Button} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, RefreshControl} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { useUser } from '@/hooks/useUserQuery';
+import { useUser } from '@/services/remote/queries/user/useUserQuery';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { useParkingLogic } from '@/hooks/useParkingLogic';
 import { formatDate } from '@/utils/format';
 import ParkingTimer from '@/components/parkingTimer';
 import { useParkingMap } from '@/hooks/useParkingMap';
 import { useParkingHistory } from '@/hooks/useParkingHistory';
-import { GOOGLE_MAPS_API_KEY } from '@env';
 
 const ParkingScreen: React.FC = () => {
-  const apiKey= GOOGLE_MAPS_API_KEY
+  const apiKey= process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY!
   const { user } = useUser();
   const {
     refreshing,
@@ -29,7 +28,6 @@ const ParkingScreen: React.FC = () => {
     setParkingActive,
     handleFinishPark
   } = useParkingLogic({
-    userId: user?.id || null,
     userPlates: user?.plate
   });
 

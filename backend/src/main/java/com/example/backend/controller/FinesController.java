@@ -4,12 +4,10 @@ import com.example.backend.models.Fines;
 import com.example.backend.models.Users;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.FinesService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/fines")
@@ -21,17 +19,6 @@ public class FinesController {
         this.finesService = finesService;
     }
 
-    @GetMapping
-    public List<Fines> findAll() {
-        return finesService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Fines> findById(@PathVariable Long id) {
-        Optional<Fines> fines = finesService.findById(id);
-        return fines.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     @GetMapping("/user")
     public ResponseEntity<List<Fines>> findByUserIdentityNumber() {
         Users user = AuthService.getAuthenticatedUser();
@@ -39,16 +26,5 @@ public class FinesController {
 
         return ResponseEntity.ok(fines);
 
-    }
-
-    @PostMapping
-    public Fines save(@RequestBody Fines fines) {
-        return finesService.save(fines);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        finesService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

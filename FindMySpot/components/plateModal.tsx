@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
 import { Modal, View, Text, TextInput, StyleSheet, Alert } from 'react-native';
+import { useState } from "react";
 import Buttons from './buttons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import apiClient from '@/api/apiClient';
+import apiClient from "@/services/remote/apiClient";
 import { AxiosError } from 'axios';
 import { router } from 'expo-router';
-import { useUser } from '@/hooks/useUserQuery';
-
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from "@/constants/queryKeys";
 
 const PlateModal = ({ visible, onClose } : any) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const plateRegex = /^[A-Z]{3} [0-9]{3}$|^[A-Z]{2} [0-9]{3} [A-Z]{2}$/;
 
@@ -39,30 +41,15 @@ const PlateModal = ({ visible, onClose } : any) => {
     }
   };
 
-  const { user, setUser } = useUser();
-
-  const handlePlates = async (values: any, onClose: () => void, resetForm: () => void) => {
-    try {
-      const response = await apiClient.post('/api/plates', {
+  const submitPlates = useMutation({
+    mutationFn: (values: any) => {
+      return apiClient.post('/api/plates', {
         number: values.plate
       });
-
-      const updatedPlates = [ ...user.plate, response.data];
-
-      const updatedUser = {
-        ...user,
-        plate: updatedPlates
-      };
-
-      if (response.status === 200) {
-        setUser(updatedUser);
-        resetForm();
-        onClose();
-        router.replace("/screens/plates");
-      }
-    } catch (err) {
-      const error = err as AxiosError;
-
+    },
+    onMutate: () => { setIsLoading(true); },
+    onError: (err, variables) => {
+      const error = err as AxiosError; 
       if (error.response) {
               console.log(error.response.status);
               console.log('Error', error.response.data || "Hubo un error al registrar la matricula")
@@ -71,7 +58,26 @@ const PlateModal = ({ visible, onClose } : any) => {
               console.log('Error general al hacer la solicitud:', error.message);
               Alert.alert('Error', `Error al hacer la solicitud: ${error.message}`);
             }
+      setIsLoading(false);
+      variables?.onClose?.();
+      variables?.resetForm?.();
+    },
+    onSuccess: (_data, variables) => {
+      Alert.alert('Exito', 'Matricula registrada correctamente');
+      setIsLoading(false);
+      variables?.resetForm?.();
+      variables?.onClose?.();
+      queryClient.invalidateQueries({queryKey: [QUERY_KEYS.USER]})
+      router.replace("/screens/plates");
+    },
+    onSettled: () => {
+      setIsLoading(false);
     }
+  }
+  )
+
+  const handlePlates = async (values: any, onClose: () => void, resetForm: () => void) => {
+    submitPlates.mutate(values);
     
   };
 

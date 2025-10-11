@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { submitParking, stopParking } from '@/services/parkingService';
-import { saveParkingData, clearParkingData, getParkingData } from '@/services/parkingStorage';
+import { submitParking, stopParking } from '@/services/remote/parking/parkingService';
+import { saveParkingData, clearParkingData, getParkingData } from '@/services/local/storage/parkingStorage';
 import { useParkingHistory } from '@/hooks/useParkingHistory';
 import { setTimeOffset } from '@/utils/timer';
 import HistoryDTO from "@/models/history"
 
 interface UseParkingLogicProps {
-  userId: string | null;
   userPlates: { id: number; number: string }[] | undefined;
 }
 
 
-export const useParkingLogic = ({ userId, userPlates}: UseParkingLogicProps) => {
+export const useParkingLogic = ({ userPlates}: UseParkingLogicProps) => {
     const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
@@ -23,18 +22,20 @@ export const useParkingLogic = ({ userId, userPlates}: UseParkingLogicProps) => 
 
     const handleSubmit = async (data: { plate: string; address: string; duration: string }) => {
         try {
-            const submit = await submitParking(userId, data.plate, data.address, data.duration);
+            console.log('Datos enviados a submitParking:', data);
+            const submit = await submitParking(data.plate, data.address, data.duration);
+            console.log('Respuesta de submitParking:', submit);
             setModalVisible(false);
             loadHistory();
             setTimeOffset(submit.startTime); 
             await saveParkingData({
                 startTime: submit.startTime,
                 duration: Number(submit.durationMinutes),
-                });
+            });
             setParkingActive(true);
         } catch (error) {
             Alert.alert('Error', 'No se pudo iniciar el estacionamiento.');
-            console.log(error);
+            console.log('Error en handleSubmit:', error);
         }
     };
 
