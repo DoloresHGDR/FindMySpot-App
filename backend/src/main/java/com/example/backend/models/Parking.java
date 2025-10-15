@@ -54,10 +54,11 @@ public class Parking {
         this.endTime = this.startTime.plusMinutes(this.durationMinutes);
     }
 
-    public void calculatePrice() {
+    public BigDecimal calculatePrice() {
         int timeBlocks = (int) Math.ceil(durationMinutes / 10.0);
         this.price = BigDecimal.valueOf(timeBlocks * 100L);
         updateEndTime();
+        return this.price;
     }
 
 }

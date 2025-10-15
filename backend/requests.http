@@ -60,7 +60,7 @@ Content-Type: application/json
 ### POST
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzExMDczNiwiZXhwIjoxNzU3MTExNjM2fQ.TyY4VC9hW4VYYvgYMrrL-UbD-dwUwuuCaijamYv4zd8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1OTk1NjE5OSwiZXhwIjoxNzU5OTYzMzk5fQ.QvanHZ6RQDXhXLcFG9NWgyUmsOooRr1YtMyPYke25uw
 
 {
     "number": "RAU 123",
@@ -75,7 +75,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1N
 ### POST 2
 POST http://localhost:8080/api/plates
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1Nzk2NDg3NCwiZXhwIjoxNzU3OTY1Nzc0fQ.5Wxr9B_swZywYHCjq4Bye_0Biys3vqaqgZfHnlIfotU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1OTUyNTQ3MiwiZXhwIjoxNzU5NTMyNjcyfQ.9eY8qh9PFuE5nZlLrhCmrjvDTyPLNwZT02kC4f2wOl4
 
 {
     "number": "RAU 123"
@@ -101,14 +101,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1N
 ### POST
 POST http://localhost:8080/api/parkings/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzcxOTk3NywiZXhwIjoxNzU3NzIwODc3fQ.UVGffG9JU6voEdYvBwqaNxjj6ER-n33ukOIsLCgB9g4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MDMwMTU0MywiZXhwIjoxNzYwMzA4NzQzfQ.gh78Xbyy1bEI2XdoRy7dsLwVbd9I0Jx7NUEbs5lvZ7E
 
 {
-  "userId": 1,
-  "plateId": 1,
+  "plateId": 6,
   "address": "Av.Mitre 10",
-  "durationMinutes": 10,
-  "status": "FINISHED",
+  "durationMinutes": 220,
+  "status": "ACTIVE",
   "price": 100
 }
 
@@ -154,23 +153,35 @@ Accept: application/json
 ###POST
 POST http://localhost:8080/api/fines
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzI3NTcwMywiZXhwIjoxNzU3Mjc2NjAzfQ.vvU72RLvPRp2XLhWwgJ-IHjjxl4dFpaeIcfjFozFJuQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MDI4MjIzOCwiZXhwIjoxNzYwMjg5NDM4fQ.0hvaX4WXQI3y-5kE5dfJEo4aoL5GjE3ah3llVdlr9Oo
 
 {
   "description": "Multa",
   "amount": 100000,
   "datetime": "2024-05-18T11:30:00",
-  "address": "Av.Mitre 10",
+  "address": "Av.Mitre 100",
   "plate": {
-    "id": 1
+    "id": 28
   }
 }
 
 ### GETBYUSERID
 GET http://localhost:8080/api/fines/user
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc1NzE5MTY5MSwiZXhwIjoxNzU3MTkyNTkxfQ.wZMCrT4CIOOQccxu6Nxjxex90h4IRrfq_C3g4nt2hHE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MDIyMTk0NSwiZXhwIjoxNzYwMjI5MTQ1fQ.T7Z4tGzgD35RxTZMFy_U0sgB6GcESYnOEAE_Rtojk8Q
 
 
 ###DELETE
 DELETE http://localhost:8080/api/fines/1
+
+
+###BALANCE TRANSACTION
+
+### ADD
+POST http://localhost:8080/api/balance/add
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MDIyOTk0MiwiZXhwIjoxNzYwMjM3MTQyfQ.s6V0qa6MiblsIdsgzMHVX_nEs5MvHjXEOfroQgUsqXM
+
+{
+  "amount": 10000000
+}

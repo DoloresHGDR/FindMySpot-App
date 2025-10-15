@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -28,11 +29,12 @@ public class Users {
     @JoinColumn(name = "user_id")
     private List<Parking> parkings;
     private String role;
+    private BigDecimal balance = BigDecimal.valueOf(0);
 
     public Users() {
     }
 
-    public Users(String name, String surname, String identityNumber, String password, List<Plates> plates, List<Parking> parkings, String role) {
+    public Users(String name, String surname, String identityNumber, String password, List<Plates> plates, List<Parking> parkings, String role, BigDecimal balance) {
         this.name = name;
         this.surname = surname;
         this.identityNumber = identityNumber;
@@ -40,5 +42,6 @@ public class Users {
         this.parkings = parkings;
         this.password = password;
         this.role = role;
+        this.balance = balance;
     }
 }

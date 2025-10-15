@@ -1,14 +1,19 @@
 package com.example.backend.service;
 import com.example.backend.dtos.HistoryDTO;
 import com.example.backend.dtos.ParkingRequestDTO;
+import com.example.backend.dtos.TransactionResponseDTO;
 import com.example.backend.models.*;
 import com.example.backend.models.enums.ParkingStatus;
 import com.example.backend.repository.ParkingRepository;
 import com.example.backend.repository.UserDeviceRepository;
+import com.example.backend.repository.UsersRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.example.backend.dtos.ParkingMapDTO;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 public class ParkingService {
     private final ParkingRepository parkingRepository;
@@ -24,16 +30,20 @@ public class ParkingService {
     private final UserService userService;
     private final FcmMessagingService fcmMessagingService;
     private final UserDeviceRepository userDeviceRepository;
+    private final BalanceService balanceService;
+    private final UsersRepository usersRepository;
+    private static final BigDecimal CREDIT_LIMIT = new BigDecimal("-2000.00");
 
     @Autowired
-    public ParkingService(ParkingRepository parkingRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, UserDeviceRepository userDeviceRepository) {
+    public ParkingService(ParkingRepository parkingRepository, PlatesService platesService, UserService userService, FcmMessagingService fcmMessagingService, UserDeviceRepository userDeviceRepository, BalanceService balanceService, UsersRepository usersRepository) {
         this.parkingRepository = parkingRepository;
         this.platesService = platesService;
         this.userService = userService;
         this.fcmMessagingService = fcmMessagingService;
         this.userDeviceRepository = userDeviceRepository;
+        this.balanceService = balanceService;
+        this.usersRepository = usersRepository;
     }
-
 
     public List<Parking> findAllParkings(){
         return parkingRepository.findAll();
@@ -98,6 +108,9 @@ public class ParkingService {
 
     public Parking createParking(ParkingRequestDTO ParkingRequestDTO){
         Long userId = AuthService.getAuthenticatedUserId();
+
+        balanceService.checkMinimumBalance(userId);
+
         Parking parking = new Parking(
                 userId,
                 ParkingRequestDTO.getPlateId(),
@@ -113,6 +126,30 @@ public class ParkingService {
         return parkingRepository.save(parking);
     }
 
+    private Parking processParkingPaymentAndFinalize(Parking parking){
+
+        long realMinutes = java.time.Duration.between(parking.getStartTime(), LocalDateTime.now()).toMinutes();
+        parking.setDurationMinutes((int) realMinutes);
+
+        BigDecimal finalPrice = parking.calculatePrice();
+
+        TransactionResponseDTO transactionResult = balanceService.subtractBalance(
+                parking.getUserId(),
+                finalPrice
+        );
+        log.info(
+            "Parking ID: {} finalizado y cobrado. | Mensaje de Pago: {} | Nuevo Saldo del usuario {}: {}",
+            parking.getId(),
+            transactionResult.getMessage(),
+            transactionResult.getUserId(),
+            transactionResult.getNewBalance()
+        );
+
+        parking.setStatus(ParkingStatus.FINISHED);
+
+        return parkingRepository.save(parking);
+    }
+
     //Finaliza el estacionamiento de manera MANUAL
     public Parking finishParking(Long parkingId){
         Parking parking = parkingRepository.findById(parkingId)
@@ -122,12 +159,7 @@ public class ParkingService {
             return parking;
         }
 
-        long realMinutes = java.time.Duration.between(parking.getStartTime(), LocalDateTime.now()).toMinutes();
-        parking.setDurationMinutes((int) realMinutes);
-        parking.calculatePrice();
-        parking.setStatus(ParkingStatus.FINISHED);
-
-        return parkingRepository.save(parking);
+        return this.processParkingPaymentAndFinalize(parking);
     }
 
     //Finaliza el estacionamiento Automaticamente una vez que termina el tiempo de duracion
@@ -136,11 +168,11 @@ public class ParkingService {
         List<Parking> expiringParkings = parkingRepository.findByStatus(ParkingStatus.ABOUT_TO_FINISH);
         for (Parking parking : expiringParkings) {
             if (parking.isFinished()) {
-                long realMinutes = java.time.Duration.between(parking.getStartTime(), LocalDateTime.now()).toMinutes();
-                parking.setDurationMinutes((int) realMinutes);
-                parking.calculatePrice();
-                parking.setStatus(ParkingStatus.FINISHED);
-                parkingRepository.save(parking);
+                try {
+                    this.processParkingPaymentAndFinalize(parking);
+                } catch (Exception e) {
+                    log.error("Error al procesar el cobro automatico para Parking ID: {}", parking.getId(), e);
+                }
             }
         }
     }
@@ -166,6 +198,51 @@ public class ParkingService {
                         );
                     }
                 });
+            }
+        }
+    }
+
+    private BigDecimal calculateCurrentPrice(Parking parking) {
+        long realMinutes = java.time.Duration.between(parking.getStartTime(), LocalDateTime.now()).toMinutes();
+
+        if (realMinutes <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        int timeBlocks = (int) Math.ceil(realMinutes/10.0);
+        return BigDecimal.valueOf(timeBlocks * 100L);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void checkCreditLimitAndAutoFinish() {
+        List<Parking> activeParkings = parkingRepository.findByStatus(ParkingStatus.ACTIVE);
+        for (Parking parking : activeParkings) {
+            try {
+                Users user = usersRepository.findById(parking.getUserId())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                BigDecimal currentBalance = user.getBalance();
+                BigDecimal currentPrice = this.calculateCurrentPrice(parking);
+                BigDecimal projectedBalance = currentBalance.subtract(currentPrice);
+                if (projectedBalance.compareTo(CREDIT_LIMIT) <= 0) {
+                    log.warn(
+                            "Parking ID {} detenido automáticamente. Límite de crédito de {} excedido. Saldo Proyectado: {}",
+                            parking.getId(),
+                            CREDIT_LIMIT,
+                            projectedBalance
+                    );
+                    this.processParkingPaymentAndFinalize(parking);
+                } else {
+                    log.info(
+                            "Parking ID {} activo. Balance: {} - Precio actual: {} = Proyectado: {} (Límite: {})",
+                            parking.getId(),
+                            currentBalance,
+                            currentPrice,
+                            projectedBalance,
+                            CREDIT_LIMIT
+                    );
+                }
+            } catch (Exception e) {
+                log.error("Error al verificar límite de crédito para Parking ID: {}", parking.getId(), e);
             }
         }
     }

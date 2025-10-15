@@ -3,6 +3,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +26,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     //Recibe las peticiones HTTP y aplica el filtro
     @Override
     protected  void doFilterInternal(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     FilterChain filterChain)
+                                     @NonNull HttpServletResponse response,
+                                     @NonNull FilterChain filterChain)
         throws ServletException, IOException {
         logger.info(String.format(
                 "Método: %s, URL: %s, Protocolo: %s",
