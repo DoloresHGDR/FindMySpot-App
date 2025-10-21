@@ -18,7 +18,7 @@ Content-Type: application/json
   "name": "dolly",
   "surname": "HERRERA GARCIA DA ROSA",
   "identityNumber": "45257189",
-  "password": "dolopiola123",
+  "password": "Dolopiola123",
   "role": "USER"
 }
 ### POST2
@@ -42,7 +42,7 @@ Content-Type: application/json
 
 {
   "identityNumber": "45257189",
-  "password": "dolopiola123"
+  "password": "Dolopiola123"
 }
 
 ###LOGIN2
@@ -180,8 +180,8 @@ DELETE http://localhost:8080/api/fines/1
 ### ADD
 POST http://localhost:8080/api/balance/add
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MDIyOTk0MiwiZXhwIjoxNzYwMjM3MTQyfQ.s6V0qa6MiblsIdsgzMHVX_nEs5MvHjXEOfroQgUsqXM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NDQ2MjkyNyIsImlhdCI6MTc2MTA1NTQ4OSwiZXhwIjoxNzYxMDYyNjg5fQ.SZ2A2HmYktOeNOEIuSaPqni7NQ9T3ryfaGtMQAThFcA
 
 {
-  "amount": 10000000
+  "amount": 1000
 }

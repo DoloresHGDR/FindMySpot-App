@@ -6,7 +6,7 @@ import { useAuthCheck } from '@/services/remote/queries/auth/useAuthCheck';
 
 export default function Splash() {
   const router = useRouter();
-  const { mutate, isPending } = useAuthCheck();
+  const { mutate } = useAuthCheck();
 
   useEffect(() => {
     mutate(undefined, {
@@ -14,7 +14,6 @@ export default function Splash() {
         router.replace('/screens/home');
       },
       onError: (error) => {
-        console.error('Auth check failed:', error),
         router.replace('/auth/login');
       }
     });

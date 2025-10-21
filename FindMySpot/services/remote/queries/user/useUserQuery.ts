@@ -11,13 +11,14 @@ const INITIAL_USER_STATE: User = {
     surname: null,
     identityNumber: null,
     role: null,
-    plate: []
+    plate: [],
+    balance: 0
 };
 
 export const useUser = () => {
     const queryClient = useQueryClient();
 
-    const { data: user, ...rest } = useQuery<User>({
+    const { data: user, refetch, ...rest } = useQuery<User>({
         queryKey: [QUERY_KEYS.USER],
         initialData: INITIAL_USER_STATE,
         queryFn: getUserData
@@ -37,6 +38,7 @@ export const useUser = () => {
         user: user || INITIAL_USER_STATE,
         setUserData,
         logout,
+        refetch,
         ...rest
     };
 };

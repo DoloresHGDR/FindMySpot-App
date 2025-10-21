@@ -12,4 +12,5 @@ export type User ={
     identityNumber: string | null;
     role: string | null;
     plate: Plate[] | [];
+    balance: number;
 };

@@ -24,7 +24,7 @@ export const useLoginMutation = () => {
     return useMutation({
         mutationFn: performLogin,
         onSuccess: async (data, variables) => {
-            const { token, id, name, surname, identityNumber, role, plates } = data;
+            const { token, id, name, surname, identityNumber, role, plates, balance } = data;
             await saveToken(token, variables.rememberMe);
             const userData: User = {
                 logged: true,
@@ -33,7 +33,8 @@ export const useLoginMutation = () => {
                 surname: surname,
                 identityNumber: identityNumber,
                 role: role,
-                plate: plates
+                plate: plates,
+                balance: balance
             };
             queryClient.setQueryData([QUERY_KEYS.USER], userData);
         },
@@ -54,7 +55,7 @@ export const useRegisterMutation = () => {
     return useMutation({
         mutationFn: performRegister,
         onSuccess: async (data) => {
-            const { token, id, name, surname, identityNumber, role, plates } = data;
+            const { token, id, name, surname, identityNumber, role, plates, balance } = data;
             await saveToken(token, false);
             const userData: User = {
                 logged: true,
@@ -63,7 +64,8 @@ export const useRegisterMutation = () => {
                 surname: surname,
                 identityNumber: identityNumber,
                 role: role,
-                plate: plates
+                plate: plates,
+                balance: balance
             };
             queryClient.setQueryData([QUERY_KEYS.USER], userData);
         },

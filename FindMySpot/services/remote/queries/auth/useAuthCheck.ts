@@ -17,7 +17,8 @@ const fetchUserData = async (identityNumber: string): Promise<User> => {
         surname: user.surname,
         identityNumber: user.identityNumber,
         role: user.role,
-        plate: user.plates
+        plate: user.plates,
+        balance: user.balance
     };
 };
 

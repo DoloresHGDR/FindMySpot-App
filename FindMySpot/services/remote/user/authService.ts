@@ -10,7 +10,8 @@ const INITIAL_USER_STATE: User = {
     surname: null,
     identityNumber: null,
     role: null,
-    plate: []
+    plate: [],
+    balance: 0
 };
 
 export const getUserData = async (): Promise<User> => {
@@ -37,7 +38,8 @@ export const getUserData = async (): Promise<User> => {
             surname: user.surname,
             identityNumber: user.identityNumber,
             role: user.role,
-            plate: user.plates
+            plate: user.plates,
+            balance: user.balance
         };
 
        

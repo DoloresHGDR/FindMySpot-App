@@ -6,14 +6,16 @@ import { EyeIconClosed, EyeIconOpen, HomeLines } from '@/components/icons';
 import { useRouter } from 'expo-router';
 import { setupFirebaseMessaging } from '@/services/local/notifications/firebaseMessagingService';
 import Carousel from '@/components/carousel';
+import RechargeModal from '@/components/rechargeModal';
 
 
 export default function HomeScreen() {
-    const { user, logout } = useUser();
+    const { user, logout, refetch } = useUser();
     const [secureBalance, setSecureBalance] = useState(false)
+    const [rechargeVisible, setRechargeVisible] = useState(false);
     const router = useRouter();
 
-    const novedades = [
+    const news = [
     { image: require('@/assets/images/dollar.png'), title: 'Dinero que se mueve contigo' },
     { image: require('@/assets/images/piggybank.png'), title: 'Pagás solo lo \n que usás' },
     { image: require('@/assets/images/smartphone.png'), title: 'Olvidate del papel, pagá fácil' },
@@ -55,7 +57,7 @@ export default function HomeScreen() {
         <Text style={[styles.label, {color:'#e9e9e9', fontSize:15, fontWeight:"600",fontFamily:"arial"}]}>Saldo disponible</Text>
         <View style={[{flexDirection: 'row', gap: 10}]}>
           <Text style={[styles.balance, {color:"#43975a"}]}> 
-            $ {secureBalance ? "*****" : "10000"}
+            $ {secureBalance ? "*****" : user.balance.toFixed(2)}
           </Text>
           <TouchableOpacity style={[{justifyContent: 'center'}]} onPress={() => setSecureBalance(!secureBalance)}> 
             {secureBalance ? <EyeIconClosed/> : <EyeIconOpen/>}
@@ -63,13 +65,22 @@ export default function HomeScreen() {
         </View>
         
 
-        <TouchableOpacity style={styles.containerCard}>
+        <TouchableOpacity style={styles.containerCard} onPress={() => setRechargeVisible(true)}>
           <Image source={require("@/assets/images/card.jpg")} style={styles.cardImage}/>
           <View style={styles.containerCardText}>
             <Text numberOfLines={1} style={styles.cardTitle}>Mi tarjeta</Text>
             <Text numberOfLines={4} style={styles.cardText}>Recarga tu saldo aquí</Text>
           </View>
         </TouchableOpacity>
+
+        <RechargeModal
+          visible={rechargeVisible}
+          onClose={() => setRechargeVisible(false)}
+          onSuccess={() => {
+            setRechargeVisible(false);
+            if (typeof refetch === 'function') void refetch();
+          }}
+        />
 
         <Text style={[styles.label, {color:'#e9e9e9', fontFamily:'arial', fontSize:15} ]}>¿Qué quieres hacer hoy?</Text>
         <View style={styles.buttonGrid}>
@@ -90,7 +101,7 @@ export default function HomeScreen() {
                     onPress={() => useRouter().push('/screens/fines')}
                   />
         </View>
-        <Carousel title="Novedades" items={novedades} />
+        <Carousel title="Novedades" items={news} />
       </View>
     </ScrollView>
   );

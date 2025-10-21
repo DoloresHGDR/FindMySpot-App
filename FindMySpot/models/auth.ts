@@ -13,7 +13,8 @@ export type AuthResponse = {
     surname: string;
     identityNumber: string;
     role: string;
-    plates: Plate[]; 
+    plates: Plate[];
+    balance: number;
 };
 
 export type RegisterPayload = {
