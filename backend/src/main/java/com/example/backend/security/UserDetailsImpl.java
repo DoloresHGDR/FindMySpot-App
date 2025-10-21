@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,9 +25,10 @@ public class UserDetailsImpl implements UserDetails {
     private final String password;
     private final String role;
     private final List<Plates> plates;
+    private final BigDecimal balance;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String name, String surname, String identityNumber, String password, String role, List<Plates> plates, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String name, String surname, String identityNumber, String password, String role, List<Plates> plates, BigDecimal balance, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -34,6 +36,7 @@ public class UserDetailsImpl implements UserDetails {
         this.password = password;
         this.role = role;
         this.plates = plates;
+        this.balance = balance;
         this.authorities = authorities;
     }
 
@@ -47,8 +50,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 user.getRole(),
                 user.getPlates(),
-                authorities
-        );
+                user.getBalance(),
+                authorities);
     }
 
     @Override

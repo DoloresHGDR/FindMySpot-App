@@ -25,13 +25,15 @@ public class BalanceService {
 
     public BalanceTransaction addBalance(BigDecimal amount) {
         Users user = AuthService.getAuthenticatedUser();
+        BigDecimal currentBalance = user.getBalance();
         BalanceTransaction balanceTransaction = new BalanceTransaction(
                 user.getId(),
                 BalanceStatus.ADD,
                 amount,
                 LocalDateTime.now()
         );
-        user.setBalance(amount);
+        BigDecimal newBalance = currentBalance.add(amount);
+        user.setBalance(newBalance);
         usersRepository.save(user);
         return balanceTransactionRepository.save(balanceTransaction);
     }

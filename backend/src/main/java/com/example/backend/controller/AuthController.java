@@ -55,7 +55,8 @@ public class AuthController {
                 userDetails.getSurname(),
                 userDetails.getIdentityNumber(),
                 userDetails.getRole(),
-                userDetails.getPlates()
+                userDetails.getPlates(),
+                userDetails.getBalance()
         );
 
         return ResponseEntity.ok(response);
@@ -75,7 +76,8 @@ public class AuthController {
                     userDetails.getSurname(),
                     userDetails.getIdentityNumber(),
                     userDetails.getRole(),
-                    userDetails.getPlates()
+                    userDetails.getPlates(),
+                    userDetails.getBalance()
             );
 
             return ResponseEntity.ok(response);
