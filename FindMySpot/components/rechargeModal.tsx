@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
         borderColor: '#ccc', 
         padding: 10, 
         borderRadius: 6, 
-        marginBottom: 12 
+        marginBottom: 12,
+        color: '#e9e9e9'
     },
     actions: { 
         flexDirection: 'row', 

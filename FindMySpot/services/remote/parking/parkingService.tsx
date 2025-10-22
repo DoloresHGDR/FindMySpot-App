@@ -19,13 +19,11 @@ export const submitParking = async (
     address: string,
     duration: string
 ) => {
-    console.log('Llamando a /api/parkings/create con:', { plateId: plate, address, durationMinutes: duration });
     const response = await apiClient.post('/api/parkings/create', {
         plateId: plate,
         address,
         durationMinutes: duration,
     });
-    console.log('Respuesta del servidor al iniciar estacionamiento:', response.data);
     return response.data;
 };
 
